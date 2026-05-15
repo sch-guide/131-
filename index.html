@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>E-Book</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#222;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    overflow:hidden;
+    font-family:sans-serif;
+}
+
+#book{
+    width:90vw;
+    height:90vh;
+}
+
+/* 페이지 */
+.page{
+    width:100%;
+    height:100%;
+    background:white;
+}
+
+.page img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+
+/* 버튼 영역 */
+.controls{
+    position:fixed;
+    top:15px;
+    right:15px;
+    z-index:9999;
+    display:flex;
+    gap:10px;
+}
+
+/* 버튼 스타일 */
+.btn{
+    background:rgba(255,255,255,0.9);
+    border:none;
+    padding:10px 15px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:bold;
+}
+
+/* 전체보기 모달 */
+#gallery{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.9);
+    overflow:auto;
+    display:none;
+    z-index:10000;
+    padding:20px;
+    box-sizing:border-box;
+}
+
+/* 썸네일 */
+.gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:15px;
+}
+
+.gallery-grid img{
+    width:100%;
+    border-radius:10px;
+    cursor:pointer;
+    background:white;
+}
+
+.close-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+
+</head>
+
+<body>
+
+<!-- 버튼 -->
+<div class="controls">
+    <button class="btn" onclick="openGallery()">펼쳐보기</button>
+</div>
+
+<!-- 플립북 -->
+<div id="book"></div>
+
+<!-- 전체보기 -->
+<div id="gallery">
+
+    <button class="close-btn" onclick="closeGallery()">닫기</button>
+
+    <div class="gallery-grid" id="galleryGrid"></div>
+
+</div>
+
+<script>
+
+const book = document.getElementById("book");
+const galleryGrid = document.getElementById("galleryGrid");
+
+/* 페이지 자동 생성 */
+for (let i = 1; i <= 172; i++) {
+
+    const page = document.createElement("div");
+    page.className = "page";
+
+    const img = document.createElement("img");
+
+    /* 이미지 폴더 분리 */
+    if (i <= 90) {
+        img.src = `images1/${i}.jpg`;
+    } else {
+        img.src = `images2/${i}.jpg`;
+    }
+
+    page.appendChild(img);
+    book.appendChild(page);
+
+    /* 펼쳐보기 썸네일 */
+    const thumb = document.createElement("img");
+
+    if (i <= 90) {
+        thumb.src = `images1/${i}.jpg`;
+    } else {
+        thumb.src = `images2/${i}.jpg`;
+    }
+
+    thumb.onclick = () => {
+        pageFlip.flip(i - 1);
+        closeGallery();
+    };
+
+    galleryGrid.appendChild(thumb);
+}
+
+/* 플립북 설정 */
+const pageFlip = new St.PageFlip(
+    document.getElementById("book"),
+    {
+        width: 1000,
+        height: 1400,
+
+        size: "stretch",
+
+        minWidth: 315,
+        maxWidth: 2000,
+
+        minHeight: 400,
+        maxHeight: 2500,
+
+        showCover: true,
+
+        mobileScrollSupport: false,
+
+        flippingTime: 800,
+
+        usePortrait: true,
+
+        startPage: 0,
+
+        autoSize: true
+    }
+);
+
+/* 페이지 불러오기 */
+pageFlip.loadFromHTML(
+    document.querySelectorAll(".page")
+);
+
+/* 펼쳐보기 열기 */
+function openGallery(){
+    document.getElementById("gallery").style.display = "block";
+}
+
+/* 펼쳐보기 닫기 */
+function closeGallery(){
+    document.getElementById("gallery").style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
