@@ -161,9 +161,9 @@ for (let i = 1; i <= 172; i++) {
 
     /* 이미지 폴더 */
     if (i <= 90) {
-        img.src = `ebook(1)/${i}.jpg`;
+        img.src = `ebook(1)/슬라이드${i}.JPG`;
     } else {
-        img.src = `ebook(2)/${i}.jpg`;
+        img.src = `ebook(2)/슬라이드${i}.JPG`;
     }
 
     page.appendChild(img);
@@ -173,9 +173,9 @@ for (let i = 1; i <= 172; i++) {
     const thumb = document.createElement("img");
 
     if (i <= 90) {
-        thumb.src = `ebook(1)/${i}.jpg`;
+        thumb.src = `ebook(1)/슬라이드${i}.JPG`;
     } else {
-        thumb.src = `ebook(2)/${i}.jpg`;
+        thumb.src = `ebook(2)/슬라이드${i}.JPG`;
     }
 
     thumb.onclick = () => {
