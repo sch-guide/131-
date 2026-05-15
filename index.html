@@ -63,7 +63,7 @@ body{
     width:42px;
     height:42px;
     padding:0;
-    font-size:24px;
+    font-size:22px;
     line-height:42px;
 }
 
@@ -124,7 +124,7 @@ body{
     <button class="btn icon-btn"
             onclick="openGallery()"
             title="전체보기">
-         ⧉
+        ⧉
     </button>
 
 </div>
@@ -161,21 +161,21 @@ for (let i = 1; i <= 172; i++) {
 
     /* 이미지 폴더 */
     if (i <= 90) {
-        img.src = `ebook(1)/슬라이드${i}.JPG`;
+        img.src = `ebook1/슬라이드${i}.JPG`;
     } else {
-        img.src = `ebook(2)/슬라이드${i}.JPG`;
+        img.src = `ebook2/슬라이드${i}.JPG`;
     }
 
     page.appendChild(img);
     book.appendChild(page);
 
-    /* 펼쳐보기 썸네일 */
+    /* 썸네일 */
     const thumb = document.createElement("img");
 
     if (i <= 90) {
-        thumb.src = `ebook(1)/슬라이드${i}.JPG`;
+        thumb.src = `ebook1/슬라이드${i}.JPG`;
     } else {
-        thumb.src = `ebook(2)/슬라이드${i}.JPG`;
+        thumb.src = `ebook2/슬라이드${i}.JPG`;
     }
 
     thumb.onclick = () => {
@@ -190,28 +190,28 @@ for (let i = 1; i <= 172; i++) {
 const pageFlip = new St.PageFlip(
     document.getElementById("book"),
     {
-        width: 1000,
-        height: 1400,
+        width:1000,
+        height:1400,
 
-        size: "stretch",
+        size:"stretch",
 
-        minWidth: 315,
-        maxWidth: 2000,
+        minWidth:315,
+        maxWidth:2000,
 
-        minHeight: 400,
-        maxHeight: 2500,
+        minHeight:400,
+        maxHeight:2500,
 
-        showCover: true,
+        showCover:true,
 
-        mobileScrollSupport: false,
+        mobileScrollSupport:false,
 
-        flippingTime: 800,
+        flippingTime:800,
 
-        usePortrait: true,
+        usePortrait:true,
 
-        startPage: 0,
+        startPage:0,
 
-        autoSize: true
+        autoSize:true
     }
 );
 
