@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+
 <meta name="viewport"
       content="width=device-width,
                initial-scale=1.0,
@@ -15,18 +16,16 @@
 body{
     margin:0;
     background:#222;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
     overflow:hidden;
     font-family:sans-serif;
 }
 
 #book{
-    width:96vw;
-    height:96vh;
+    width:100vw;
+    height:100vh;
 }
+
+/* 페이지 */
 
 .page{
     width:100%;
@@ -39,6 +38,8 @@ body{
     height:100%;
     object-fit:contain;
 }
+
+/* 상단 버튼 */
 
 .controls{
     position:fixed;
@@ -65,6 +66,8 @@ body{
     font-size:22px;
     line-height:42px;
 }
+
+/* 전체보기 */
 
 #gallery{
     position:fixed;
@@ -93,6 +96,8 @@ body{
     z-index:10002;
 }
 
+/* 카테고리 */
+
 .category-bar{
     position:fixed;
     top:18px;
@@ -119,6 +124,8 @@ body{
     background:#ffd966;
 }
 
+/* 썸네일 */
+
 .gallery-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
@@ -143,6 +150,8 @@ body{
     margin-top:5px;
     word-break:break-all;
 }
+
+/* 이미지 확대 */
 
 #viewer{
     position:fixed;
@@ -256,6 +265,8 @@ body{
 
 <body>
 
+<!-- 상단 버튼 -->
+
 <div class="controls">
 
     <button class="btn icon-btn"
@@ -271,6 +282,8 @@ body{
     </button>
 
 </div>
+
+<!-- 플립북 -->
 
 <div id="book"></div>
 
@@ -293,7 +306,7 @@ body{
 
 </div>
 
-<!-- 이미지 확대 -->
+<!-- 확대 이미지 -->
 
 <div id="viewer">
 
@@ -541,10 +554,14 @@ const fileNames2 = [
 "172.JPG"
 ];
 
+/* 합치기 */
+
 const pages = [
     ...fileNames1.map(name => ({ folder:"ebook1", name })),
     ...fileNames2.map(name => ({ folder:"ebook2", name }))
 ];
+
+/* 카테고리 */
 
 const categories = [
     { name:"전체", start:1, end:172 },
@@ -576,184 +593,43 @@ pages.forEach((item) => {
 
 });
 
-/* 플립북 */
+/* 세로모드 플립북 */
 
 const pageFlip = new St.PageFlip(
     document.getElementById("book"),
     {
-        width:1600,
-        height:2200,
+        width:1200,
+        height:2000,
 
         size:"stretch",
 
-        minWidth:315,
-        maxWidth:4000,
+        minWidth:300,
+        maxWidth:2000,
 
         minHeight:400,
-        maxHeight:5000,
+        maxHeight:4000,
 
-        showCover:true,
-
-        mobileScrollSupport:true,
-
-        flippingTime:600,
+        showCover:false,
 
         usePortrait:true,
 
         startPage:0,
 
-        autoSize:true
+        autoSize:true,
+
+        mobileScrollSupport:true,
+
+        flippingTime:500,
+
+        maxShadowOpacity:0.15,
+
+        swipeDistance:20
     }
 );
 
 pageFlip.loadFromHTML(
     document.querySelectorAll(".page")
 );
-
-/* 카테고리 */
-
-categories.forEach((cat, idx) => {
-
-    const btn = document.createElement("button");
-
-    btn.className = "category-btn";
-    btn.innerText = cat.name;
-
-    if(idx === 0){
-        btn.classList.add("active");
-    }
-
-    btn.onclick = () => {
-
-        document.querySelectorAll(".category-btn")
-            .forEach(b => b.classList.remove("active"));
-
-        btn.classList.add("active");
-
-        renderGallery(cat.start, cat.end);
-    };
-
-    categoryBar.appendChild(btn);
-});
-
-/* 전체보기 */
-
-function renderGallery(start, end){
-
-    galleryGrid.innerHTML = "";
-
-    pages.forEach((item, index) => {
-
-        const pageNum = index + 1;
-
-        if(pageNum < start || pageNum > end){
-            return;
-        }
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "gallery-item";
-
-        const thumb = document.createElement("img");
-        thumb.src = `${item.folder}/${item.name}`;
-
-        const title = document.createElement("div");
-        title.className = "gallery-title";
-
-        title.innerText =
-            item.name.replace(".JPG", "");
-
-        wrapper.onclick = () => {
-            openViewer(index);
-        };
-
-        wrapper.appendChild(thumb);
-        wrapper.appendChild(title);
-
-        galleryGrid.appendChild(wrapper);
-    });
-}
-
-renderGallery(1,172);
-
-/* 갤러리 */
-
-function openGallery(){
-    document.getElementById("gallery").style.display = "block";
-}
-
-function closeGallery(){
-    document.getElementById("gallery").style.display = "none";
-}
-
-/* 확대 이미지 */
-
-function openViewer(index){
-
-    currentViewerIndex = index;
-
-    const item = pages[index];
-
-    document.getElementById("viewerImg").src =
-        `${item.folder}/${item.name}`;
-
-    document.getElementById("viewerTitle").innerText =
-        item.name.replace(".JPG", "");
-
-    document.getElementById("viewer").style.display = "block";
-}
-
-function closeViewer(){
-    document.getElementById("viewer").style.display = "none";
-}
-
-function goToCurrentPage(){
-
-    pageFlip.flip(currentViewerIndex);
-
-    closeViewer();
-    closeGallery();
-}
-
-/* 메모 */
-
-function getCurrentPageIndex(){
-    return pageFlip.getCurrentPageIndex();
-}
-
-function openMemo(){
-
-    const index = getCurrentPageIndex();
-
-    const item = pages[index];
-
-    const key = `memo_${index}`;
-
-    document.getElementById("memoTitle").innerText =
-        `${index + 1}페이지 메모 - ${item.name.replace(".JPG", "")}`;
-
-    document.getElementById("memoText").value =
-        localStorage.getItem(key) || "";
-
-    document.getElementById("memoBox").style.display = "block";
-}
-
-function saveMemo(){
-
-    const index = getCurrentPageIndex();
-
-    const key = `memo_${index}`;
-
-    localStorage.setItem(
-        key,
-        document.getElementById("memoText").value
-    );
-
-    alert("메모가 저장되었습니다.");
-}
-
-function closeMemo(){
-    document.getElementById("memoBox").style.display = "none";
-}
 
 </script>
 
