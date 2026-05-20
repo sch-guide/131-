@@ -8,7 +8,6 @@
 <title>E-Book</title>
 
 <style>
-
 body{
     margin:0;
     background:#222;
@@ -21,15 +20,15 @@ body{
 }
 
 #book{
-    width:90vw;
-    height:90vh;
+    width:96vw;
+    height:96vh;
 }
 
-/* 페이지 */
 .page{
     width:100%;
     height:100%;
     background:white;
+    position:relative;
 }
 
 .page img{
@@ -38,7 +37,18 @@ body{
     object-fit:contain;
 }
 
-/* 버튼 영역 */
+.page-title{
+    position:absolute;
+    bottom:10px;
+    left:10px;
+    background:rgba(0,0,0,0.65);
+    color:white;
+    padding:5px 10px;
+    border-radius:8px;
+    font-size:14px;
+    z-index:10;
+}
+
 .controls{
     position:fixed;
     top:15px;
@@ -46,7 +56,6 @@ body{
     z-index:9999;
 }
 
-/* 버튼 스타일 */
 .btn{
     background:rgba(255,255,255,0.9);
     border:none;
@@ -56,7 +65,6 @@ body{
     box-shadow:0 2px 10px rgba(0,0,0,0.2);
 }
 
-/* 아이콘 버튼 */
 .icon-btn{
     width:42px;
     height:42px;
@@ -65,7 +73,6 @@ body{
     line-height:42px;
 }
 
-/* 전체보기 모달 */
 #gallery{
     position:fixed;
     top:0;
@@ -80,7 +87,6 @@ body{
     box-sizing:border-box;
 }
 
-/* 썸네일 */
 .gallery-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
@@ -94,7 +100,6 @@ body{
     background:white;
 }
 
-/* 닫기 버튼 */
 .close-btn{
     position:fixed;
     top:20px;
@@ -106,138 +111,272 @@ body{
     cursor:pointer;
     font-weight:bold;
 }
-
 </style>
 
-<!-- 중요 -->
 <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
 
 </head>
 
 <body>
 
-<!-- 상단 버튼 -->
 <div class="controls">
-
-    <!-- 전체보기 아이콘 -->
-    <button class="btn icon-btn"
-            onclick="openGallery()"
-            title="전체보기">
-        ⧉
-    </button>
-
+    <button class="btn icon-btn" onclick="openGallery()" title="전체보기">⧉</button>
 </div>
 
-<!-- 플립북 -->
 <div id="book"></div>
 
-<!-- 전체보기 -->
 <div id="gallery">
-
-    <button class="close-btn"
-            onclick="closeGallery()">
-        닫기
-    </button>
-
-    <div class="gallery-grid"
-         id="galleryGrid">
-    </div>
-
+    <button class="close-btn" onclick="closeGallery()">닫기</button>
+    <div class="gallery-grid" id="galleryGrid"></div>
 </div>
 
 <script>
-
 const book = document.getElementById("book");
 const galleryGrid = document.getElementById("galleryGrid");
 
-const totalPages = 172;
-const splitPage = 100;
+const fileNames1 = [
+"001.JPG",
+"002_입원수속.JPG",
+"003_전화번호.JPG",
+"004.JPG",
+"005_ENT소개.JPG",
+"006_UR소개.JPG",
+"007_EY소개.JPG",
+"008_DM소개.JPG",
+"009_수술공통.JPG",
+"010_ENT수술.JPG",
+"011_만성부비동.JPG",
+"012_성대후두.JPG",
+"013.JPG",
+"014_난청.JPG",
+"015_종이.JPG",
+"016.JPG",
+"017_외이.JPG",
+"018_참샘.JPG",
+"019.JPG",
+"020_흉터관리.JPG",
+"021_구강인두.JPG",
+"022_갑상선.JPG",
+"023.JPG",
+"024.JPG",
+"025_구강암.JPG",
+"026.JPG",
+"027_기관절개관프로토콜.JPG",
+"028.JPG",
+"029.JPG",
+"030_ENT검사.JPG",
+"031_청각.JPG",
+"032_전정기능.JPG",
+"033_검염_고실내스테로이드주입.JPG",
+"034_UR수술.JPG",
+"035_cystectomy.JPG",
+"036.JPG",
+"037_TUR-B.JPG",
+"038_TUR-P_HoLEP.JPG",
+"039_RRP_LRP_ALP.JPG",
+"040.JPG",
+"041_Nephrectomy.JPG",
+"042_D-URS.JPG",
+"043_DJ.JPG",
+"044_URS.JPG",
+"045_RIRS.JPG",
+"046_PCNL.JPG",
+"047_Cystolitholapaxy.JPG",
+"048_결석의이해.JPG",
+"049.JPG",
+"050.JPG",
+"051_요도.JPG",
+"052_TOT.JPG",
+"053_AUS.JPG",
+"054_잠복고환.JPG",
+"055_음낭수종.JPG",
+"056_Vasovasostomy.JPG",
+"057_UR검사.JPG",
+"058_Prostatebiopsy.JPG",
+"059.JPG",
+"060.JPG",
+"061.JPG",
+"062_RenalBiopsy.JPG",
+"063.JPG",
+"064.JPG",
+"065_Cystostomy.JPG",
+"066_PCN_IVP_AGP.JPG",
+"067_RGP_RGU.JPG",
+"068_VCUG_Renalscan.JPG",
+"069_Cystoscopy_Cystography.JPG",
+"070_UFM_RU_UDS.JPG",
+"071_EY수술.JPG",
+"072_백내장.JPG",
+"073_TPPV.JPG",
+"074_공막돌륭술.JPG",
+"075_사시.JPG",
+"076_안검내반.JPG",
+"077.JPG",
+"078.JPG",
+"079_실무.JPG",
+"080.JPG",
+"081_하이플로우.JPG",
+"082.JPG",
+"083_수술전.JPG",
+"084.JPG",
+"085.JPG",
+"086.JPG",
+"087.JPG",
+"088.JPG",
+"089.JPG",
+"090.JPG",
+"091.JPG",
+"092.JPG",
+"093.JPG",
+"094.JPG",
+"095_수술후.JPG",
+"096.JPG",
+"097.JPG",
+"098.JPG",
+"099.JPG",
+"100.JPG"
+];
 
-/* 페이지 생성 */
-for (let i = 1; i <= totalPages; i++) {
+const fileNames2 = [
+"101.JPG",
+"102_SINAPI.JPG",
+"103.JPG",
+"104.JPG",
+"105.JPG",
+"106.JPG",
+"107.JPG",
+"108_NPWT.JPG",
+"109.JPG",
+"110.JPG",
+"111.JPG",
+"112.JPG",
+"113.JPG",
+"114.JPG",
+"115.JPG",
+"116_식이.JPG",
+"117.JPG",
+"118.JPG",
+"119.JPG",
+"120.JPG",
+"121.JPG",
+"122.JPG",
+"123.JPG",
+"124_수혈.JPG",
+"125.JPG",
+"126_검체.JPG",
+"127.JPG",
+"128.JPG",
+"129.JPG",
+"130.JPG",
+"131.JPG",
+"132.JPG",
+"133.JPG",
+"134_AST.JPG",
+"135.JPG",
+"136.JPG",
+"137.JPG",
+"138_당뇨.JPG",
+"139.JPG",
+"140_인슐린.JPG",
+"141_항암.JPG",
+"142.JPG",
+"143.JPG",
+"144_검사이해.JPG",
+"145.JPG",
+"146.JPG",
+"147.JPG",
+"148.JPG",
+"149_SET준비.JPG",
+"150.JPG",
+"151.JPG",
+"152.JPG",
+"153.JPG",
+"154.JPG",
+"155.JPG",
+"156_드레싱.JPG",
+"157_Tra이해.JPG",
+"158.JPG",
+"159.JPG",
+"160.JPG",
+"161.JPG",
+"162.JPG",
+"163.JPG",
+"164.JPG",
+"165.JPG",
+"166.JPG",
+"167.JPG",
+"168_위치안내.JPG",
+"169.JPG",
+"170.JPG",
+"171.JPG",
+"172.JPG"
+];
 
+const pages = [
+    ...fileNames1.map(name => ({ folder: "ebook1", name })),
+    ...fileNames2.map(name => ({ folder: "ebook2", name }))
+];
+
+pages.forEach((item, index) => {
     const page = document.createElement("div");
     page.className = "page";
 
     const img = document.createElement("img");
+    img.src = `${item.folder}/${item.name}`;
 
-    const fileName = `${String(i).padStart(3,'0')}.JPG`;
-
-    if (i <= splitPage) {
-        img.src = `ebook1/${fileName}`;
-    } else {
-        img.src = `ebook2/${fileName}`;
-    }
+    const title = document.createElement("div");
+    title.className = "page-title";
+    title.innerText = item.name.replace(".JPG", "");
 
     page.appendChild(img);
+    page.appendChild(title);
     book.appendChild(page);
-}
+});
 
-/* 플립북 생성 */
 const pageFlip = new St.PageFlip(
     document.getElementById("book"),
     {
-        width:1000,
-        height:1400,
-
+        width:1400,
+        height:2000,
         size:"stretch",
-
         minWidth:315,
-        maxWidth:2000,
-
+        maxWidth:3000,
         minHeight:400,
-        maxHeight:2500,
-
+        maxHeight:4000,
         showCover:true,
-
-        mobileScrollSupport:false,
-
-        flippingTime:800,
-
+        mobileScrollSupport:true,
+        flippingTime:600,
         usePortrait:true,
-
         startPage:0,
-
-        autoSize:true
+        autoSize:true,
+        maxShadowOpacity:0.2,
+        swipeDistance:30,
+        clickEventForward:true,
+        useMouseEvents:true
     }
 );
 
-/* 페이지 불러오기 */
-pageFlip.loadFromHTML(
-    document.querySelectorAll(".page")
-);
+pageFlip.loadFromHTML(document.querySelectorAll(".page"));
 
-/* 썸네일 생성 */
-for (let i = 1; i <= totalPages; i++) {
-
+pages.forEach((item, index) => {
     const thumb = document.createElement("img");
-
-    const fileName = `${String(i).padStart(3,'0')}.JPG`;
-
-    if (i <= splitPage) {
-        thumb.src = `ebook1/${fileName}`;
-    } else {
-        thumb.src = `ebook2/${fileName}`;
-    }
+    thumb.src = `${item.folder}/${item.name}`;
 
     thumb.onclick = () => {
-        pageFlip.flip(i - 1);
+        pageFlip.flip(index);
         closeGallery();
     };
 
     galleryGrid.appendChild(thumb);
-}
+});
 
-/* 전체보기 열기 */
 function openGallery(){
     document.getElementById("gallery").style.display = "block";
 }
 
-/* 전체보기 닫기 */
 function closeGallery(){
     document.getElementById("gallery").style.display = "none";
 }
-
 </script>
 
 </body>
