@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
 <meta charset="UTF-8">
-
-<!-- 확대 가능 -->
 <meta name="viewport"
       content="width=device-width,
                initial-scale=1.0,
@@ -31,7 +28,6 @@ body{
     height:96vh;
 }
 
-/* 페이지 */
 .page{
     width:100%;
     height:100%;
@@ -44,15 +40,15 @@ body{
     object-fit:contain;
 }
 
-/* 버튼 영역 */
 .controls{
     position:fixed;
     top:15px;
     right:15px;
     z-index:9999;
+    display:flex;
+    gap:8px;
 }
 
-/* 버튼 스타일 */
 .btn{
     background:rgba(255,255,255,0.9);
     border:none;
@@ -62,7 +58,6 @@ body{
     box-shadow:0 2px 10px rgba(0,0,0,0.2);
 }
 
-/* 아이콘 버튼 */
 .icon-btn{
     width:42px;
     height:42px;
@@ -71,29 +66,65 @@ body{
     line-height:42px;
 }
 
-/* 전체보기 모달 */
 #gallery{
     position:fixed;
     top:0;
     left:0;
     width:100%;
     height:100%;
-    background:rgba(0,0,0,0.9);
+    background:rgba(0,0,0,0.92);
     overflow:auto;
     display:none;
     z-index:10000;
-    padding:20px;
+    padding:70px 16px 20px;
     box-sizing:border-box;
 }
 
-/* 썸네일 그리드 */
-.gallery-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-    gap:15px;
+.close-btn{
+    position:fixed;
+    top:18px;
+    right:18px;
+    background:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    z-index:10002;
 }
 
-/* 썸네일 카드 */
+.category-bar{
+    position:fixed;
+    top:18px;
+    left:16px;
+    right:80px;
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    z-index:10001;
+}
+
+.category-btn{
+    background:white;
+    border:none;
+    border-radius:999px;
+    padding:9px 13px;
+    font-size:13px;
+    font-weight:bold;
+    white-space:nowrap;
+    cursor:pointer;
+}
+
+.category-btn.active{
+    background:#ffd966;
+}
+
+.gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+    gap:14px;
+}
+
 .gallery-item{
     background:white;
     border-radius:10px;
@@ -101,13 +132,11 @@ body{
     cursor:pointer;
 }
 
-/* 썸네일 이미지 */
 .gallery-item img{
     width:100%;
     border-radius:8px;
 }
 
-/* 파일명 */
 .gallery-title{
     font-size:12px;
     text-align:center;
@@ -115,17 +144,108 @@ body{
     word-break:break-all;
 }
 
-/* 닫기 버튼 */
-.close-btn{
+#viewer{
     position:fixed;
-    top:20px;
-    right:20px;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#111;
+    display:none;
+    z-index:20000;
+    overflow:auto;
+    touch-action:pinch-zoom pan-x pan-y;
+}
+
+.viewer-top{
+    position:fixed;
+    top:15px;
+    left:15px;
+    right:15px;
+    display:flex;
+    gap:8px;
+    justify-content:space-between;
+    align-items:center;
+    z-index:20001;
+}
+
+.viewer-title{
+    color:white;
+    background:rgba(0,0,0,0.6);
+    padding:8px 10px;
+    border-radius:8px;
+    font-size:13px;
+    word-break:break-all;
+}
+
+.viewer-btn{
     background:white;
     border:none;
-    padding:10px 15px;
     border-radius:10px;
-    cursor:pointer;
+    padding:9px 12px;
     font-weight:bold;
+    cursor:pointer;
+}
+
+.viewer-img{
+    display:block;
+    width:100%;
+    max-width:none;
+    margin:70px auto 30px;
+    touch-action:pinch-zoom pan-x pan-y;
+}
+
+/* 메모 */
+
+.memo-box{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.75);
+    display:none;
+    z-index:30000;
+    padding:70px 20px 20px;
+    box-sizing:border-box;
+}
+
+.memo-panel{
+    background:white;
+    border-radius:14px;
+    padding:15px;
+    height:80%;
+    display:flex;
+    flex-direction:column;
+}
+
+.memo-title{
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+#memoText{
+    flex:1;
+    width:100%;
+    resize:none;
+    font-size:15px;
+    padding:10px;
+    box-sizing:border-box;
+}
+
+.memo-actions{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.memo-actions button{
+    flex:1;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
 </style>
@@ -136,23 +256,31 @@ body{
 
 <body>
 
-<!-- 상단 버튼 -->
 <div class="controls">
 
-    <!-- 전체보기 -->
     <button class="btn icon-btn"
             onclick="openGallery()"
             title="전체보기">
         ⧉
     </button>
 
+    <button class="btn icon-btn"
+            onclick="openMemo()"
+            title="메모">
+        📝
+    </button>
+
 </div>
 
-<!-- 플립북 -->
 <div id="book"></div>
 
 <!-- 전체보기 -->
+
 <div id="gallery">
+
+    <div class="category-bar"
+         id="categoryBar">
+    </div>
 
     <button class="close-btn"
             onclick="closeGallery()">
@@ -165,12 +293,76 @@ body{
 
 </div>
 
+<!-- 이미지 확대 -->
+
+<div id="viewer">
+
+    <div class="viewer-top">
+
+        <div class="viewer-title"
+             id="viewerTitle">
+        </div>
+
+        <div>
+
+            <button class="viewer-btn"
+                    onclick="goToCurrentPage()">
+                이 페이지로 이동
+            </button>
+
+            <button class="viewer-btn"
+                    onclick="closeViewer()">
+                닫기
+            </button>
+
+        </div>
+
+    </div>
+
+    <img class="viewer-img"
+         id="viewerImg">
+
+</div>
+
+<!-- 메모 -->
+
+<div id="memoBox"
+     class="memo-box">
+
+    <div class="memo-panel">
+
+        <div class="memo-title"
+             id="memoTitle">
+            메모
+        </div>
+
+        <textarea id="memoText"
+                  placeholder="이 페이지에 대한 메모를 입력하세요."></textarea>
+
+        <div class="memo-actions">
+
+            <button onclick="saveMemo()">
+                저장
+            </button>
+
+            <button onclick="closeMemo()">
+                닫기
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 <script>
 
 const book = document.getElementById("book");
 const galleryGrid = document.getElementById("galleryGrid");
+const categoryBar = document.getElementById("categoryBar");
 
 /* 파일 목록 */
+
 const fileNames1 = [
 "001.JPG",
 "002_입원수속.JPG",
@@ -186,10 +378,10 @@ const fileNames1 = [
 "012_성대후두.JPG",
 "013.JPG",
 "014_난청.JPG",
-"015_중이.JPG",
+"015_종이.JPG",
 "016.JPG",
 "017_외이.JPG",
-"018_침샘.JPG",
+"018_참샘.JPG",
 "019.JPG",
 "020_흉터관리.JPG",
 "021_구강인두.JPG",
@@ -204,7 +396,7 @@ const fileNames1 = [
 "030_ENT검사.JPG",
 "031_청각.JPG",
 "032_전정기능.JPG",
-"033_감염_고실내스테로이드주입.JPG",
+"033_검염_고실내스테로이드주입.JPG",
 "034_UR수술.JPG",
 "035_cystectomy.JPG",
 "036.JPG",
@@ -229,11 +421,11 @@ const fileNames1 = [
 "055_음낭수종.JPG",
 "056_Vasovasostomy.JPG",
 "057_UR검사.JPG",
-"058_전립선생검.JPG",
+"058_Prostatebiopsy.JPG",
 "059.JPG",
 "060.JPG",
 "061.JPG",
-"062_신장생검.JPG",
+"062_RenalBiopsy.JPG",
 "063.JPG",
 "064.JPG",
 "065_Cystostomy.JPG",
@@ -245,7 +437,7 @@ const fileNames1 = [
 "071_EY수술.JPG",
 "072_백내장.JPG",
 "073_TPPV.JPG",
-"074_망막박리.JPG",
+"074_공막돌륭술.JPG",
 "075_사시.JPG",
 "076_안검내반.JPG",
 "077.JPG",
@@ -349,13 +541,27 @@ const fileNames2 = [
 "172.JPG"
 ];
 
-/* 합치기 */
 const pages = [
     ...fileNames1.map(name => ({ folder:"ebook1", name })),
     ...fileNames2.map(name => ({ folder:"ebook2", name }))
 ];
 
+const categories = [
+    { name:"전체", start:1, end:172 },
+    { name:"ENT", start:5, end:33 },
+    { name:"UR", start:34, end:70 },
+    { name:"EY", start:71, end:81 },
+    { name:"수술전후", start:83, end:115 },
+    { name:"식이/수혈", start:116, end:133 },
+    { name:"당뇨/항암", start:134, end:143 },
+    { name:"검사/SET", start:144, end:155 },
+    { name:"드레싱", start:156, end:172 }
+];
+
+let currentViewerIndex = 0;
+
 /* 페이지 생성 */
+
 pages.forEach((item) => {
 
     const page = document.createElement("div");
@@ -367,9 +573,11 @@ pages.forEach((item) => {
     page.appendChild(img);
 
     book.appendChild(page);
+
 });
 
 /* 플립북 */
+
 const pageFlip = new St.PageFlip(
     document.getElementById("book"),
     {
@@ -394,56 +602,157 @@ const pageFlip = new St.PageFlip(
 
         startPage:0,
 
-        autoSize:true,
-
-        maxShadowOpacity:0.2,
-
-        swipeDistance:30,
-
-        clickEventForward:true,
-
-        useMouseEvents:true
+        autoSize:true
     }
 );
 
-/* 페이지 불러오기 */
 pageFlip.loadFromHTML(
     document.querySelectorAll(".page")
 );
 
-/* 전체보기 썸네일 */
-pages.forEach((item, index) => {
+/* 카테고리 */
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "gallery-item";
+categories.forEach((cat, idx) => {
 
-    const thumb = document.createElement("img");
-    thumb.src = `${item.folder}/${item.name}`;
+    const btn = document.createElement("button");
 
-    const title = document.createElement("div");
-    title.className = "gallery-title";
+    btn.className = "category-btn";
+    btn.innerText = cat.name;
 
-    title.innerText = item.name.replace(".JPG", "");
+    if(idx === 0){
+        btn.classList.add("active");
+    }
 
-    wrapper.onclick = () => {
-        pageFlip.flip(index);
-        closeGallery();
+    btn.onclick = () => {
+
+        document.querySelectorAll(".category-btn")
+            .forEach(b => b.classList.remove("active"));
+
+        btn.classList.add("active");
+
+        renderGallery(cat.start, cat.end);
     };
 
-    wrapper.appendChild(thumb);
-    wrapper.appendChild(title);
-
-    galleryGrid.appendChild(wrapper);
+    categoryBar.appendChild(btn);
 });
 
-/* 전체보기 열기 */
+/* 전체보기 */
+
+function renderGallery(start, end){
+
+    galleryGrid.innerHTML = "";
+
+    pages.forEach((item, index) => {
+
+        const pageNum = index + 1;
+
+        if(pageNum < start || pageNum > end){
+            return;
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "gallery-item";
+
+        const thumb = document.createElement("img");
+        thumb.src = `${item.folder}/${item.name}`;
+
+        const title = document.createElement("div");
+        title.className = "gallery-title";
+
+        title.innerText =
+            item.name.replace(".JPG", "");
+
+        wrapper.onclick = () => {
+            openViewer(index);
+        };
+
+        wrapper.appendChild(thumb);
+        wrapper.appendChild(title);
+
+        galleryGrid.appendChild(wrapper);
+    });
+}
+
+renderGallery(1,172);
+
+/* 갤러리 */
+
 function openGallery(){
     document.getElementById("gallery").style.display = "block";
 }
 
-/* 전체보기 닫기 */
 function closeGallery(){
     document.getElementById("gallery").style.display = "none";
+}
+
+/* 확대 이미지 */
+
+function openViewer(index){
+
+    currentViewerIndex = index;
+
+    const item = pages[index];
+
+    document.getElementById("viewerImg").src =
+        `${item.folder}/${item.name}`;
+
+    document.getElementById("viewerTitle").innerText =
+        item.name.replace(".JPG", "");
+
+    document.getElementById("viewer").style.display = "block";
+}
+
+function closeViewer(){
+    document.getElementById("viewer").style.display = "none";
+}
+
+function goToCurrentPage(){
+
+    pageFlip.flip(currentViewerIndex);
+
+    closeViewer();
+    closeGallery();
+}
+
+/* 메모 */
+
+function getCurrentPageIndex(){
+    return pageFlip.getCurrentPageIndex();
+}
+
+function openMemo(){
+
+    const index = getCurrentPageIndex();
+
+    const item = pages[index];
+
+    const key = `memo_${index}`;
+
+    document.getElementById("memoTitle").innerText =
+        `${index + 1}페이지 메모 - ${item.name.replace(".JPG", "")}`;
+
+    document.getElementById("memoText").value =
+        localStorage.getItem(key) || "";
+
+    document.getElementById("memoBox").style.display = "block";
+}
+
+function saveMemo(){
+
+    const index = getCurrentPageIndex();
+
+    const key = `memo_${index}`;
+
+    localStorage.setItem(
+        key,
+        document.getElementById("memoText").value
+    );
+
+    alert("메모가 저장되었습니다.");
+}
+
+function closeMemo(){
+    document.getElementById("memoBox").style.display = "none";
 }
 
 </script>
