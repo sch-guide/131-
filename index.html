@@ -1,151 +1,3 @@
-<!DOCTYPE html>
-<html lang="ko">
-
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>E-Book</title>
-
-<style>
-
-body{
-    margin:0;
-    background:#222;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    overflow:hidden;
-    font-family:sans-serif;
-}
-
-#book{
-    width:90vw;
-    height:90vh;
-}
-
-/* 페이지 */
-.page{
-    width:100%;
-    height:100%;
-    background:white;
-}
-
-.page img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-}
-
-/* 버튼 영역 */
-.controls{
-    position:fixed;
-    top:15px;
-    right:15px;
-    z-index:9999;
-    display:flex;
-    gap:10px;
-}
-
-/* 버튼 스타일 */
-.btn{
-    background:rgba(255,255,255,0.9);
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:bold;
-    box-shadow:0 2px 10px rgba(0,0,0,0.2);
-}
-
-/* 아이콘 버튼 */
-.icon-btn{
-    width:42px;
-    height:42px;
-    padding:0;
-    font-size:22px;
-    line-height:42px;
-}
-
-/* 전체보기 모달 */
-#gallery{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.9);
-    overflow:auto;
-    display:none;
-    z-index:10000;
-    padding:20px;
-    box-sizing:border-box;
-}
-
-/* 썸네일 */
-.gallery-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-    gap:15px;
-}
-
-.gallery-grid img{
-    width:100%;
-    border-radius:10px;
-    cursor:pointer;
-    background:white;
-}
-
-/* 닫기 버튼 */
-.close-btn{
-    position:fixed;
-    top:20px;
-    right:20px;
-    background:white;
-    border:none;
-    padding:10px 15px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-</style>
-
-<script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
-
-</head>
-
-<body>
-
-<!-- 상단 버튼 -->
-<div class="controls">
-
-    <!-- 전체보기 아이콘 -->
-    <button class="btn icon-btn"
-            onclick="openGallery()"
-            title="전체보기">
-        ⧉
-    </button>
-
-</div>
-
-<!-- 플립북 -->
-<div id="book"></div>
-
-<!-- 전체보기 -->
-<div id="gallery">
-
-    <button class="close-btn"
-            onclick="closeGallery()">
-        닫기
-    </button>
-
-    <div class="gallery-grid"
-         id="galleryGrid">
-    </div>
-
-</div>
-
 <script>
 
 const book = document.getElementById("book");
@@ -159,11 +11,14 @@ for (let i = 1; i <= 172; i++) {
 
     const img = document.createElement("img");
 
-    /* 이미지 폴더 */
-    if (i <= 90) {
-        img.src = `ebook(1)/${i}.JPG`;
+    /* 파일명 001 형식 */
+    const fileName = `${String(i).padStart(3,'0')}.JPG`;
+
+    /* ebook1 / ebook2 분기 */
+    if (i <= 100) {
+        img.src = `ebook1/${fileName}`;
     } else {
-        img.src = `ebook(2)/${i}.JPG`;
+        img.src = `ebook2/${fileName}`;
     }
 
     page.appendChild(img);
@@ -172,10 +27,10 @@ for (let i = 1; i <= 172; i++) {
     /* 썸네일 */
     const thumb = document.createElement("img");
 
-    if (i <= 90) {
-        thumb.src = `ebook(1)/${i}.JPG`;
+    if (i <= 100) {
+        thumb.src = `ebook1/${fileName}`;
     } else {
-        thumb.src = `ebook(2)/${i}.JPG`;
+        thumb.src = `ebook2/${fileName}`;
     }
 
     thumb.onclick = () => {
@@ -231,6 +86,3 @@ function closeGallery(){
 }
 
 </script>
-
-</body>
-</html>
