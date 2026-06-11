@@ -701,9 +701,9 @@ function searchPages(){
         const fileKey = `${item.folder}/${item.name}`;
         const fileNameText = normalizeText(item.name);
         const ocrText = normalizeText(
-            window.ocrTexts && window.ocrTexts[fileKey]
-                ? window.ocrTexts[fileKey]
-                : ""
+           typeof ocrTexts !== "undefined" && ocrTexts[fileKey]
+    ? ocrTexts[fileKey]
+    : ""
         );
 
         if(fileNameText.includes(keyword) || ocrText.includes(keyword)){
