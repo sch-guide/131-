@@ -33,7 +33,7 @@ body{
 .page img{
     width:100%;
     height:100%;
-    object-fit:contain;
+    object-fit:cover;
 }
 
 .controls{
@@ -515,7 +515,15 @@ const categories = [
     { name:"SET/Tra/CSR", start:140, end:152 },
     { name:"위치안내", start:153, end:156 }
 ];
-
+const manualKeywords = {
+    "저혈당": [132],
+    "혈당": [132],
+    "고혈당": [132],
+    "인슐린": [132],
+    "당뇨": [132],
+    "BST": [132],
+    "DM": [132]
+};
 let currentViewerIndex = 0;
 
 pages.forEach((item) => {
@@ -533,7 +541,7 @@ const pageFlip = new St.PageFlip(
     document.getElementById("book"),
     {
         width:1200,
-        height:2000,
+        height:2400,
         size:"stretch",
         minWidth:300,
         maxWidth:2000,
@@ -706,7 +714,22 @@ function searchPages(){
     : ""
         );
 
-        if(fileNameText.includes(keyword) || ocrText.includes(keyword)){
+      const manualPages = [];
+
+Object.keys(manualKeywords).forEach(key => {
+    if(
+        normalizeText(key).includes(keyword) ||
+        keyword.includes(normalizeText(key))
+    ){
+        manualPages.push(...manualKeywords[key]);
+    }
+});
+
+if(
+    fileNameText.includes(keyword) ||
+    ocrText.includes(keyword) ||
+    manualPages.includes(index + 1)
+){
             const div = document.createElement("div");
             div.className = "search-item";
             div.innerText = `${index+1}페이지 - ${item.name}`;
