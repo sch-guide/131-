@@ -21,7 +21,7 @@ body{
 
 #book{
     width:100vw;
-    height:100vh;
+    height:calc(100vh - 20px);
 }
 
 .page{
@@ -565,7 +565,7 @@ const pageFlip = new St.PageFlip(
         showCover:false,
         usePortrait:true,
         startPage:0,
-        autoSize:true,
+        autoSize:false,
         mobileScrollSupport:true,
         flippingTime:500,
         maxShadowOpacity:0.15,
