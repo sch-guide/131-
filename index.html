@@ -283,6 +283,7 @@ body{
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+<script src="ocr-data.js"></script>
 
 </head>
 
@@ -667,18 +668,16 @@ function saveMemo(){
 function closeMemo(){
     document.getElementById("memoBox").style.display = "none";
 }
-      function openSearch(){
+   function openSearch(){
     document.getElementById("searchBox").style.display = "block";
+    document.getElementById("searchInput").focus();
 }
 
 function closeSearch(){
     document.getElementById("searchBox").style.display = "none";
 }
 
-function searchPages(){
-
-   function normalizeText(text){
-
+function normalizeText(text){
     return String(text || "")
         .toLowerCase()
         .replace(/\s/g,"")
@@ -687,15 +686,11 @@ function searchPages(){
 }
 
 function searchPages(){
+    const keyword = normalizeText(
+        document.getElementById("searchInput").value
+    );
 
-    const keyword =
-        normalizeText(
-            document.getElementById("searchInput").value
-        );
-
-    const resultBox =
-        document.getElementById("searchResult");
-
+    const resultBox = document.getElementById("searchResult");
     resultBox.innerHTML = "";
 
     if(keyword === ""){
@@ -703,39 +698,21 @@ function searchPages(){
     }
 
     pages.forEach((item,index)=>{
+        const fileKey = `${item.folder}/${item.name}`;
+        const fileNameText = normalizeText(item.name);
+        const ocrText = normalizeText(
+            window.ocrTexts && window.ocrTexts[fileKey]
+                ? window.ocrTexts[fileKey]
+                : ""
+        );
 
-        const fileKey =
-            `${item.folder}/${item.name}`;
-
-        const fileNameText =
-            normalizeText(item.name);
-
-        const ocrText =
-            normalizeText(
-                window.ocrTexts &&
-                window.ocrTexts[fileKey]
-                    ? window.ocrTexts[fileKey]
-                    : ""
-            );
-
-        if(
-            fileNameText.includes(keyword) ||
-            ocrText.includes(keyword)
-        ){
-
-            const div =
-                document.createElement("div");
-
-            div.className =
-                "search-item";
-
-            div.innerText =
-                `${index+1}페이지 - ${item.name}`;
+        if(fileNameText.includes(keyword) || ocrText.includes(keyword)){
+            const div = document.createElement("div");
+            div.className = "search-item";
+            div.innerText = `${index+1}페이지 - ${item.name}`;
 
             div.onclick = ()=>{
-
                 pageFlip.flip(index);
-
                 closeSearch();
             };
 
@@ -744,7 +721,6 @@ function searchPages(){
     });
 
     if(resultBox.innerHTML === ""){
-
         resultBox.innerHTML =
             "<div class='search-item'>검색 결과가 없습니다.</div>";
     }
