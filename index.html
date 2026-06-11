@@ -677,31 +677,62 @@ function closeSearch(){
 
 function searchPages(){
 
+   function normalizeText(text){
+
+    return String(text || "")
+        .toLowerCase()
+        .replace(/\s/g,"")
+        .replace(/_/g,"")
+        .replace(/-/g,"");
+}
+
+function searchPages(){
+
     const keyword =
-        document.getElementById("searchInput")
-        .value
-        .toLowerCase();
+        normalizeText(
+            document.getElementById("searchInput").value
+        );
 
     const resultBox =
         document.getElementById("searchResult");
 
     resultBox.innerHTML = "";
 
-    if(keyword === "") return;
+    if(keyword === ""){
+        return;
+    }
 
-    pages.forEach((item, index) => {
+    pages.forEach((item,index)=>{
 
-        if(item.name.toLowerCase().includes(keyword)){
+        const fileKey =
+            `${item.folder}/${item.name}`;
+
+        const fileNameText =
+            normalizeText(item.name);
+
+        const ocrText =
+            normalizeText(
+                window.ocrTexts &&
+                window.ocrTexts[fileKey]
+                    ? window.ocrTexts[fileKey]
+                    : ""
+            );
+
+        if(
+            fileNameText.includes(keyword) ||
+            ocrText.includes(keyword)
+        ){
 
             const div =
                 document.createElement("div");
 
-            div.className = "search-item";
+            div.className =
+                "search-item";
 
             div.innerText =
                 `${index+1}페이지 - ${item.name}`;
 
-            div.onclick = () => {
+            div.onclick = ()=>{
 
                 pageFlip.flip(index);
 
@@ -711,6 +742,12 @@ function searchPages(){
             resultBox.appendChild(div);
         }
     });
+
+    if(resultBox.innerHTML === ""){
+
+        resultBox.innerHTML =
+            "<div class='search-item'>검색 결과가 없습니다.</div>";
+    }
 }
 </script>
 <div id="searchBox" class="search-box">
