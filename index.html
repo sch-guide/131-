@@ -241,6 +241,45 @@ body{
     font-weight:bold;
     cursor:pointer;
 }
+      .search-box{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.85);
+    display:none;
+    z-index:35000;
+    padding:70px 20px 20px;
+    box-sizing:border-box;
+}
+
+.search-panel{
+    background:white;
+    border-radius:14px;
+    padding:15px;
+}
+
+#searchInput{
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    box-sizing:border-box;
+}
+
+.search-result{
+    margin-top:12px;
+    max-height:65vh;
+    overflow:auto;
+}
+
+.search-item{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+    cursor:pointer;
+}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
@@ -252,6 +291,10 @@ body{
 <div class="controls">
     <button class="btn icon-btn" onclick="openGallery()" title="전체보기">⧉</button>
     <button class="btn icon-btn" onclick="openMemo()" title="메모">📝</button>
+   <button class="btn icon-btn"
+        onclick="openSearch()">
+    🔍
+</button>
 </div>
 
 <div id="book"></div>
@@ -458,7 +501,7 @@ const pages = [
 ];
 
 const categories = [
-    { name:"전체", start:001, end:156 },
+    { name:"전체", start:1, end:156 },
     { name:"ENT", start:10, end:34 },
     { name:"UR", start:35, end:73 },
     { name:"EY", start:74, end:79 },
@@ -624,7 +667,71 @@ function saveMemo(){
 function closeMemo(){
     document.getElementById("memoBox").style.display = "none";
 }
-</script>
+      function openSearch(){
+    document.getElementById("searchBox").style.display = "block";
+}
 
+function closeSearch(){
+    document.getElementById("searchBox").style.display = "none";
+}
+
+function searchPages(){
+
+    const keyword =
+        document.getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const resultBox =
+        document.getElementById("searchResult");
+
+    resultBox.innerHTML = "";
+
+    if(keyword === "") return;
+
+    pages.forEach((item, index) => {
+
+        if(item.name.toLowerCase().includes(keyword)){
+
+            const div =
+                document.createElement("div");
+
+            div.className = "search-item";
+
+            div.innerText =
+                `${index+1}페이지 - ${item.name}`;
+
+            div.onclick = () => {
+
+                pageFlip.flip(index);
+
+                closeSearch();
+            };
+
+            resultBox.appendChild(div);
+        }
+    });
+}
+</script>
+<div id="searchBox" class="search-box">
+
+    <div class="search-panel">
+
+        <input id="searchInput"
+               type="text"
+               placeholder="검색어 입력"
+               oninput="searchPages()">
+
+        <div id="searchResult"
+             class="search-result">
+        </div>
+
+        <div class="memo-actions">
+            <button onclick="closeSearch()">닫기</button>
+        </div>
+
+    </div>
+
+</div>
 </body>
 </html>
