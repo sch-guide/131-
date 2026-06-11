@@ -38,7 +38,17 @@ body{
     height:auto;
     display:block;
 }
+.stf__block{
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+}
 
+.stf__item{
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+}
 .controls{
     position:fixed;
     top:15px;
@@ -545,7 +555,7 @@ const pageFlip = new St.PageFlip(
     document.getElementById("book"),
     {
         width:1200,
-        height:2200,
+        height:2000,
         size:"stretch",
         minWidth:300,
         maxWidth:2000,
