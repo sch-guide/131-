@@ -331,7 +331,7 @@ body{
 }
 
 @media (min-width: 769px){
-    .icon-btn[title="확대보기"]{
+    #zoomToggleBtn{
         display:none;
     }
 }
@@ -356,8 +356,7 @@ body{
         onclick="openSearch()">
     🔍
 </button>
-    <button class="btn icon-btn" onclick="openImageViewer()" title="확대보기">➕</button>
-</div>
+<button class="btn icon-btn" id="zoomToggleBtn" onclick="openImageViewer()" title="확대보기">➕</button></div>
 
 <div id="book"></div>
 
