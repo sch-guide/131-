@@ -300,11 +300,34 @@ body{
 #zoomImg{
     display:block;
     width:100%;
-    max-width:100%;
+    max-width:none;
     height:auto;
     margin:70px auto 30px;
 }
 
+#zoomOut{
+    position:fixed;
+    top:15px;
+    left:170px;
+    z-index:50001;
+}
+
+#zoomIn{
+    position:fixed;
+    top:15px;
+    left:220px;
+    z-index:50001;
+}
+
+#zoomOut,
+#zoomIn{
+    background:white;
+    border:none;
+    border-radius:12px;
+    padding:10px 16px;
+    font-weight:bold;
+}    
+    
 #viewerClose{
     position:fixed;
     top:15px;
@@ -325,9 +348,12 @@ body{
 
 <body>
 <div id="imageViewer">
-<button id="viewerClose" onclick="closeImageViewer()">닫기</button>
-<button id="viewerNext" onclick="showRightPage()">오른쪽 페이지</button>
-<img id="zoomImg" src="">
+    <button id="viewerLeft" onclick="showLeftPage()">왼쪽</button>
+    <button id="viewerRight" onclick="showRightPage()">오른쪽</button>
+    <button id="zoomOut" onclick="zoomOutImage()">-</button>
+    <button id="zoomIn" onclick="zoomInImage()">+</button>
+    <button id="viewerClose" onclick="closeImageViewer()">닫기</button>
+    <img id="zoomImg" src="">
 </div>
 <div class="controls">
     <button class="btn icon-btn" onclick="openGallery()" title="전체보기">⧉</button>
@@ -614,7 +640,22 @@ const pageFlip = new St.PageFlip(
 });
 
 let zoomBaseIndex = 0;
+let zoomPercent = 100;
+    function applyZoom(){
+    document.getElementById("zoomImg").style.width = zoomPercent + "%";
+}
 
+function zoomInImage(){
+    zoomPercent += 50;
+    if(zoomPercent > 400) zoomPercent = 400;
+    applyZoom();
+}
+
+function zoomOutImage(){
+    zoomPercent -= 50;
+    if(zoomPercent < 100) zoomPercent = 100;
+    applyZoom();
+}
 function setZoomPage(index){
     const item = pages[index];
 
@@ -628,6 +669,8 @@ function setZoomPage(index){
 }
 
 function openImageViewer(){
+    zoomPercent = 100;
+applyZoom();
     zoomBaseIndex = currentViewerIndex;
     setZoomPage(zoomBaseIndex);
     document.getElementById("imageViewer").style.display = "block";
