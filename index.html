@@ -677,18 +677,24 @@ function resetPageZoom(){
     const viewport = document.querySelector('meta[name="viewport"]');
     const original = viewport.getAttribute("content");
 
-    viewport.setAttribute("content", original + ", maximum-scale=1.0");
+    viewport.setAttribute("content", original + ", maximum-scale=1.0, user-scalable=no");
+
+    window.scrollTo(0, 0);
 
     setTimeout(() => {
         viewport.setAttribute("content", original);
-    }, 50);
+    }, 300);
 }
 
 function closeImageViewer(){
-    document.getElementById("imageViewer").style.display = "none";
-    document.getElementById("zoomImg").src = "";
     resetPageZoom();
+
+    setTimeout(() => {
+        document.getElementById("imageViewer").style.display = "none";
+        document.getElementById("zoomImg").src = "";
+    }, 100);
 }
+    
 let bookZoom = 100;
 
 document.addEventListener("keydown", function(e){
