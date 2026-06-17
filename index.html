@@ -297,6 +297,7 @@ body{
         onclick="openSearch()">
     🔍
 </button>
+    <button onclick="openCurrentImage()" title="PC 원본 보기">🖥️</button>
 </div>
 
 <div id="book"></div>
@@ -569,6 +570,22 @@ const pageFlip = new St.PageFlip(
     }
 );
 
+    pageFlip.on("flip", (e) => {
+    currentViewerIndex = e.data;
+});
+
+function openCurrentImage(){
+    const item = pages[currentViewerIndex];
+
+    if(!item){
+        alert("현재 페이지 정보를 찾을 수 없습니다.");
+        return;
+    }
+
+    const imageUrl = `${item.folder}/${item.name}`;
+    window.open(imageUrl, "_blank");
+}
+    
 pageFlip.loadFromHTML(document.querySelectorAll(".page"));
 
 categories.forEach((cat, idx) => {
