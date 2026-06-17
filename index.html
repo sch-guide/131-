@@ -673,9 +673,21 @@ function showRightPage(){
     setZoomPage(zoomBaseIndex + 1);
 }
 
+function resetPageZoom(){
+    const viewport = document.querySelector('meta[name="viewport"]');
+    const original = viewport.getAttribute("content");
+
+    viewport.setAttribute("content", original + ", maximum-scale=1.0");
+
+    setTimeout(() => {
+        viewport.setAttribute("content", original);
+    }, 50);
+}
+
 function closeImageViewer(){
     document.getElementById("imageViewer").style.display = "none";
     document.getElementById("zoomImg").src = "";
+    resetPageZoom();
 }
 let bookZoom = 100;
 
