@@ -692,6 +692,11 @@ function closeImageViewer(){
     setTimeout(() => {
         document.getElementById("imageViewer").style.display = "none";
         document.getElementById("zoomImg").src = "";
+
+        window.dispatchEvent(new Event("resize"));
+        if(pageFlip && pageFlip.update){
+            pageFlip.update();
+        }
     }, 100);
 }
     
