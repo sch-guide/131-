@@ -305,39 +305,29 @@ body{
     margin:70px auto 30px;
 }
 
-#zoomOut{
-    position:fixed;
-    top:15px;
-    left:170px;
-    z-index:50001;
-}
+#viewerLeft{ left:10px; }
+#viewerRight{ left:65px; }
+#zoomOut{ left:135px; }
+#zoomIn{ left:180px; }
 
-#zoomIn{
-    position:fixed;
-    top:15px;
-    left:220px;
-    z-index:50001;
-}
-
+#viewerLeft,
+#viewerRight,
 #zoomOut,
-#zoomIn{
-    background:white;
-    border:none;
-    border-radius:12px;
-    padding:10px 16px;
-    font-weight:bold;
-}    
-    
+#zoomIn,
 #viewerClose{
     position:fixed;
     top:15px;
-    right:15px;
     z-index:50001;
     background:white;
     border:none;
-    border-radius:12px;
-    padding:10px 16px;
+    border-radius:10px;
+    padding:8px 10px;
     font-weight:bold;
+    font-size:14px;
+}
+
+#viewerClose{
+    right:10px;
 }
     
 </style>
