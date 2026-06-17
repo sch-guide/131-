@@ -12,7 +12,7 @@ content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable
 body{
     margin:0;
     background:#222;
-    overflow:hidden;
+    overflow:auto;
     font-family:sans-serif;
 }
 
@@ -340,8 +340,6 @@ body{
 <div id="imageViewer">
     <button id="viewerLeft" onclick="showLeftPage()">왼쪽</button>
     <button id="viewerRight" onclick="showRightPage()">오른쪽</button>
-    <button id="zoomOut" onclick="zoomOutImage()">-</button>
-    <button id="zoomIn" onclick="zoomInImage()">+</button>
     <button id="viewerClose" onclick="closeImageViewer()">닫기</button>
     <img id="zoomImg" src="">
 </div>
@@ -678,7 +676,38 @@ function closeImageViewer(){
     document.getElementById("imageViewer").style.display = "none";
     document.getElementById("zoomImg").src = "";
 }
-    
+let bookZoom = 100;
+
+document.addEventListener("keydown", function(e){
+    if(e.ctrlKey && (e.key === "+" || e.key === "=" || e.key === "NumpadAdd")){
+        e.preventDefault();
+        bookZoom += 25;
+        if(bookZoom > 400) bookZoom = 400;
+        applyBookZoom();
+    }
+    if(e.ctrlKey && (e.key === "-" || e.key === "NumpadSubtract")){
+        e.preventDefault();
+        bookZoom -= 25;
+        if(bookZoom < 50) bookZoom = 50;
+        applyBookZoom();
+    }
+});
+
+document.addEventListener("wheel", function(e){
+    if(e.ctrlKey){
+        e.preventDefault();
+        if(e.deltaY < 0) bookZoom += 15;
+        else bookZoom -= 15;
+        bookZoom = Math.min(400, Math.max(50, bookZoom));
+        applyBookZoom();
+    }
+}, { passive: false });
+
+function applyBookZoom(){
+    const b = document.getElementById("book");
+    b.style.transform = `scale(${bookZoom/100})`;
+    b.style.transformOrigin = "top center";
+}
 pageFlip.loadFromHTML(document.querySelectorAll(".page"));
 
 categories.forEach((cat, idx) => {
