@@ -451,6 +451,149 @@ body{
     cursor:pointer;
 }
 
+.drug-box{
+    position:fixed;
+    inset:0;
+    display:none;
+    z-index:30000;
+    background:rgba(15,27,48,0.96);
+    overflow:auto;
+    padding:76px 16px 24px;
+}
+
+.drug-panel{
+    width:min(100%,720px);
+    margin:0 auto;
+    background:#fff;
+    border-radius:18px;
+    padding:18px;
+    box-shadow:var(--shadow-md);
+}
+
+.drug-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:14px;
+}
+
+.drug-head h2{
+    margin:0 0 6px;
+    color:var(--navy);
+    font-size:22px;
+}
+
+.drug-head p{
+    margin:0;
+    color:#657085;
+    font-size:13px;
+    line-height:1.45;
+}
+
+.drug-close{
+    border:0;
+    background:var(--navy);
+    color:#fff;
+    border-radius:10px;
+    padding:10px 14px;
+    font-family:inherit;
+    font-weight:700;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+.drug-search-row{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+    margin:14px 0 10px;
+}
+
+.drug-search-row input{
+    width:100%;
+    min-height:48px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:0 14px;
+    font-family:inherit;
+    font-size:16px;
+}
+
+.drug-star{
+    width:48px;
+    min-height:48px;
+    border:1px solid #e2c0ae;
+    border-radius:12px;
+    background:#fff7ea;
+    color:#9a651f;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.drug-action-row{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:8px;
+}
+
+.drug-primary{
+    min-height:48px;
+    border:0;
+    border-radius:12px;
+    background:var(--gold);
+    color:var(--navy-deep);
+    font-family:inherit;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.drug-note{
+    margin:10px 0 0;
+    color:#657085;
+    font-size:12px;
+    line-height:1.45;
+}
+
+.drug-section{
+    margin-top:18px;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+}
+
+.drug-section h3{
+    margin:0 0 10px;
+    color:var(--navy);
+    font-size:15px;
+}
+
+.drug-chip-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.drug-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    min-height:36px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:#FAF8F5;
+    color:var(--ink);
+    padding:0 10px;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.drug-empty{
+    color:#657085;
+    font-size:13px;
+}
+
 @media (hover: hover) and (pointer: fine){
     #zoomToggleBtn{
         display:none !important;
@@ -471,6 +614,7 @@ body{
 <div class="controls">
     <button class="btn icon-btn" onclick="openGallery()" title="전체보기">⧉</button>
     <button class="btn icon-btn" onclick="openMemo()" title="메모">📝</button>
+    <button class="btn icon-btn" onclick="openDrugDictionary()" title="약물사전">💊</button>
    <button class="btn icon-btn"
         onclick="openSearch()">
     🔍
@@ -504,6 +648,44 @@ body{
         <div class="memo-actions">
             <button onclick="saveMemo()">저장</button>
             <button onclick="closeMemo()">닫기</button>
+        </div>
+    </div>
+</div>
+
+<div id="drugBox" class="drug-box">
+    <div class="drug-panel">
+        <div class="drug-head">
+            <div>
+                <h2>약물사전</h2>
+                <p>약물명을 입력하면 약학정보원 공식 검색 결과로 연결합니다. 자주 찾는 약물은 별표로 저장할 수 있습니다.</p>
+            </div>
+            <button class="drug-close" onclick="closeDrugDictionary()">닫기</button>
+        </div>
+
+        <div class="drug-search-row">
+            <input id="drugInput"
+                   type="search"
+                   placeholder="예: 나프실린, propacetamol"
+                   autocomplete="off"
+                   onkeydown="handleDrugEnter(event)">
+            <button class="drug-star"
+                    onclick="saveDrugFavorite()"
+                    title="자주 찾는 약물 저장">★</button>
+        </div>
+
+        <div class="drug-action-row">
+            <button class="drug-primary" onclick="openDrugSearch()">약학정보원에서 검색</button>
+        </div>
+        <p class="drug-note">공식 자료를 복사하거나 저장하지 않고, 입력한 약물명을 약학정보원 검색 URL에 넣어 새 창으로 엽니다.</p>
+
+        <div class="drug-section">
+            <h3>최근 검색어</h3>
+            <div id="drugRecentList" class="drug-chip-list drug-empty">아직 없습니다</div>
+        </div>
+
+        <div class="drug-section">
+            <h3>자주 찾는 약물</h3>
+            <div id="drugFavoriteList" class="drug-chip-list drug-empty">아직 없습니다</div>
         </div>
     </div>
 </div>
@@ -940,6 +1122,15 @@ memoBtn.onclick = () => {
 };
 categoryBar.appendChild(memoBtn);
 
+const drugBtn = document.createElement("button");
+drugBtn.className = "category-btn";
+drugBtn.innerText = "약물사전";
+drugBtn.onclick = () => {
+    closeGallery();
+    openDrugDictionary();
+};
+categoryBar.appendChild(drugBtn);
+
 function renderGallery(start, end){
     galleryGrid.innerHTML = "";
 
@@ -1036,6 +1227,117 @@ function saveMemo(){
 function closeMemo(){
     document.getElementById("memoBox").style.display = "none";
 }
+
+const drugStoreKeys = {
+    recent:"wardDrugDictionary.recent",
+    favorites:"wardDrugDictionary.favorites"
+};
+
+function normalizeDrugTerm(value){
+    return String(value || "").trim().replace(/\s+/g," ");
+}
+
+function readDrugList(key){
+    try{
+        const data = JSON.parse(localStorage.getItem(key) || "[]");
+        return Array.isArray(data) ? data.filter(Boolean) : [];
+    }catch{
+        return [];
+    }
+}
+
+function writeDrugList(key, values){
+    localStorage.setItem(key, JSON.stringify(values));
+}
+
+function getDrugTerm(){
+    return normalizeDrugTerm(document.getElementById("drugInput").value);
+}
+
+function buildHealthDrugUrl(term){
+    const url = new URL("https://www.health.kr/searchDrug/search_total_result.asp");
+    url.searchParams.set("search_word", term);
+    url.searchParams.set("search_flag", "all");
+    return url.toString();
+}
+
+function openDrugDictionary(){
+    document.getElementById("drugBox").style.display = "block";
+    renderDrugLists();
+    setTimeout(() => document.getElementById("drugInput").focus(), 0);
+}
+
+function closeDrugDictionary(){
+    document.getElementById("drugBox").style.display = "none";
+}
+
+function addDrugRecent(term){
+    const current = readDrugList(drugStoreKeys.recent);
+    const next = [term, ...current.filter(item => item !== term)].slice(0, 8);
+    writeDrugList(drugStoreKeys.recent, next);
+    renderDrugLists();
+}
+
+function saveDrugFavorite(){
+    const term = getDrugTerm();
+    if(!term){
+        alert("약물명을 먼저 입력하세요.");
+        document.getElementById("drugInput").focus();
+        return;
+    }
+    const current = readDrugList(drugStoreKeys.favorites);
+    if(!current.includes(term)){
+        writeDrugList(drugStoreKeys.favorites, [term, ...current]);
+    }
+    renderDrugLists();
+}
+
+function openDrugSearch(){
+    const term = getDrugTerm();
+    if(!term){
+        alert("약물명을 먼저 입력하세요.");
+        document.getElementById("drugInput").focus();
+        return;
+    }
+    addDrugRecent(term);
+    window.open(buildHealthDrugUrl(term), "_blank", "noopener,noreferrer");
+}
+
+function handleDrugEnter(event){
+    if(event.key === "Enter"){
+        event.preventDefault();
+        openDrugSearch();
+    }
+}
+
+function makeDrugChip(term){
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "drug-chip";
+    chip.textContent = term;
+    chip.onclick = () => {
+        document.getElementById("drugInput").value = term;
+        openDrugSearch();
+    };
+    return chip;
+}
+
+function renderDrugList(containerId, values){
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    container.classList.toggle("drug-empty", values.length === 0);
+    if(values.length === 0){
+        container.textContent = "아직 없습니다";
+        return;
+    }
+    values.forEach(term => container.appendChild(makeDrugChip(term)));
+}
+
+function renderDrugLists(){
+    renderDrugList("drugRecentList", readDrugList(drugStoreKeys.recent));
+    renderDrugList("drugFavoriteList", readDrugList(drugStoreKeys.favorites));
+}
+
    function openSearch(){
     document.getElementById("searchBox").style.display = "block";
     document.getElementById("searchInput").focus();
