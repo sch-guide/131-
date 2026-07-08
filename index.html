@@ -451,7 +451,7 @@ body{
     cursor:pointer;
 }
 
-.drug-box{
+.calc-box{
     position:fixed;
     inset:0;
     display:none;
@@ -461,7 +461,7 @@ body{
     padding:76px 16px 24px;
 }
 
-.drug-panel{
+.calc-panel{
     width:min(100%,720px);
     margin:0 auto;
     background:#fff;
@@ -470,7 +470,7 @@ body{
     box-shadow:var(--shadow-md);
 }
 
-.drug-head{
+.calc-head{
     display:flex;
     justify-content:space-between;
     align-items:flex-start;
@@ -478,20 +478,20 @@ body{
     margin-bottom:14px;
 }
 
-.drug-head h2{
+.calc-head h2{
     margin:0 0 6px;
     color:var(--navy);
     font-size:22px;
 }
 
-.drug-head p{
+.calc-head p{
     margin:0;
     color:#657085;
     font-size:13px;
     line-height:1.45;
 }
 
-.drug-close{
+.calc-close{
     border:0;
     background:var(--navy);
     color:#fff;
@@ -503,14 +503,36 @@ body{
     white-space:nowrap;
 }
 
-.drug-search-row{
-    display:grid;
-    grid-template-columns:1fr auto;
-    gap:8px;
-    margin:14px 0 10px;
+.calc-card{
+    margin-top:14px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:#fff;
+    padding:14px;
 }
 
-.drug-search-row input{
+.calc-card h3{
+    margin:0 0 10px;
+    color:var(--navy);
+    font-size:16px;
+}
+
+.calc-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+}
+
+.calc-grid label{
+    display:grid;
+    gap:6px;
+    color:#4b5566;
+    font-size:13px;
+    font-weight:700;
+}
+
+.calc-grid input,
+.calc-grid select{
     width:100%;
     min-height:48px;
     border:1px solid var(--line);
@@ -520,78 +542,52 @@ body{
     font-size:16px;
 }
 
-.drug-star{
-    width:48px;
-    min-height:48px;
-    border:1px solid #e2c0ae;
-    border-radius:12px;
-    background:#fff7ea;
-    color:#9a651f;
-    font-size:20px;
-    cursor:pointer;
-}
-
-.drug-action-row{
+.calc-unit-row{
     display:grid;
-    grid-template-columns:1fr;
+    grid-template-columns:1fr 88px;
     gap:8px;
 }
 
-.drug-primary{
-    min-height:48px;
-    border:0;
+.calc-result-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    margin-top:12px;
+    padding:12px;
     border-radius:12px;
-    background:var(--gold);
-    color:var(--navy-deep);
+    background:#FAF8F5;
+}
+
+.calc-result{
+    color:var(--navy);
+    font-size:24px;
+    font-weight:900;
+}
+
+.calc-copy{
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#fff;
+    color:var(--navy);
+    padding:9px 12px;
     font-family:inherit;
     font-weight:800;
     cursor:pointer;
 }
 
-.drug-note{
-    margin:10px 0 0;
+.calc-note,
+.calc-formula,
+.calc-error{
+    margin:8px 0 0;
     color:#657085;
     font-size:12px;
     line-height:1.45;
 }
 
-.drug-section{
-    margin-top:18px;
-    padding-top:14px;
-    border-top:1px solid var(--line);
-}
-
-.drug-section h3{
-    margin:0 0 10px;
-    color:var(--navy);
-    font-size:15px;
-}
-
-.drug-chip-list{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-}
-
-.drug-chip{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    min-height:36px;
-    border:1px solid var(--line);
-    border-radius:999px;
-    background:#FAF8F5;
-    color:var(--ink);
-    padding:0 10px;
-    font-family:inherit;
-    font-size:13px;
+.calc-error{
+    color:#b42318;
     font-weight:700;
-    cursor:pointer;
-}
-
-.drug-empty{
-    color:#657085;
-    font-size:13px;
 }
 
 @media (hover: hover) and (pointer: fine){
@@ -614,7 +610,7 @@ body{
 <div class="controls">
     <button class="btn icon-btn" onclick="openGallery()" title="전체보기">⧉</button>
     <button class="btn icon-btn" onclick="openMemo()" title="메모">📝</button>
-    <button class="btn icon-btn" onclick="openDrugDictionary()" title="약물사전">💊</button>
+    <button class="btn icon-btn" onclick="openCalculator()" title="계산기">🧮</button>
    <button class="btn icon-btn"
         onclick="openSearch()">
     🔍
@@ -652,40 +648,121 @@ body{
     </div>
 </div>
 
-<div id="drugBox" class="drug-box">
-    <div class="drug-panel">
-        <div class="drug-head">
+<div id="calcBox" class="calc-box">
+    <div class="calc-panel">
+        <div class="calc-head">
             <div>
-                <h2>약물사전</h2>
-                <p>약물명을 입력하면 약학정보원 공식 검색 결과로 연결합니다. 자주 찾는 약물은 별표로 저장할 수 있습니다.</p>
+                <h2>간호 계산기</h2>
+                <p>참고용 계산기입니다. 실제 투약, 수액, 항암 용량은 병원 지침과 처방을 우선하세요.</p>
             </div>
-            <button class="drug-close" onclick="closeDrugDictionary()">닫기</button>
+            <button class="calc-close" onclick="closeCalculator()">닫기</button>
         </div>
 
-        <div class="drug-search-row">
-            <input id="drugInput"
-                   type="search"
-                   placeholder="예: 나프실린, propacetamol"
-                   autocomplete="off"
-                   onkeydown="handleDrugEnter(event)">
-            <button class="drug-star"
-                    onclick="saveDrugFavorite()"
-                    title="자주 찾는 약물 저장">★</button>
+        <div class="calc-card">
+            <h3>수액 속도 mL/hr</h3>
+            <div class="calc-grid">
+                <label>총 수액량
+                    <div class="calc-unit-row">
+                        <input id="totalVolumeRate" type="number" min="0" step="any">
+                        <select id="totalVolumeRateUnit">
+                            <option value="mL">mL</option>
+                            <option value="L">L</option>
+                        </select>
+                    </div>
+                </label>
+                <label>주입 시간
+                    <div class="calc-unit-row">
+                        <input id="infusionTimeRate" type="number" min="0" step="any">
+                        <select id="infusionTimeRateUnit">
+                            <option value="hr">시간</option>
+                            <option value="min">분</option>
+                        </select>
+                    </div>
+                </label>
+            </div>
+            <div class="calc-result-row">
+                <output id="fluidRateResult" class="calc-result">-- mL/hr</output>
+                <button class="calc-copy" onclick="copyCalcResult('fluidRateResult')">복사</button>
+            </div>
+            <div class="calc-result-row">
+                <output id="dropIntervalResult" class="calc-result">--</output>
+                <button class="calc-copy" onclick="copyCalcResult('dropIntervalResult')">복사</button>
+            </div>
+            <p id="gttMinuteResult" class="calc-note"></p>
+            <p id="fluidRateError" class="calc-error"></p>
+            <p class="calc-formula">mL/hr = 총 수액량(mL) ÷ 시간(hr), 방울 간격 = 60 ÷ (mL/hr × 20 ÷ 60)</p>
         </div>
 
-        <div class="drug-action-row">
-            <button class="drug-primary" onclick="openDrugSearch()">약학정보원에서 검색</button>
+        <div class="calc-card">
+            <h3>비례식 약물 계산기</h3>
+            <div class="calc-grid">
+                <label>약물 함량
+                    <div class="calc-unit-row">
+                        <input id="drugAmount" type="number" min="0" step="any">
+                        <select id="drugAmountUnit">
+                            <option value="g">g</option>
+                            <option value="mg">mg</option>
+                            <option value="mcg">mcg</option>
+                        </select>
+                    </div>
+                </label>
+                <label>총 부피(mL)
+                    <input id="totalVolume" type="number" min="0" step="any">
+                </label>
+                <label>처방 용량
+                    <div class="calc-unit-row">
+                        <input id="prescribedDose" type="number" min="0" step="any">
+                        <select id="prescribedDoseUnit">
+                            <option value="mg">mg</option>
+                            <option value="g">g</option>
+                            <option value="mcg">mcg</option>
+                        </select>
+                    </div>
+                </label>
+            </div>
+            <div class="calc-result-row">
+                <output id="proportionResult" class="calc-result">-- mL</output>
+                <button class="calc-copy" onclick="copyCalcResult('proportionResult')">복사</button>
+            </div>
+            <p id="proportionFormulaLine" class="calc-note"></p>
+            <p id="proportionError" class="calc-error"></p>
+            <p class="calc-formula">투여량(mL) = 처방용량(mg 환산) × 총부피(mL) ÷ 약물함량(mg 환산)</p>
         </div>
-        <p class="drug-note">공식 자료를 복사하거나 저장하지 않고, 입력한 약물명을 약학정보원 검색 URL에 넣어 새 창으로 엽니다.</p>
 
-        <div class="drug-section">
-            <h3>최근 검색어</h3>
-            <div id="drugRecentList" class="drug-chip-list drug-empty">아직 없습니다</div>
+        <div class="calc-card">
+            <h3>BSA</h3>
+            <div class="calc-grid">
+                <label>키(cm)<input id="heightCm" type="number" min="0" step="any"></label>
+                <label>체중(kg)<input id="weightKgBsa" type="number" min="0" step="any"></label>
+            </div>
+            <div class="calc-result-row">
+                <output id="bsaResult" class="calc-result">-- m²</output>
+                <button class="calc-copy" onclick="copyCalcResult('bsaResult')">복사</button>
+            </div>
+            <p id="bsaError" class="calc-error"></p>
+            <p class="calc-formula">BSA = √((키 × 체중) / 3600), Mosteller 공식</p>
         </div>
 
-        <div class="drug-section">
-            <h3>자주 찾는 약물</h3>
-            <div id="drugFavoriteList" class="drug-chip-list drug-empty">아직 없습니다</div>
+        <div class="calc-card">
+            <h3>Cockcroft-Gault</h3>
+            <div class="calc-grid">
+                <label>나이<input id="age" type="number" min="0" step="any"></label>
+                <label>체중(kg)<input id="weightKgCrcl" type="number" min="0" step="any"></label>
+                <label>혈청 Cr(Scr)<input id="scr" type="number" min="0" step="any"></label>
+                <label>성별
+                    <select id="sex">
+                        <option value="male">남성</option>
+                        <option value="female">여성</option>
+                    </select>
+                </label>
+            </div>
+            <div class="calc-result-row">
+                <output id="crclResult" class="calc-result">--</output>
+                <button class="calc-copy" onclick="copyCalcResult('crclResult')">복사</button>
+            </div>
+            <p id="crclError" class="calc-error"></p>
+            <p class="calc-formula">GFR = [(140 - age) × BW / (72 × S-cr)] × 1(남성), 0.85(여성)</p>
+            <p class="calc-formula">Carbo dose = target AUC(2) × (GFR + 25)</p>
         </div>
     </div>
 </div>
@@ -1122,14 +1199,14 @@ memoBtn.onclick = () => {
 };
 categoryBar.appendChild(memoBtn);
 
-const drugBtn = document.createElement("button");
-drugBtn.className = "category-btn";
-drugBtn.innerText = "약물사전";
-drugBtn.onclick = () => {
+const calcBtn = document.createElement("button");
+calcBtn.className = "category-btn";
+calcBtn.innerText = "계산기";
+calcBtn.onclick = () => {
     closeGallery();
-    openDrugDictionary();
+    openCalculator();
 };
-categoryBar.appendChild(drugBtn);
+categoryBar.appendChild(calcBtn);
 
 function renderGallery(start, end){
     galleryGrid.innerHTML = "";
@@ -1228,115 +1305,165 @@ function closeMemo(){
     document.getElementById("memoBox").style.display = "none";
 }
 
-const drugStoreKeys = {
-    recent:"wardDrugDictionary.recent",
-    favorites:"wardDrugDictionary.favorites"
-};
+const doseUnitToMg = { g:1000, mg:1, mcg:0.001 };
+const volumeUnitToMl = { L:1000, mL:1 };
+const timeUnitToHours = { hr:1, min:1/60 };
+const FIXED_DROP_FACTOR = 20;
 
-function normalizeDrugTerm(value){
-    return String(value || "").trim().replace(/\s+/g," ");
+function openCalculator(){
+    document.getElementById("calcBox").style.display = "block";
+    calculateAll();
 }
 
-function readDrugList(key){
-    try{
-        const data = JSON.parse(localStorage.getItem(key) || "[]");
-        return Array.isArray(data) ? data.filter(Boolean) : [];
-    }catch{
-        return [];
-    }
+function closeCalculator(){
+    document.getElementById("calcBox").style.display = "none";
 }
 
-function writeDrugList(key, values){
-    localStorage.setItem(key, JSON.stringify(values));
+function readCalcNumber(id){
+    const value = Number(document.getElementById(id).value);
+    return Number.isFinite(value) ? value : NaN;
 }
 
-function getDrugTerm(){
-    return normalizeDrugTerm(document.getElementById("drugInput").value);
+function isPositive(value){
+    return Number.isFinite(value) && value > 0;
 }
 
-function buildHealthDrugUrl(term){
-    const url = new URL("https://www.health.kr/searchDrug/search_total_result.asp");
-    url.searchParams.set("search_word", term);
-    url.searchParams.set("search_flag", "all");
-    return url.toString();
+function toMg(value, unit){
+    return Number(value) * doseUnitToMg[unit];
 }
 
-function openDrugDictionary(){
-    document.getElementById("drugBox").style.display = "block";
-    renderDrugLists();
-    setTimeout(() => document.getElementById("drugInput").focus(), 0);
+function toMl(value, unit){
+    return Number(value) * volumeUnitToMl[unit];
 }
 
-function closeDrugDictionary(){
-    document.getElementById("drugBox").style.display = "none";
+function toHours(value, unit){
+    return Number(value) * timeUnitToHours[unit];
 }
 
-function addDrugRecent(term){
-    const current = readDrugList(drugStoreKeys.recent);
-    const next = [term, ...current.filter(item => item !== term)].slice(0, 8);
-    writeDrugList(drugStoreKeys.recent, next);
-    renderDrugLists();
+function formatCalc(value, unit){
+    if(!Number.isFinite(value)) return unit ? `-- ${unit}` : "--";
+    const text = value.toFixed(2).replace(/\.?0+$/,"");
+    return unit ? `${text} ${unit}` : text;
 }
 
-function saveDrugFavorite(){
-    const term = getDrugTerm();
-    if(!term){
-        alert("약물명을 먼저 입력하세요.");
-        document.getElementById("drugInput").focus();
+function setCalcOutput(id, text){
+    const output = document.getElementById(id);
+    output.textContent = text;
+    output.dataset.copyValue = text.startsWith("--") ? "" : text;
+}
+
+function setCalcError(id, message){
+    document.getElementById(id).textContent = message || "";
+}
+
+function calculateFluidRate(){
+    const totalMl = toMl(
+        document.getElementById("totalVolumeRate").value,
+        document.getElementById("totalVolumeRateUnit").value
+    );
+    const hours = toHours(
+        document.getElementById("infusionTimeRate").value,
+        document.getElementById("infusionTimeRateUnit").value
+    );
+
+    if(!isPositive(totalMl) || !isPositive(hours)){
+        setCalcOutput("fluidRateResult", "-- mL/hr");
+        setCalcOutput("dropIntervalResult", "--");
+        document.getElementById("gttMinuteResult").textContent = "";
+        setCalcError("fluidRateError", "값을 모두 0보다 크게 입력하세요.");
         return;
     }
-    const current = readDrugList(drugStoreKeys.favorites);
-    if(!current.includes(term)){
-        writeDrugList(drugStoreKeys.favorites, [term, ...current]);
-    }
-    renderDrugLists();
+
+    const mlPerHour = totalMl / hours;
+    const gttPerMinute = (mlPerHour * FIXED_DROP_FACTOR) / 60;
+    const secondsPerDrop = 60 / gttPerMinute;
+    setCalcOutput("fluidRateResult", formatCalc(mlPerHour, "mL/hr"));
+    setCalcOutput("dropIntervalResult", `${formatCalc(secondsPerDrop, "초에 1방울")}`);
+    document.getElementById("gttMinuteResult").textContent =
+        `참고: ${formatCalc(gttPerMinute, "gtt/min")} (drop factor 20 고정)`;
+    setCalcError("fluidRateError", "");
 }
 
-function openDrugSearch(){
-    const term = getDrugTerm();
-    if(!term){
-        alert("약물명을 먼저 입력하세요.");
-        document.getElementById("drugInput").focus();
+function calculateProportion(){
+    const drugAmountMg = toMg(
+        document.getElementById("drugAmount").value,
+        document.getElementById("drugAmountUnit").value
+    );
+    const volumeMl = readCalcNumber("totalVolume");
+    const prescribedMg = toMg(
+        document.getElementById("prescribedDose").value,
+        document.getElementById("prescribedDoseUnit").value
+    );
+
+    if(!isPositive(drugAmountMg) || !isPositive(volumeMl) || !isPositive(prescribedMg)){
+        setCalcOutput("proportionResult", "-- mL");
+        document.getElementById("proportionFormulaLine").textContent = "";
+        setCalcError("proportionError", "값을 모두 0보다 크게 입력하세요.");
         return;
     }
-    addDrugRecent(term);
-    window.open(buildHealthDrugUrl(term), "_blank", "noopener,noreferrer");
+
+    const result = (prescribedMg * volumeMl) / drugAmountMg;
+    setCalcOutput("proportionResult", formatCalc(result, "mL"));
+    document.getElementById("proportionFormulaLine").textContent =
+        `${formatCalc(drugAmountMg, "mg")} : ${formatCalc(volumeMl, "mL")} = ${formatCalc(prescribedMg, "mg")} : x, x = ${formatCalc(result, "mL")}`;
+    setCalcError("proportionError", "");
 }
 
-function handleDrugEnter(event){
-    if(event.key === "Enter"){
-        event.preventDefault();
-        openDrugSearch();
-    }
-}
-
-function makeDrugChip(term){
-    const chip = document.createElement("button");
-    chip.type = "button";
-    chip.className = "drug-chip";
-    chip.textContent = term;
-    chip.onclick = () => {
-        document.getElementById("drugInput").value = term;
-        openDrugSearch();
-    };
-    return chip;
-}
-
-function renderDrugList(containerId, values){
-    const container = document.getElementById(containerId);
-    container.innerHTML = "";
-    container.classList.toggle("drug-empty", values.length === 0);
-    if(values.length === 0){
-        container.textContent = "아직 없습니다";
+function calculateBsa(){
+    const heightCm = readCalcNumber("heightCm");
+    const weightKg = readCalcNumber("weightKgBsa");
+    if(!isPositive(heightCm) || !isPositive(weightKg)){
+        setCalcOutput("bsaResult", "-- m²");
+        setCalcError("bsaError", "값을 모두 0보다 크게 입력하세요.");
         return;
     }
-    values.forEach(term => container.appendChild(makeDrugChip(term)));
+    setCalcOutput("bsaResult", formatCalc(Math.sqrt((heightCm * weightKg) / 3600), "m²"));
+    setCalcError("bsaError", "");
 }
 
-function renderDrugLists(){
-    renderDrugList("drugRecentList", readDrugList(drugStoreKeys.recent));
-    renderDrugList("drugFavoriteList", readDrugList(drugStoreKeys.favorites));
+function calculateCrcl(){
+    const age = readCalcNumber("age");
+    const weightKg = readCalcNumber("weightKgCrcl");
+    const scr = readCalcNumber("scr");
+    if(!isPositive(age) || !isPositive(weightKg) || !isPositive(scr)){
+        setCalcOutput("crclResult", "--");
+        setCalcError("crclError", "값을 모두 0보다 크게 입력하세요.");
+        return;
+    }
+    const maleValue = ((140 - age) * weightKg) / (72 * scr);
+    const gfr = document.getElementById("sex").value === "female" ? maleValue * 0.85 : maleValue;
+    const carboDose = 2 * (gfr + 25);
+    setCalcOutput("crclResult", `GFR ${formatCalc(gfr, "mL/min")} / Carbo dose ${formatCalc(carboDose, "mg")}`);
+    setCalcError("crclError", "");
 }
+
+function calculateAll(){
+    calculateFluidRate();
+    calculateProportion();
+    calculateBsa();
+    calculateCrcl();
+}
+
+function copyCalcResult(id){
+    const value = document.getElementById(id).dataset.copyValue || "";
+    if(!value){
+        alert("계산할 값을 먼저 입력하세요.");
+        return;
+    }
+    if(navigator.clipboard){
+        navigator.clipboard.writeText(value).then(() => alert("복사했습니다."));
+    }else{
+        alert(value);
+    }
+}
+
+document.addEventListener("input", (event) => {
+    if(event.target.closest("#calcBox")) calculateAll();
+});
+
+document.addEventListener("change", (event) => {
+    if(event.target.closest("#calcBox")) calculateAll();
+});
 
    function openSearch(){
     document.getElementById("searchBox").style.display = "block";
