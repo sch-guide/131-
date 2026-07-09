@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -692,7 +692,7 @@ body{
         </div>
 
         <div class="calc-card">
-            <h3>약물사전 계산기</h3>
+            <h3>수액 속도계산기</h3>
         </div>
 
         <div class="calc-card">
@@ -731,7 +731,7 @@ body{
         </div>
 
         <div class="calc-card">
-            <h3>비례식 약물 계산기</h3>
+            <h3>비례식 약물계산기</h3>
             <div class="calc-grid">
                 <label>약물 함량
                     <div class="calc-unit-row">
@@ -767,7 +767,7 @@ body{
         </div>
 
         <div class="calc-card">
-            <h3>항암 BSA 용량</h3>
+            <h3>항암 계산기</h3>
             <div class="calc-grid">
                 <label>전산 BSA(m²)<input id="emrBsa" type="number" min="0" step="any" placeholder="예: 1.49"></label>
                 <label>코멘트 용량(mg/m²)<input id="bsaDosePerM2" type="number" min="0" step="any" placeholder="예: 60"></label>
@@ -785,7 +785,7 @@ body{
         </div>
 
         <div class="calc-card">
-            <h3>Cockcroft-Gault</h3>
+            <h3>네오플란틴 계산기</h3>
             <div class="calc-grid">
                 <label>나이<input id="age" type="number" min="0" step="any"></label>
                 <label>체중(kg)<input id="weightKgCrcl" type="number" min="0" step="any"></label>
@@ -1871,75 +1871,76 @@ if(
             .weight-label { font-size:0.85rem; }
             .weight-input { width:58px; height:38px; font-size:1.35rem; }
             .btn-common { min-height:44px; font-size:0.86rem; }
-            .table-wrap { padding:10px 10px 190px; max-width:none; }
+            .table-wrap { padding:8px 8px 170px; max-width:none; }
             table,
             tbody { display:block; width:100%; background:transparent; box-shadow:none; border-radius:0; }
             thead { display:none; }
             tr {
                 display:grid;
                 grid-template-columns:1fr 1fr;
-                gap:10px;
-                margin:0 0 12px;
-                padding:12px;
+                gap:6px;
+                margin:0 0 8px;
+                padding:8px;
                 background:var(--bg-card);
                 border:1px solid var(--border-color);
-                border-radius:14px;
-                box-shadow:0 4px 14px rgba(15,27,48,0.08);
+                border-radius:12px;
+                box-shadow:0 2px 8px rgba(15,27,48,0.07);
             }
             td {
                 display:flex;
                 flex-direction:column;
                 justify-content:center;
                 width:auto !important;
-                min-height:64px;
+                min-height:48px;
                 height:auto;
                 border:0;
-                border-radius:12px;
-                padding:8px;
+                border-radius:10px;
+                padding:5px 6px;
                 text-align:center;
                 box-sizing:border-box;
             }
             td::before {
                 content:attr(data-label);
                 display:block;
-                margin-bottom:5px;
+                margin-bottom:3px;
                 color:#607084;
-                font-size:0.72rem;
+                font-size:0.66rem;
                 font-weight:800;
                 line-height:1.1;
             }
             .td-name {
                 grid-column:1 / -1;
                 min-height:auto;
-                padding:12px;
-                border-radius:12px;
+                padding:8px;
+                border-radius:10px;
             }
             .td-name::before { display:none; }
             .drug-cell-container { justify-content:center; }
-            .copy-btn-area { padding-right:8px; }
-            .copy-icon { font-size:1rem; }
-            .drug-title { font-size:1.15rem; line-height:1.25; }
-            .drug-mix-info { font-size:0.78rem; margin-top:3px; }
+            .copy-btn-area { padding-right:5px; }
+            .copy-icon { font-size:0.9rem; padding:2px; }
+            .drug-title { font-size:1rem; line-height:1.15; }
+            .info-icon { width:13px; height:13px; font-size:0.72rem; }
+            .drug-mix-info { font-size:0.68rem; margin-top:1px; line-height:1.1; }
             .td-input,
             .td-unit { background:#fff8d9; }
             .td-result {
                 grid-column:1 / -1;
-                min-height:82px;
-                border:2px solid currentColor;
+                min-height:54px;
+                border:1px solid currentColor;
             }
             .input-mini,
             .input-dose {
-                min-height:42px;
-                font-size:1.45rem;
-                border-radius:10px;
+                min-height:32px;
+                font-size:1.16rem;
+                border-radius:8px;
                 background:rgba(255,255,255,0.55);
             }
             .td-unit select {
-                min-height:42px;
-                font-size:1rem !important;
+                min-height:32px;
+                font-size:0.86rem !important;
             }
-            .res-val { font-size:2rem; }
-            .res-unit { font-size:0.9rem; }
+            .res-val { font-size:1.55rem; }
+            .res-unit { font-size:0.75rem; margin-top:1px; }
             .footer-bar { padding:9px 8px calc(9px + env(safe-area-inset-bottom)); }
             .btn-copy { font-size:1rem; padding:12px; }
             .footer-disclaimer { font-size:0.6rem; }
