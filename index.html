@@ -1,0 +1,1680 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+
+<title>131병동 간호사전</title>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin
+href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+:root{
+    --navy:#1B2A4A;
+    --navy-deep:#0F1B30;
+    --cream:#FAF8F5;
+    --gold:#C89B5C;
+    --gold-soft:#E9D5B0;
+    --ink:#2A2D34;
+    --line:#E7E2D8;
+    --shadow-sm:0 2px 8px rgba(15,27,48,0.10);
+    --shadow-md:0 8px 24px rgba(15,27,48,0.16);
+    --radius:14px;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:var(--cream);
+    overflow:auto;
+    font-family:'Pretendard', sans-serif;
+    color:var(--ink);
+}
+
+#book{
+  width:100vw;
+  height:100vh;
+  height:100dvh;
+  margin:0 auto;
+}
+
+.page{
+    width:100%;
+    height:100%;
+    background:white;
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+}
+
+.page img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block
+}
+
+.controls{
+    position:fixed;
+    top:16px;
+    right:16px;
+    z-index:9999;
+    display:flex;
+    gap:10px;
+}
+
+.btn{
+    background:rgba(255,255,255,0.96);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    cursor:pointer;
+    font-weight:600;
+    box-shadow:var(--shadow-sm);
+    color:var(--navy);
+    transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.btn:hover{
+    box-shadow:var(--shadow-md);
+    transform:translateY(-1px);
+}
+
+.btn:active{
+    transform:translateY(0);
+}
+
+.icon-btn{
+    width:44px;
+    height:44px;
+    padding:0;
+    font-size:19px;
+    line-height:44px;
+}
+
+#gallery{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(15,27,48,0.94);
+    overflow:auto;
+    display:none;
+    z-index:10000;
+    padding:78px 16px 24px;
+    box-sizing:border-box;
+}
+
+.close-btn{
+    position:fixed;
+    top:18px;
+    right:18px;
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    padding:11px 18px;
+    border-radius:var(--radius);
+    cursor:pointer;
+    font-weight:600;
+    font-family:inherit;
+    box-shadow:var(--shadow-md);
+    z-index:10002;
+    letter-spacing:.2px;
+}
+
+.category-bar{
+    position:fixed;
+    top:18px;
+    left:16px;
+    right:96px;
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    z-index:10001;
+    padding:8px;
+    background:rgba(15,27,48,0.55);
+    backdrop-filter:blur(8px);
+    border-radius:999px;
+}
+
+.category-bar::-webkit-scrollbar{
+    display:none;
+}
+
+.category-btn{
+    background:rgba(255,255,255,0.08);
+    color:#F1EDE4;
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:999px;
+    padding:9px 16px;
+    font-size:13px;
+    font-weight:600;
+    white-space:nowrap;
+    cursor:pointer;
+    font-family:inherit;
+    letter-spacing:.2px;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.category-btn.active{
+    background:var(--gold);
+    color:var(--navy-deep);
+    border-color:var(--gold);
+}
+
+.gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+    gap:16px;
+}
+
+.gallery-item{
+    background:#fff;
+    border-radius:var(--radius);
+    padding:8px;
+    cursor:pointer;
+    box-shadow:var(--shadow-sm);
+    transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.gallery-item:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-md);
+}
+
+.gallery-item img{
+    width:100%;
+    border-radius:8px;
+    display:block;
+}
+
+.gallery-title{
+    font-size:12px;
+    text-align:center;
+    margin-top:8px;
+    word-break:break-all;
+    color:var(--ink);
+    font-weight:500;
+}
+
+#viewer{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:var(--navy-deep);
+    display:none;
+    z-index:20000;
+    overflow:auto;
+    touch-action:pinch-zoom pan-x pan-y;
+}
+
+.viewer-top{
+    position:fixed;
+    top:16px;
+    left:16px;
+    right:16px;
+    display:flex;
+    gap:8px;
+    justify-content:space-between;
+    align-items:center;
+    z-index:20001;
+}
+
+.viewer-title{
+    color:#F1EDE4;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.16);
+    padding:9px 12px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:600;
+    word-break:break-all;
+}
+
+.viewer-btn{
+    background:#fff;
+    color:var(--navy);
+    border:none;
+    border-radius:10px;
+    padding:10px 14px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+    box-shadow:var(--shadow-sm);
+}
+
+.viewer-img{
+    display:block;
+    width:auto;
+    max-width:100%;
+    height:auto;
+    max-height:calc(100% - 100px);
+    margin:74px auto 30px;
+    border-radius:4px;
+}
+
+.memo-box{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(15,27,48,0.78);
+    display:none;
+    z-index:30000;
+    padding:78px 20px 20px;
+    box-sizing:border-box;
+}
+
+.memo-panel{
+    background:#fff;
+    border-radius:18px;
+    padding:18px;
+    height:80%;
+    display:flex;
+    flex-direction:column;
+    box-shadow:var(--shadow-md);
+}
+
+.memo-title{
+    font-weight:700;
+    margin-bottom:12px;
+    color:var(--navy);
+    font-size:15px;
+}
+
+#memoText{
+    flex:1;
+    width:100%;
+    resize:none;
+    font-size:15px;
+    font-family:inherit;
+    padding:12px;
+    box-sizing:border-box;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:var(--cream);
+    color:var(--ink);
+}
+
+#memoText:focus{
+    outline:none;
+    border-color:var(--gold);
+}
+
+.memo-actions{
+    display:flex;
+    gap:10px;
+    margin-top:12px;
+}
+
+.memo-actions button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+    background:var(--navy);
+    color:#fff;
+    transition:background .15s ease;
+}
+
+.memo-actions button:last-child{
+    background:var(--line);
+    color:var(--ink);
+}
+
+.search-box{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(15,27,48,0.85);
+    display:none;
+    z-index:35000;
+    padding:78px 20px 20px;
+    box-sizing:border-box;
+}
+
+.search-panel{
+    background:#fff;
+    border-radius:18px;
+    padding:18px;
+    box-shadow:var(--shadow-md);
+}
+
+#searchInput{
+    width:100%;
+    padding:13px 14px;
+    font-size:16px;
+    font-family:inherit;
+    border:1px solid var(--line);
+    border-radius:10px;
+    box-sizing:border-box;
+    background:var(--cream);
+    color:var(--ink);
+}
+
+#searchInput:focus{
+    outline:none;
+    border-color:var(--gold);
+}
+
+.search-result{
+    margin-top:14px;
+    max-height:65vh;
+    overflow:auto;
+}
+
+.search-item{
+    padding:12px 8px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+    font-size:14px;
+    color:var(--ink);
+    transition:background .15s ease;
+    border-radius:8px;
+}
+
+.search-highlight{
+    background:#FFEB3B;
+    color:var(--navy-deep);
+    padding:0 2px;
+    border-radius:3px;
+    font-weight:700;
+}    
+    
+.search-highlight{
+    background:#FFEB3B;
+    color:var(--navy-deep);
+    padding:0 2px;
+    border-radius:3px;
+    font-weight:700;
+}
+    
+.search-item:hover{
+    background:var(--cream);
+}
+
+#imageViewer{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:var(--navy-deep);
+    display:none;
+    overflow:hidden;
+    z-index:50000;
+    touch-action:none;
+}
+
+#zoomImg{
+    display:block;
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:100%;
+    max-width:none;
+    height:auto;
+    transform:translate(-50%,-50%) scale(1);
+    transform-origin:center center;
+    touch-action:none;
+}
+
+#viewerClose{
+    position:fixed;
+    top:16px;
+    right:16px;
+    z-index:50001;
+    background:#fff;
+    color:var(--navy);
+    border:none;
+    border-radius:10px;
+    padding:10px 16px;
+    font-weight:600;
+    font-family:inherit;
+    font-size:14px;
+    box-shadow:var(--shadow-md);
+    cursor:pointer;
+}
+
+.calc-box{
+    position:fixed;
+    inset:0;
+    display:none;
+    z-index:30000;
+    background:rgba(15,27,48,0.96);
+    overflow:auto;
+    padding:76px 16px 24px;
+}
+
+.calc-panel{
+    width:min(100%,720px);
+    margin:0 auto;
+    background:#fff;
+    border-radius:18px;
+    padding:18px;
+    box-shadow:var(--shadow-md);
+}
+
+.calc-panel-wide{
+    width:min(100%,980px);
+    padding:10px;
+}
+
+.calc-frame{
+    display:block;
+    width:100%;
+    height:max(760px, calc(100vh - 150px));
+    min-height:760px;
+    margin-top:10px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:#fff;
+}
+
+.calc-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:14px;
+}
+
+.calc-head h2{
+    margin:0 0 6px;
+    color:var(--navy);
+    font-size:22px;
+}
+
+.calc-head p{
+    margin:0;
+    color:#657085;
+    font-size:13px;
+    line-height:1.45;
+}
+
+.calc-close{
+    border:0;
+    background:var(--navy);
+    color:#fff;
+    border-radius:10px;
+    padding:10px 14px;
+    font-family:inherit;
+    font-weight:700;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+.calc-card{
+    margin-top:14px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:#fff;
+    padding:14px;
+}
+
+.calc-card h3{
+    margin:0 0 10px;
+    color:var(--navy);
+    font-size:16px;
+}
+
+.calc-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+}
+
+.calc-grid label{
+    display:grid;
+    gap:6px;
+    color:#4b5566;
+    font-size:13px;
+    font-weight:700;
+}
+
+.calc-grid input,
+.calc-grid select{
+    width:100%;
+    min-height:48px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:0 14px;
+    font-family:inherit;
+    font-size:16px;
+}
+
+.calc-unit-row{
+    display:grid;
+    grid-template-columns:1fr 88px;
+    gap:8px;
+}
+
+.calc-result-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    margin-top:12px;
+    padding:12px;
+    border-radius:12px;
+    background:#FAF8F5;
+}
+
+.calc-result{
+    color:var(--navy);
+    font-size:24px;
+    font-weight:900;
+}
+
+.calc-copy{
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#fff;
+    color:var(--navy);
+    padding:9px 12px;
+    font-family:inherit;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.calc-note,
+.calc-formula,
+.calc-error{
+    margin:8px 0 0;
+    color:#657085;
+    font-size:12px;
+    line-height:1.45;
+}
+
+.calc-error{
+    color:#b42318;
+    font-weight:700;
+}
+
+@media (hover: hover) and (pointer: fine){
+    #zoomToggleBtn{
+        display:none !important;
+    }
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+<script src="ocr-data.js?v=3"></script>
+</head>
+
+<body>
+<div id="imageViewer">
+    <button id="viewerClose" onclick="closeImageViewer()">닫기</button>
+    <img id="zoomImg" src="">
+</div>
+<div class="controls">
+    <button class="btn icon-btn" onclick="openGallery()" title="전체보기">⧉</button>
+    <button class="btn icon-btn" onclick="openMemo()" title="메모">📝</button>
+    <button class="btn icon-btn" onclick="openCalculator()" title="계산기">💊</button>
+   <button class="btn icon-btn"
+        onclick="openSearch()">
+    🔍
+</button>
+<button class="btn icon-btn" id="zoomToggleBtn" onclick="openImageViewer()" title="확대보기">➕</button></div>
+
+<div id="book"></div>
+
+<div id="gallery">
+    <div class="category-bar" id="categoryBar"></div>
+    <button class="close-btn" onclick="closeGallery()">닫기</button>
+    <div class="gallery-grid" id="galleryGrid"></div>
+</div>
+
+<div id="viewer">
+    <div class="viewer-top">
+        <div class="viewer-title" id="viewerTitle"></div>
+        <div>
+            <button class="viewer-btn" onclick="goToCurrentPage()">이 페이지로 이동</button>
+            <button class="viewer-btn" onclick="closeViewer()">닫기</button>
+        </div>
+    </div>
+    <img class="viewer-img" id="viewerImg">
+</div>
+
+<div id="memoBox" class="memo-box">
+    <div class="memo-panel">
+        <div class="memo-title" id="memoTitle">메모</div>
+        <textarea id="memoText" placeholder="이 페이지에 대한 메모를 입력하세요."></textarea>
+
+        <div class="memo-actions">
+            <button onclick="saveMemo()">저장</button>
+            <button onclick="closeMemo()">닫기</button>
+        </div>
+    </div>
+</div>
+
+<div id="calcBox" class="calc-box">
+    <div class="calc-panel calc-panel-wide">
+        <div class="calc-head">
+            <div>
+                <h2>계산기</h2>
+            </div>
+            <button class="calc-close" onclick="closeCalculator()">닫기</button>
+        </div>
+
+        <div class="calc-card">
+            <h3>약물사전 계산기</h3>
+        </div>
+
+        <div class="calc-card">
+            <h3>수액 속도 mL/hr</h3>
+            <div class="calc-grid">
+                <label>총 수액량
+                    <div class="calc-unit-row">
+                        <input id="totalVolumeRate" type="number" min="0" step="any">
+                        <select id="totalVolumeRateUnit">
+                            <option value="mL">mL</option>
+                            <option value="L">L</option>
+                        </select>
+                    </div>
+                </label>
+                <label>주입 시간
+                    <div class="calc-unit-row">
+                        <input id="infusionTimeRate" type="number" min="0" step="any">
+                        <select id="infusionTimeRateUnit">
+                            <option value="hr">시간</option>
+                            <option value="min">분</option>
+                        </select>
+                    </div>
+                </label>
+            </div>
+            <div class="calc-result-row">
+                <output id="fluidRateResult" class="calc-result">-- mL/hr</output>
+                <button class="calc-copy" onclick="copyCalcResult('fluidRateResult')">복사</button>
+            </div>
+            <div class="calc-result-row">
+                <output id="dropIntervalResult" class="calc-result">--</output>
+                <button class="calc-copy" onclick="copyCalcResult('dropIntervalResult')">복사</button>
+            </div>
+            <p id="gttMinuteResult" class="calc-note"></p>
+            <p id="fluidRateError" class="calc-error"></p>
+            <p class="calc-formula">mL/hr = 총 수액량(mL) ÷ 시간(hr), 방울 간격 = 60 ÷ (mL/hr × 20 ÷ 60)</p>
+        </div>
+
+        <div class="calc-card">
+            <h3>비례식 약물 계산기</h3>
+            <div class="calc-grid">
+                <label>약물 함량
+                    <div class="calc-unit-row">
+                        <input id="drugAmount" type="number" min="0" step="any">
+                        <select id="drugAmountUnit">
+                            <option value="g">g</option>
+                            <option value="mg">mg</option>
+                            <option value="mcg">mcg</option>
+                        </select>
+                    </div>
+                </label>
+                <label>총 부피(mL)
+                    <input id="totalVolume" type="number" min="0" step="any">
+                </label>
+                <label>처방 용량
+                    <div class="calc-unit-row">
+                        <input id="prescribedDose" type="number" min="0" step="any">
+                        <select id="prescribedDoseUnit">
+                            <option value="mg">mg</option>
+                            <option value="g">g</option>
+                            <option value="mcg">mcg</option>
+                        </select>
+                    </div>
+                </label>
+            </div>
+            <div class="calc-result-row">
+                <output id="proportionResult" class="calc-result">-- mL</output>
+                <button class="calc-copy" onclick="copyCalcResult('proportionResult')">복사</button>
+            </div>
+            <p id="proportionFormulaLine" class="calc-note"></p>
+            <p id="proportionError" class="calc-error"></p>
+            <p class="calc-formula">투여량(mL) = 처방용량(mg 환산) × 총부피(mL) ÷ 약물함량(mg 환산)</p>
+        </div>
+
+        <div class="calc-card">
+            <h3>BSA</h3>
+            <div class="calc-grid">
+                <label>키(cm)<input id="heightCm" type="number" min="0" step="any"></label>
+                <label>체중(kg)<input id="weightKgBsa" type="number" min="0" step="any"></label>
+            </div>
+            <div class="calc-result-row">
+                <output id="bsaResult" class="calc-result">-- m²</output>
+                <button class="calc-copy" onclick="copyCalcResult('bsaResult')">복사</button>
+            </div>
+            <p id="bsaError" class="calc-error"></p>
+            <p class="calc-formula">BSA = √((키 × 체중) / 3600), Mosteller 공식</p>
+        </div>
+
+        <div class="calc-card">
+            <h3>Cockcroft-Gault</h3>
+            <div class="calc-grid">
+                <label>나이<input id="age" type="number" min="0" step="any"></label>
+                <label>체중(kg)<input id="weightKgCrcl" type="number" min="0" step="any"></label>
+                <label>혈청 Cr(Scr)<input id="scr" type="number" min="0" step="any"></label>
+                <label>성별
+                    <select id="sex">
+                        <option value="male">남성</option>
+                        <option value="female">여성</option>
+                    </select>
+                </label>
+            </div>
+            <div class="calc-result-row">
+                <output id="crclResult" class="calc-result">--</output>
+                <button class="calc-copy" onclick="copyCalcResult('crclResult')">복사</button>
+            </div>
+            <p id="crclError" class="calc-error"></p>
+            <p class="calc-formula">GFR = [(140 - age) × BW / (72 × S-cr)] × 1(남성), 0.85(여성)</p>
+            <p class="calc-formula">Carbo dose = target AUC(2) × (GFR + 25)</p>
+        </div>
+
+        <div class="calc-card">
+            <h3>중환자실 약물계산기</h3>
+        </div>
+        <iframe class="calc-frame" src="icu-calculator.html" title="중환자실 약물계산기"></iframe>
+    </div>
+</div>
+
+<script>
+const book = document.getElementById("book");
+const galleryGrid = document.getElementById("galleryGrid");
+const categoryBar = document.getElementById("categoryBar");
+
+const fileNames1 = [
+"001.JPG",
+"002_입원수속.JPG",
+"003_전화번호.JPG",
+"004_전화번호.JPG",
+"005_약조제시간.JPG",
+"006_ENT소개.JPG",
+"007_URO소개.JPG",
+"008_EY소개.JPG",
+"009_DM소개.JPG",
+"010_수술공통.JPG",
+"011_ENT수술.JPG",
+"012_만성부비동.JPG",
+"013_성대후두.JPG",
+"014.JPG",
+"015_난청.JPG",
+"016_중이.JPG",
+"017.JPG",
+"018_외이.JPG",
+"019_침샘.JPG",
+"020.JPG",
+"021_흉터관리.JPG",
+"022_구강인두.JPG",
+"023_갑상선.JPG",
+"024.JPG",
+"025.JPG",
+"026_구강암.JPG",
+"027_기관절개관프로토콜.JPG",
+"028.JPG",
+"029.JPG",
+"030.JPG",
+"031.JPG",
+"032.JPG",
+"033_ENT검사.JPG",
+"034_청각_전정기능.JPG",
+"035_감염_고실내스테로이드주입.JPG",
+"036_URO수술.JPG",
+"037_cystectomy.JPG",
+"038.JPG",
+"039_TUR-B.JPG",
+"040_TUR-P_HoLEP.JPG",
+"041_RRP_LRP_ALP.JPG",
+"042.JPG",
+"043_Nephrectomy.JPG",
+"044_D-URS.JPG",
+"045_DJ.JPG",
+"046_URS.JPG",
+"047_RIRS.JPG",
+"048_PCNL.JPG",
+"049_Cystolitholapaxy.JPG",
+"050_결석의이해.JPG",
+"051.JPG",
+"052.JPG",
+"053.JPG",
+"054.JPG",
+"055_요도.JPG",
+"056_TOT.JPG",
+"057_AUS.JPG",
+"058_잠복고환.JPG",
+"059_음낭수종.JPG",
+"060_Vasovasostomy.JPG",
+"061_URO검사.JPG",
+"062_전립선생검.JPG",
+"063.JPG",
+"064.JPG",
+"065.JPG",
+"066_신장생검.JPG",
+"067.JPG",
+"068.JPG",
+"069_Cystostomy.JPG",
+"070_PCN_IVP_AGP.JPG",
+"071_RGP_RGU.JPG",
+"072_VCUG_신장스캔.JPG",
+"073_Cystoscopy_Cystography.JPG",
+"074_UFM&RU_UDS_TRUS.JPG",
+"075_EY수술.JPG",
+"076_백내장.JPG",
+"077_TPPV.JPG",
+"078_망막박리.JPG",
+"079_사시.JPG",
+"080_안검내반.JPG",
+"081_DM수술.JPG",
+"082_피부피판술.JPG",
+"083_실무.JPG",
+"084_수술전.JPG",
+"085.JPG",
+"086.JPG",
+"087.JPG",
+"088.JPG",
+"089.JPG",
+"090.JPG",
+"091.JPG",
+"092.JPG",
+"093_수술후.JPG",
+"094.JPG",
+"095.JPG",
+"096.JPG",
+"097.JPG",
+"098.JPG",
+"099.JPG",
+"100_SINAPI.JPG",
+];
+
+const fileNames2 = [
+"101.JPG",    
+"102.JPG",
+"103_NPWT.JPG",
+"104.JPG",
+"105.JPG",
+"106.JPG",
+"107.JPG",
+"108.JPG",
+"109_식이.JPG",
+"110.JPG",
+"111.JPG",
+"112.JPG",
+"113.JPG",
+"114.JPG",
+"115.JPG",
+"116.JPG",
+"117.JPG",
+"118_수혈.JPG",
+"119.JPG",
+"120_검체.JPG",
+"121.JPG",
+"122.JPG",
+"123.JPG",
+"124.JPG",
+"125.JPG",
+"126.JPG",
+"127_AST.JPG",
+"128.JPG",
+"129.JPG",
+"130_당뇨.JPG",
+"131_항암.JPG",
+"132.JPG",
+"133_ACTH.JPG",
+"134_검사line정리.JPG",
+"135_검사순서이해.JPG",
+"136_X-ray.JPG",
+"137_핵의학검사.JPG",
+"138.JPG",
+"139_심장초음파_폐기능검사.JPG",
+"140_SET준비.JPG",
+"141.JPG",
+"142.JPG",
+"143.JPG",
+"144.JPG",
+"145_Tra이해.JPG",
+"146.JPG",
+"147.JPG",
+"148.JPG",
+"149_CSR관리.JPG",
+"150.JPG",
+"151.JPG",
+"152.JPG",
+"153.JPG",
+"154_위치안내.JPG",
+"155.JPG",
+"156.JPG",
+"157.JPG",
+"158_유효기간.JPG",
+"159.JPG"
+      
+];
+
+const pages = [
+    ...fileNames1.map(name => ({ folder:"ebook1", name })),
+    ...fileNames2.map(name => ({ folder:"ebook2", name }))
+];
+
+const categories = [
+    { name:"전체", start:1, end:159 },
+    { name:"ENT", start:11, end:35 },
+    { name:"UR0", start:36, end:74 },
+    { name:"EY", start:75, end:80 },
+    { name:"DM", start:81, end:82 },
+    { name:"실무전체", start:83, end:157 },
+    { name:"수술전후", start:83, end:107 },
+    { name:"식이", start:109, end:117 },
+    { name:"수혈/검체/AST", start:118, end:129 },
+    { name:"당뇨/항암/검사이해", start:190, end:139 },
+    { name:"SET/Tra/CSR", start:140, end:153 },
+    { name:"위치안내/유효기간", start:154, end:159 }
+      ];
+      
+const manualKeywords = {
+    "저혈당": [130],
+    "혈당": [130],
+    "고혈당": [130],
+    "인슐린": [130],
+    "당뇨": [130],
+    "BST": [130],
+    "DM": [130],
+          
+    "편도": [22],
+    "편도절제술": [22],
+    "아데": [22],
+    "아데노이드": [22],
+    "구강인두": [22],
+    "Tonsillectomy": [22],
+    "Adenoidectomy": [22]
+};
+let currentViewerIndex = 0;
+
+pages.forEach((item) => {
+    const page = document.createElement("div");
+    page.className = "page";
+
+    const img = document.createElement("img");
+    img.src = `${item.folder}/${item.name}`;
+
+    page.appendChild(img);
+    book.appendChild(page);
+});
+
+const pageFlip = new St.PageFlip(
+    document.getElementById("book"),
+    {
+        width:1400,
+        height:2200,
+        size:"stretch",
+        minWidth:300,
+        maxWidth:2000,
+        minHeight:400,
+        maxHeight:4000,
+        showCover:false,
+        usePortrait:true,
+        startPage:0,
+        autoSize:false,
+        mobileScrollSupport:true,
+        flippingTime:500,
+        maxShadowOpacity:0.15,
+        swipeDistance:20
+    }
+);
+
+    pageFlip.on("flip", (e) => {
+    currentViewerIndex = e.data;
+});
+
+let zoomBaseIndex = 0;
+
+let imgScale = 1;
+let imgTranslateX = 0;
+let imgTranslateY = 0;
+
+let lastTouchDistance = null;
+let lastPanX = 0;
+let lastPanY = 0;
+let lastTapTime = 0;
+let zoomTouchEventsReady = false;
+
+function applyImgTransform(){
+    const img = document.getElementById("zoomImg");
+    img.style.transform =
+        `translate(-50%,-50%) translate(${imgTranslateX}px, ${imgTranslateY}px) scale(${imgScale})`;
+}
+
+function resetImgTransform(){
+    imgScale = 1;
+    imgTranslateX = 0;
+    imgTranslateY = 0;
+    applyImgTransform();
+}
+
+function getTouchDistance(touches){
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx*dx + dy*dy);
+}
+
+function setupZoomImgTouchEvents(){
+    if(zoomTouchEventsReady) return;
+    zoomTouchEventsReady = true;
+
+    const img = document.getElementById("zoomImg");
+
+    img.addEventListener("touchstart", function(e){
+        if(e.touches.length === 2){
+            lastTouchDistance = getTouchDistance(e.touches);
+        } else if(e.touches.length === 1){
+            lastPanX = e.touches[0].clientX;
+            lastPanY = e.touches[0].clientY;
+
+            const now = Date.now();
+            if(now - lastTapTime < 300){
+                if(imgScale > 1){
+                    resetImgTransform();
+                } else {
+                    imgScale = 2;
+                    applyImgTransform();
+                }
+            }
+            lastTapTime = now;
+        }
+    }, { passive:true });
+
+    img.addEventListener("touchmove", function(e){
+        if(e.touches.length === 2){
+            e.preventDefault();
+
+            const newDistance = getTouchDistance(e.touches);
+
+            if(lastTouchDistance){
+                const scaleChange = newDistance / lastTouchDistance;
+                imgScale *= scaleChange;
+                imgScale = Math.min(Math.max(imgScale, 1), 5);
+            }
+
+            lastTouchDistance = newDistance;
+            applyImgTransform();
+
+        } else if(e.touches.length === 1 && imgScale > 1){
+            e.preventDefault();
+
+            const dx = e.touches[0].clientX - lastPanX;
+            const dy = e.touches[0].clientY - lastPanY;
+
+            imgTranslateX += dx;
+            imgTranslateY += dy;
+
+            lastPanX = e.touches[0].clientX;
+            lastPanY = e.touches[0].clientY;
+
+            applyImgTransform();
+        }
+    }, { passive:false });
+
+    img.addEventListener("touchend", function(e){
+        if(e.touches.length < 2){
+            lastTouchDistance = null;
+        }
+        if(e.touches.length === 0 && imgScale < 1.05){
+            resetImgTransform();
+        }
+    }, { passive:true });
+}
+
+function setZoomPage(index){
+    const item = pages[index];
+
+    if(!item){
+        alert("페이지 정보를 찾을 수 없습니다.");
+        return;
+    }
+
+    document.getElementById("zoomImg").src =
+        `${item.folder}/${item.name}`;
+}
+
+function openImageViewer(){
+    resetImgTransform();
+    zoomBaseIndex = currentViewerIndex;
+    setZoomPage(zoomBaseIndex);
+    document.getElementById("imageViewer").style.display = "block";
+    setupZoomImgTouchEvents();
+}
+
+function closeImageViewer(){
+    resetImgTransform();
+    document.getElementById("imageViewer").style.display = "none";
+    document.getElementById("zoomImg").src = "";
+}
+    
+let bookZoom = 100;
+
+document.addEventListener("keydown", function(e){
+    if(e.ctrlKey && (e.key === "+" || e.key === "=" || e.key === "NumpadAdd")){
+        e.preventDefault();
+        bookZoom += 25;
+        if(bookZoom > 400) bookZoom = 400;
+        applyBookZoom();
+    }
+    if(e.ctrlKey && (e.key === "-" || e.key === "NumpadSubtract")){
+        e.preventDefault();
+        bookZoom -= 25;
+        if(bookZoom < 50) bookZoom = 50;
+        applyBookZoom();
+    }
+});
+
+document.addEventListener("wheel", function(e){
+    if(e.ctrlKey){
+        e.preventDefault();
+        if(e.deltaY < 0) bookZoom += 15;
+        else bookZoom -= 15;
+        bookZoom = Math.min(400, Math.max(50, bookZoom));
+        applyBookZoom();
+    }
+}, { passive: false });
+
+function applyBookZoom(){
+    const b = document.getElementById("book");
+    b.style.transform = `scale(${bookZoom/100})`;
+    b.style.transformOrigin = "top center";
+}
+pageFlip.loadFromHTML(document.querySelectorAll(".page"));
+
+categories.forEach((cat, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "category-btn";
+    btn.innerText = cat.name;
+
+    if(idx === 0){
+        btn.classList.add("active");
+    }
+
+    btn.onclick = () => {
+        document.querySelectorAll(".category-btn")
+            .forEach(b => b.classList.remove("active"));
+
+        btn.classList.add("active");
+        renderGallery(cat.start, cat.end);
+    };
+
+    categoryBar.appendChild(btn);
+});
+
+const memoBtn = document.createElement("button");
+memoBtn.className = "category-btn";
+memoBtn.innerText = "메모모음";
+memoBtn.onclick = () => {
+    showAllMemos();
+};
+categoryBar.appendChild(memoBtn);
+
+const calcBtn = document.createElement("button");
+calcBtn.className = "category-btn";
+calcBtn.innerText = "계산기";
+calcBtn.onclick = () => {
+    closeGallery();
+    openCalculator();
+};
+categoryBar.appendChild(calcBtn);
+
+function renderGallery(start, end){
+    galleryGrid.innerHTML = "";
+
+    pages.forEach((item, index) => {
+        const pageNum = index + 1;
+
+        if(pageNum < start || pageNum > end){
+            return;
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "gallery-item";
+
+        const thumb = document.createElement("img");
+        thumb.src = `${item.folder}/${item.name}`;
+
+        const title = document.createElement("div");
+        title.className = "gallery-title";
+        title.innerText = item.name.replace(".JPG", "");
+
+        wrapper.onclick = () => {
+            openViewer(index);
+        };
+
+        wrapper.appendChild(thumb);
+        wrapper.appendChild(title);
+        galleryGrid.appendChild(wrapper);
+    });
+}
+
+renderGallery(1,159);
+
+function openGallery(){
+    document.getElementById("gallery").style.display = "block";
+}
+
+function closeGallery(){
+    document.getElementById("gallery").style.display = "none";
+}
+
+function openViewer(index){
+    currentViewerIndex = index;
+    const item = pages[index];
+
+    document.getElementById("viewerImg").src =
+        `${item.folder}/${item.name}`;
+
+    document.getElementById("viewerTitle").innerText =
+        item.name.replace(".JPG", "");
+
+    document.getElementById("viewer").style.display = "block";
+}
+
+function closeViewer(){
+    document.getElementById("viewer").style.display = "none";
+}
+
+function goToCurrentPage(){
+    pageFlip.flip(currentViewerIndex);
+    closeViewer();
+    closeGallery();
+}
+
+function getCurrentPageIndex(){
+    return pageFlip.getCurrentPageIndex();
+}
+
+function openMemo(){
+    const index = getCurrentPageIndex();
+    const item = pages[index];
+    const key = `memo_${index}`;
+
+    document.getElementById("memoTitle").innerText =
+        `${index + 1}페이지 메모 - ${item.name.replace(".JPG", "")}`;
+
+    document.getElementById("memoText").value =
+        localStorage.getItem(key) || "";
+
+    document.getElementById("memoBox").style.display = "block";
+}
+
+function saveMemo(){
+    const index = getCurrentPageIndex();
+    const key = `memo_${index}`;
+
+    localStorage.setItem(
+        key,
+        document.getElementById("memoText").value
+    );
+
+    alert("메모가 저장되었습니다.");
+}
+
+function closeMemo(){
+    document.getElementById("memoBox").style.display = "none";
+}
+
+const doseUnitToMg = { g:1000, mg:1, mcg:0.001 };
+const volumeUnitToMl = { L:1000, mL:1 };
+const timeUnitToHours = { hr:1, min:1/60 };
+const FIXED_DROP_FACTOR = 20;
+
+function openCalculator(){
+    document.getElementById("calcBox").style.display = "block";
+}
+
+function closeCalculator(){
+    document.getElementById("calcBox").style.display = "none";
+}
+
+function readCalcNumber(id){
+    const value = Number(document.getElementById(id).value);
+    return Number.isFinite(value) ? value : NaN;
+}
+
+function isPositive(value){
+    return Number.isFinite(value) && value > 0;
+}
+
+function toMg(value, unit){
+    return Number(value) * doseUnitToMg[unit];
+}
+
+function toMl(value, unit){
+    return Number(value) * volumeUnitToMl[unit];
+}
+
+function toHours(value, unit){
+    return Number(value) * timeUnitToHours[unit];
+}
+
+function formatCalc(value, unit){
+    if(!Number.isFinite(value)) return unit ? `-- ${unit}` : "--";
+    const text = value.toFixed(2).replace(/\.?0+$/,"");
+    return unit ? `${text} ${unit}` : text;
+}
+
+function toMcg(value, unit){
+    return Number(value) * (unit === "mg" ? 1000 : 1);
+}
+
+function setCalcOutput(id, text){
+    const output = document.getElementById(id);
+    output.textContent = text;
+    output.dataset.copyValue = text.startsWith("--") ? "" : text;
+}
+
+function setCalcError(id, message){
+    document.getElementById(id).textContent = message || "";
+}
+
+function calculateFluidRate(){
+    const totalMl = toMl(
+        document.getElementById("totalVolumeRate").value,
+        document.getElementById("totalVolumeRateUnit").value
+    );
+    const hours = toHours(
+        document.getElementById("infusionTimeRate").value,
+        document.getElementById("infusionTimeRateUnit").value
+    );
+
+    if(!isPositive(totalMl) || !isPositive(hours)){
+        setCalcOutput("fluidRateResult", "-- mL/hr");
+        setCalcOutput("dropIntervalResult", "--");
+        document.getElementById("gttMinuteResult").textContent = "";
+        setCalcError("fluidRateError", "값을 모두 0보다 크게 입력하세요.");
+        return;
+    }
+
+    const mlPerHour = totalMl / hours;
+    const gttPerMinute = (mlPerHour * FIXED_DROP_FACTOR) / 60;
+    const secondsPerDrop = 60 / gttPerMinute;
+    setCalcOutput("fluidRateResult", formatCalc(mlPerHour, "mL/hr"));
+    setCalcOutput("dropIntervalResult", `${formatCalc(secondsPerDrop, "초에 1방울")}`);
+    document.getElementById("gttMinuteResult").textContent =
+        `참고: ${formatCalc(gttPerMinute, "gtt/min")} (drop factor 20 고정)`;
+    setCalcError("fluidRateError", "");
+}
+
+function calculateIcuInfusion(){
+    const totalMcg = toMcg(
+        document.getElementById("icuDrugAmount").value,
+        document.getElementById("icuDrugAmountUnit").value
+    );
+    const totalVolume = readCalcNumber("icuTotalVolume");
+    const weightKg = readCalcNumber("icuWeightKg");
+    const targetDose = readCalcNumber("icuTargetDose");
+    const currentRate = readCalcNumber("icuCurrentRate");
+
+    if(!isPositive(totalMcg) || !isPositive(totalVolume) || !isPositive(weightKg) || !isPositive(targetDose)){
+        setCalcOutput("icuRateResult", "-- mL/hr");
+        document.getElementById("icuRateFormula").textContent = "";
+        setCalcError("icuRateError", "목표 주입속도 계산값을 모두 0보다 크게 입력하세요.");
+    }else{
+        const mlPerHour = (targetDose * weightKg * 60 * totalVolume) / totalMcg;
+        setCalcOutput("icuRateResult", formatCalc(mlPerHour, "mL/hr"));
+        document.getElementById("icuRateFormula").textContent =
+            `${formatCalc(targetDose, "mcg/kg/min")} × ${formatCalc(weightKg, "kg")} × 60 × ${formatCalc(totalVolume, "mL")} ÷ ${formatCalc(totalMcg, "mcg")} = ${formatCalc(mlPerHour, "mL/hr")}`;
+        setCalcError("icuRateError", "");
+    }
+
+    if(!isPositive(totalMcg) || !isPositive(totalVolume) || !isPositive(weightKg) || !isPositive(currentRate)){
+        setCalcOutput("icuCurrentDoseResult", "-- mcg/kg/min");
+        setCalcError("icuReverseError", "역산하려면 약물 총량, 총 부피, 체중, 현재 주입속도를 0보다 크게 입력하세요.");
+        return;
+    }
+
+    const dose = (currentRate * totalMcg) / (weightKg * 60 * totalVolume);
+    setCalcOutput("icuCurrentDoseResult", formatCalc(dose, "mcg/kg/min"));
+    setCalcError("icuReverseError", "");
+}
+
+function calculateProportion(){
+    const drugAmountMg = toMg(
+        document.getElementById("drugAmount").value,
+        document.getElementById("drugAmountUnit").value
+    );
+    const volumeMl = readCalcNumber("totalVolume");
+    const prescribedMg = toMg(
+        document.getElementById("prescribedDose").value,
+        document.getElementById("prescribedDoseUnit").value
+    );
+
+    if(!isPositive(drugAmountMg) || !isPositive(volumeMl) || !isPositive(prescribedMg)){
+        setCalcOutput("proportionResult", "-- mL");
+        document.getElementById("proportionFormulaLine").textContent = "";
+        setCalcError("proportionError", "값을 모두 0보다 크게 입력하세요.");
+        return;
+    }
+
+    const result = (prescribedMg * volumeMl) / drugAmountMg;
+    setCalcOutput("proportionResult", formatCalc(result, "mL"));
+    document.getElementById("proportionFormulaLine").textContent =
+        `${formatCalc(drugAmountMg, "mg")} : ${formatCalc(volumeMl, "mL")} = ${formatCalc(prescribedMg, "mg")} : x, x = ${formatCalc(result, "mL")}`;
+    setCalcError("proportionError", "");
+}
+
+function calculateBsa(){
+    const heightCm = readCalcNumber("heightCm");
+    const weightKg = readCalcNumber("weightKgBsa");
+    if(!isPositive(heightCm) || !isPositive(weightKg)){
+        setCalcOutput("bsaResult", "-- m²");
+        setCalcError("bsaError", "값을 모두 0보다 크게 입력하세요.");
+        return;
+    }
+    setCalcOutput("bsaResult", formatCalc(Math.sqrt((heightCm * weightKg) / 3600), "m²"));
+    setCalcError("bsaError", "");
+}
+
+function calculateCrcl(){
+    const age = readCalcNumber("age");
+    const weightKg = readCalcNumber("weightKgCrcl");
+    const scr = readCalcNumber("scr");
+    if(!isPositive(age) || !isPositive(weightKg) || !isPositive(scr)){
+        setCalcOutput("crclResult", "--");
+        setCalcError("crclError", "값을 모두 0보다 크게 입력하세요.");
+        return;
+    }
+    const maleValue = ((140 - age) * weightKg) / (72 * scr);
+    const gfr = document.getElementById("sex").value === "female" ? maleValue * 0.85 : maleValue;
+    const carboDose = 2 * (gfr + 25);
+    setCalcOutput("crclResult", `GFR ${formatCalc(gfr, "mL/min")} / Carbo dose ${formatCalc(carboDose, "mg")}`);
+    setCalcError("crclError", "");
+}
+
+function calculateAll(){
+    calculateIcuInfusion();
+    calculateFluidRate();
+    calculateProportion();
+    calculateBsa();
+    calculateCrcl();
+}
+
+function copyCalcResult(id){
+    const value = document.getElementById(id).dataset.copyValue || "";
+    if(!value){
+        alert("계산할 값을 먼저 입력하세요.");
+        return;
+    }
+    if(navigator.clipboard){
+        navigator.clipboard.writeText(value).then(() => alert("복사했습니다."));
+    }else{
+        alert(value);
+    }
+}
+
+document.addEventListener("input", (event) => {
+    if(event.target.closest("#calcBox")) calculateAll();
+});
+
+document.addEventListener("change", (event) => {
+    if(event.target.closest("#calcBox")) calculateAll();
+});
+
+   function openSearch(){
+    document.getElementById("searchBox").style.display = "block";
+    document.getElementById("searchInput").focus();
+}
+
+function closeSearch(){
+    document.getElementById("searchBox").style.display = "none";
+}
+
+function normalizeText(text){
+    return String(text || "")
+        .toLowerCase()
+        .replace(/\s/g,"")
+        .replace(/_/g,"")
+        .replace(/-/g,"");
+}
+
+function highlightKeyword(text, rawKeyword){
+    if(!rawKeyword) return text;
+
+    const escaped = rawKeyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, "gi");
+
+    return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+}
+    
+function highlightKeyword(text, rawKeyword){
+    if(!rawKeyword) return text;
+
+    const escaped = rawKeyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, "gi");
+
+    return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+}    
+    
+function searchPages(){
+    const rawKeyword = document.getElementById("searchInput").value;
+    const keyword = normalizeText(rawKeyword);
+
+    const resultBox = document.getElementById("searchResult");
+    resultBox.innerHTML = "";
+
+    if(keyword === ""){
+        return;
+    }
+
+    pages.forEach((item,index)=>{
+        const fileKey = `${item.folder}/${item.name}`;
+        const fileNameText = normalizeText(item.name);
+        const ocrText = normalizeText(
+           typeof ocrTexts !== "undefined" && ocrTexts[fileKey]
+    ? ocrTexts[fileKey]
+    : ""
+        );
+
+      const manualPages = [];
+
+Object.keys(manualKeywords).forEach(key => {
+    if(
+        normalizeText(key).includes(keyword) ||
+        keyword.includes(normalizeText(key))
+    ){
+        manualPages.push(...manualKeywords[key]);
+    }
+});
+
+if(
+    fileNameText.includes(keyword) ||
+    ocrText.includes(keyword) ||
+    manualPages.includes(index + 1)
+){
+            const div = document.createElement("div");
+            div.className = "search-item";
+
+            const displayName = item.name.replace(".JPG", "");
+            const highlightedName = highlightKeyword(displayName, rawKeyword);
+
+            div.innerHTML = `${index+1}페이지 - ${highlightedName}`;
+
+            div.onclick = ()=>{
+                pageFlip.flip(index);
+                closeSearch();
+            };
+
+            resultBox.appendChild(div);
+        }
+    });
+
+    if(resultBox.innerHTML === ""){
+        resultBox.innerHTML =
+            "<div class='search-item'>검색 결과가 없습니다.</div>";
+    }
+}
+      function showAllMemos(){
+    galleryGrid.innerHTML = "";
+
+    pages.forEach((item, index) => {
+        const key = `memo_${index}`;
+        const memo = localStorage.getItem(key);
+
+        if(memo && memo.trim() !== ""){
+            const div = document.createElement("div");
+            div.className = "gallery-item";
+
+            div.innerHTML = `
+                <div class="gallery-title">
+                    <b>${index + 1}페이지</b><br>
+                    ${item.name}
+                    <hr>
+                    ${memo.replace(/\n/g,"<br>")}
+                </div>
+            `;
+
+            div.onclick = () => {
+                pageFlip.flip(index);
+                closeGallery();
+            };
+
+            galleryGrid.appendChild(div);
+        }
+    });
+
+    if(galleryGrid.innerHTML === ""){
+        galleryGrid.innerHTML =
+            "<div class='gallery-item'><div class='gallery-title'>저장된 메모가 없습니다.</div></div>";
+    }
+}
+
+</script>
+<div id="searchBox" class="search-box">
+
+    <div class="search-panel">
+
+        <input id="searchInput"
+               type="text"
+               placeholder="검색어 입력"
+               oninput="searchPages()">
+
+        <div id="searchResult"
+             class="search-result">
+        </div>
+
+        <div class="memo-actions">
+            <button onclick="closeSearch()">닫기</button>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>
+
