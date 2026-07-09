@@ -1038,10 +1038,10 @@ const categories = [
     { name:"EY", start:75, end:80 },
     { name:"DM", start:81, end:82 },
     { name:"실무전체", start:83, end:157 },
-    { name:"수술전후", start:83, end:107 },
+    { name:"수술전후", start:84, end:107 },
     { name:"식이", start:109, end:117 },
     { name:"수혈/검체/AST", start:118, end:129 },
-    { name:"당뇨/항암/검사이해", start:190, end:139 },
+    { name:"당뇨/항암/검사이해", start:130, end:139 },
     { name:"SET/Tra/CSR", start:140, end:153 },
     { name:"위치안내/유효기간", start:154, end:159 }
       ];
@@ -1895,76 +1895,76 @@ if(
             .weight-label { font-size:0.85rem; }
             .weight-input { width:58px; height:38px; font-size:1.35rem; }
             .btn-common { min-height:44px; font-size:0.86rem; }
-            .table-wrap { padding:4px 4px 140px; max-width:none; }
+            .table-wrap { padding:6px 6px 150px; max-width:none; }
             table,
             tbody { display:block; width:100%; background:transparent; box-shadow:none; border-radius:0; }
             thead { display:none; }
             tr {
                 display:grid;
-                grid-template-columns:repeat(3, 1fr);
-                gap:1px;
-                margin:0 0 1px;
-                padding:1px;
+                grid-template-columns:1fr 1fr;
+                gap:4px;
+                margin:0 0 6px;
+                padding:6px;
                 background:var(--bg-card);
                 border:1px solid rgba(224,224,224,0.75);
-                border-radius:6px;
-                box-shadow:none;
+                border-radius:10px;
+                box-shadow:0 1px 6px rgba(15,27,48,0.06);
             }
             td {
                 display:flex;
                 flex-direction:column;
                 justify-content:center;
                 width:auto !important;
-                min-height:22px;
+                min-height:42px;
                 height:auto;
                 border:0;
-                border-radius:4px;
-                padding:0 2px;
+                border-radius:8px;
+                padding:4px 6px;
                 text-align:center;
                 box-sizing:border-box;
             }
             td::before {
                 content:attr(data-label);
                 display:block;
-                margin-bottom:0;
+                margin-bottom:2px;
                 color:#607084;
-                font-size:0.52rem;
+                font-size:0.64rem;
                 font-weight:800;
                 line-height:1;
             }
             .td-name {
                 grid-column:1 / -1;
                 min-height:auto;
-                padding:1px 4px;
-                border-radius:4px;
+                padding:6px 8px;
+                border-radius:8px;
             }
             .td-name::before { display:none; }
             .drug-cell-container { justify-content:center; }
-            .copy-btn-area { padding-right:3px; }
-            .copy-icon { font-size:0.78rem; padding:0; }
-            .drug-title { font-size:0.76rem; line-height:0.96; }
-            .info-icon { width:10px; height:10px; font-size:0.58rem; }
-            .drug-mix-info { font-size:0.54rem; margin-top:0; line-height:0.98; }
+            .copy-btn-area { padding-right:5px; }
+            .copy-icon { font-size:0.9rem; padding:1px; }
+            .drug-title { font-size:0.98rem; line-height:1.12; }
+            .info-icon { width:12px; height:12px; font-size:0.68rem; }
+            .drug-mix-info { font-size:0.68rem; margin-top:1px; line-height:1.08; }
             .td-input,
             .td-unit { background:#fff8d9; }
             .td-result {
-                grid-column:auto;
-                min-height:24px;
+                grid-column:1 / -1;
+                min-height:52px;
                 border:1px solid currentColor;
             }
             .input-mini,
             .input-dose {
-                min-height:17px;
-                font-size:0.8rem;
-                border-radius:4px;
+                min-height:34px;
+                font-size:1.08rem;
+                border-radius:8px;
                 background:rgba(255,255,255,0.55);
             }
             .td-unit select {
-                min-height:17px;
-                font-size:0.68rem !important;
+                min-height:34px;
+                font-size:0.9rem !important;
             }
-            .res-val { font-size:0.98rem; }
-            .res-unit { font-size:0.58rem; margin-top:0; }
+            .res-val { font-size:1.45rem; }
+            .res-unit { font-size:0.72rem; margin-top:1px; }
             .footer-bar { padding:9px 8px calc(9px + env(safe-area-inset-bottom)); }
             .btn-copy { font-size:1rem; padding:12px; }
             .footer-disclaimer { font-size:0.6rem; }
