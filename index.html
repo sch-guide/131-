@@ -815,6 +815,16 @@ const book = document.getElementById("book");
 const galleryGrid = document.getElementById("galleryGrid");
 const categoryBar = document.getElementById("categoryBar");
 
+// 계산기 입력 리스너는 스크립트 맨 앞에서 먼저 등록합니다.
+// (책 넘기기/갤러리 초기화 쪽에서 오류가 나더라도 계산기는 항상 동작하도록)
+document.addEventListener("input", (event) => {
+    if(event.target.closest("#calcBox")) calculateAll();
+});
+
+document.addEventListener("change", (event) => {
+    if(event.target.closest("#calcBox")) calculateAll();
+});
+
 const fileNames1 = [
 "001.JPG",
 "002_입원수속.JPG",
@@ -1558,14 +1568,6 @@ function copyCalcResult(id){
     }
 }
 
-document.addEventListener("input", (event) => {
-    if(event.target.closest("#calcBox")) calculateAll();
-});
-
-document.addEventListener("change", (event) => {
-    if(event.target.closest("#calcBox")) calculateAll();
-});
-
    function openSearch(){
     document.getElementById("searchBox").style.display = "block";
     document.getElementById("searchInput").focus();
@@ -1781,10 +1783,7 @@ if(
         .weight-input { width:70px; height:42px; border:2px solid #ffcdd2; border-radius:6px; text-align:center; font-size:1.7rem; font-weight:900; background:#fff; color:#d32f2f; }
         .btn-group { display:flex; flex-wrap: wrap; justify-content: center; gap:4px; flex:1; }
         .btn-common { flex: 1 1 30%; border-radius:8px; font-weight:800; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2); padding:10px 0; font-size: 0.8rem; letter-spacing: -0.5px; white-space: nowrap; display: flex; align-items: center; justify-content: center; }
-        .btn-vent { background:#009688; color:#fff; border:2px solid #00796b; }
-        .btn-yale { background:#7e57c2; color:#fff; border:2px solid #5e35b1; }
         .btn-heparin { background:#ff9800; color:#fff; border:2px solid #f57c00; }
-        .btn-intubation { background:#3f51b5; color:#fff; border:2px solid #283593; }
         .btn-setting { background:#fdd835; color:#000; border:2px solid #fbc02d; }
         .mode-row { display:flex; gap:5px; width:100%; max-width:600px; margin-top: 5px; }
         .mode-btn { flex:1; border:none; border-radius:6px; padding:12px 0; font-size:1rem; font-weight:700; cursor:pointer; background:rgba(0,0,0,0.25); color:#cfd8dc; transition:0.2s; white-space:nowrap; }
@@ -1832,18 +1831,6 @@ if(
         .btn-confirm-final { width:100%; padding:15px; border:none; border-radius:8px; font-size:1.2rem; font-weight:900; cursor:pointer; margin-top:20px; margin-bottom:10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .btn-reset-final { width:100%; padding:10px; background:#e53935; color:white; border:none; border-radius:8px; font-size:0.9rem; font-weight:700; cursor:pointer; margin-top:10px; opacity:0.9; }
         .btn-popup-close { width:100%; padding:10px; background:#555; color:white; border:none; border-radius:8px; margin-top:15px; font-size:1rem; font-weight:700; cursor:pointer; }
-        .vent-row { display:flex; align-items:center; gap:5px; justify-content: space-between; margin-bottom: 15px; }
-        .vent-label { font-weight:700; color:var(--sch-blue); }
-        .gender-btn { flex:1; padding:12px; border:1px solid #ccc; background:#f0f0f0; color:#666; cursor:pointer; font-weight:700; border-radius:6px; transition:0.2s; }
-        .gender-btn.active { background:#0055b8; color:#fff; border-color:#004ba0; box-shadow:0 2px 4px rgba(0,0,0,0.3); }
-        .vent-section-header { font-size:0.9rem; font-weight:900; color:#455a64; margin-top:15px; margin-bottom:5px; text-align:left; border-left:4px solid #009688; padding-left:8px; }
-        .vt-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:5px; }
-        .vt-item { background:#fff; padding:10px 5px; border-radius:6px; text-align:center; border:1px solid #b2dfdb; }
-        .vt-label { display:block; font-size:0.75rem; color:#00796b; margin-bottom:2px; }
-        .vt-val { font-size:1.2rem; font-weight:900; color:#004d40; }
-        .pbw-display { text-align:center; font-size:2rem; font-weight:900; color:#d32f2f; margin:10px 0; background:#ffebee; padding:10px; border-radius:8px; }
-        .btn-vent-print { width:100%; padding:12px; background:#607d8b; color:white; border:none; border-radius:8px; font-size:1rem; font-weight:800; cursor:pointer; margin-top:15px; box-shadow:0 4px 6px rgba(0,0,0,0.2); }
-        .free-input { flex:1; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:1.1rem; text-align:center; font-weight:700; background:#fff; color:#333; }
         .hep-protocol-box { border: 2px solid #ffcc80; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
         .hep-protocol-title { background: #ffe0b2; color: #e65100; padding: 10px; font-weight: 900; text-align: center; border-bottom: 1px solid #ffcc80; }
         .hep-calc-row { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: #fff; border-bottom: 1px solid #eee; }
@@ -1857,13 +1844,6 @@ if(
         .hep-action-box { background:#fbe9e7; padding:15px; border-radius:8px; text-align:center; margin-top:15px; border:2px solid #ff5722; }
         .hep-action-text { font-size:1.1rem; font-weight:900; color:#bf360c; display:block; margin-bottom:5px; }
         .hep-new-rate { font-size:2rem; font-weight:900; color:#d84315; }
-        .yale-result-box { margin-top:15px; padding:15px; border-radius:8px; display:none; line-height:1.5; font-size:0.9rem; color:white; animation:fadeInUp 0.3s ease-out; }
-        @keyframes fadeInUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-        .yale-res-success { background:linear-gradient(135deg, #16a085, #27ae60); }
-        .yale-res-warning { background:linear-gradient(135deg, #d35400, #f39c12); }
-        .yale-res-danger { background:linear-gradient(135deg, #c0392b, #e74c3c); }
-        .yale-bold { font-weight:900; text-decoration:underline; font-size:1.05rem; }
-        .yale-small-inst { font-size:0.85em; opacity:0.95; line-height:1.3; display:block; margin:4px 0; }
 
         @media (max-width: 640px) {
             body { background:#eef3f8; }
@@ -1887,69 +1867,69 @@ if(
             tr {
                 display:grid;
                 grid-template-columns:1fr 1fr;
-                gap:4px;
-                margin:0 0 5px;
-                padding:5px;
+                gap:2px;
+                margin:0 0 3px;
+                padding:3px;
                 background:var(--bg-card);
                 border:1px solid var(--border-color);
-                border-radius:9px;
-                box-shadow:0 2px 8px rgba(15,27,48,0.07);
+                border-radius:8px;
+                box-shadow:0 1px 4px rgba(15,27,48,0.07);
             }
             td {
                 display:flex;
                 flex-direction:column;
                 justify-content:center;
                 width:auto !important;
-                min-height:38px;
+                min-height:28px;
                 height:auto;
                 border:0;
-                border-radius:7px;
-                padding:3px 5px;
+                border-radius:6px;
+                padding:1px 4px;
                 text-align:center;
                 box-sizing:border-box;
             }
             td::before {
                 content:attr(data-label);
                 display:block;
-                margin-bottom:1px;
+                margin-bottom:0;
                 color:#607084;
-                font-size:0.6rem;
+                font-size:0.56rem;
                 font-weight:800;
-                line-height:1.1;
+                line-height:1;
             }
             .td-name {
                 grid-column:1 / -1;
                 min-height:auto;
-                padding:5px 6px;
-                border-radius:8px;
+                padding:3px 6px;
+                border-radius:7px;
             }
             .td-name::before { display:none; }
             .drug-cell-container { justify-content:center; }
             .copy-btn-area { padding-right:5px; }
-            .copy-icon { font-size:0.9rem; padding:2px; }
-            .drug-title { font-size:0.9rem; line-height:1.05; }
-            .info-icon { width:12px; height:12px; font-size:0.66rem; }
-            .drug-mix-info { font-size:0.61rem; margin-top:0; line-height:1.05; }
+            .copy-icon { font-size:0.85rem; padding:1px; }
+            .drug-title { font-size:0.85rem; line-height:1; }
+            .info-icon { width:11px; height:11px; font-size:0.62rem; }
+            .drug-mix-info { font-size:0.58rem; margin-top:0; line-height:1; }
             .td-input,
             .td-unit { background:#fff8d9; }
             .td-result {
                 grid-column:1 / -1;
-                min-height:42px;
+                min-height:32px;
                 border:1px solid currentColor;
             }
             .input-mini,
             .input-dose {
-                min-height:26px;
-                font-size:1rem;
-                border-radius:6px;
+                min-height:20px;
+                font-size:0.92rem;
+                border-radius:5px;
                 background:rgba(255,255,255,0.55);
             }
             .td-unit select {
-                min-height:26px;
-                font-size:0.78rem !important;
+                min-height:20px;
+                font-size:0.74rem !important;
             }
-            .res-val { font-size:1.28rem; }
-            .res-unit { font-size:0.68rem; margin-top:0; }
+            .res-val { font-size:1.12rem; }
+            .res-unit { font-size:0.64rem; margin-top:0; }
             .footer-bar { padding:9px 8px calc(9px + env(safe-area-inset-bottom)); }
             .btn-copy { font-size:1rem; padding:12px; }
             .footer-disclaimer { font-size:0.6rem; }
@@ -1966,65 +1946,6 @@ if(
             .hep-calc-result { width:72px; }
         }
 
-        /* =============================================
-           PRINT STYLES - Ventilator 결과 출력 전용
-           ============================================= */
-        @media print {
-            /* 색상 강제 적용 */
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            /* 전체 페이지 리셋 */
-            html, body {
-                margin: 0 !important;
-                padding: 0 !important;
-                background: white !important;
-                color: black !important;
-                width: 100% !important;
-                height: auto !important;
-            }
-            /* 화면 UI 전부 숨김 */
-            .header, .footer-bar, .table-wrap, .overlay { display: none !important; }
-            /* 모든 팝업 기본 숨김 */
-            .popup-panel { display: none !important; }
-            /* vent-panel만 전체 페이지로 표시 - 1/4 크기 출력 */
-            #vent-panel {
-                display: block !important;
-                position: static !important;
-                transform: none !important;
-                top: auto !important;
-                left: auto !important;
-                width: 200mm !important;
-                max-width: 200mm !important;
-                max-height: none !important;
-                overflow: visible !important;
-                box-shadow: none !important;
-                border: none !important;
-                border-radius: 0 !important;
-                padding: 5mm 8mm !important;
-                margin: 0 !important;
-                background: white !important;
-                box-sizing: border-box !important;
-                zoom: 0.5 !important;
-                page-break-inside: avoid !important;
-            }
-            /* 버튼 숨김 */
-            #vent-panel .btn-popup-close,
-            #vent-panel .btn-vent-print { display: none !important; }
-            /* 색상 유지 */
-            #vent-panel h3 { color: #00796b !important; }
-            .gender-btn.active { background: #0055b8 !important; color: white !important; }
-            .pbw-display { background: #ffebee !important; color: #d32f2f !important; border-radius: 8px !important; }
-            .vent-section-header { border-left: 4px solid #009688 !important; color: #455a64 !important; }
-            .vt-item { background: #f9f9f9 !important; border: 1px solid #b2dfdb !important; border-radius: 6px !important; }
-            .vt-label { color: #00796b !important; }
-            .vt-val { color: #004d40 !important; }
-            /* 그리드/레이아웃 유지 */
-            .vent-row { display: flex !important; }
-            .vt-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 5px !important; }
-        }
     </style>
 </head>
 <body>
@@ -2042,7 +1963,7 @@ if(
     <div class="control-top-row">
         <div class="weight-container">
             <span class="weight-label">체중(kg)</span>
-            <input type="number" id="bw" class="weight-input" value="60" oninput="saveWeight(); calcAll(); calcPBW(); calcHeparin(); calcInduction();" step="0.5">
+            <input type="number" id="bw" class="weight-input" value="60" oninput="saveWeight(); calcAll(); calcHeparin();" step="0.5">
         </div>
         <div class="btn-group">
             <button class="btn-common btn-heparin" onclick="openHeparinCalc()">🩸 Heparin</button>
@@ -2085,78 +2006,6 @@ if(
 
 <div class="overlay" id="overlay" onclick="closeAllPopups()"></div>
 
-<div id="vent-panel" class="popup-panel">
-    <h3 style="text-align:center; margin-top:0; color:#00796b; margin-bottom:15px;">🌬️ Ventilator Settings</h3>
-    <div class="vent-row">
-        <span class="vent-label">성별 (Gender)</span>
-        <div style="display:flex; gap:10px; flex:1;">
-            <button class="gender-btn active" id="btn-male" onclick="setGender('male')">남성 (Male)</button>
-            <button class="gender-btn" id="btn-female" onclick="setGender('female')">여성 (Female)</button>
-        </div>
-    </div>
-    <div class="vent-row">
-        <span class="vent-label">신장 (Height)</span>
-        <input type="number" id="vent-height" class="free-input" placeholder="cm" oninput="calcPBW()">
-    </div>
-    <hr style="border:1px dashed #b2dfdb; margin:15px 0;">
-    <div style="text-align:center;">
-        <span style="font-size:0.9rem; color:#555;">예측 체중 (PBW)</span>
-        <div class="pbw-display"><span id="pbw-val">0.0</span> kg</div>
-    </div>
-    <div class="vent-section-header">Without ARDS (6 ~ 8 ml/kg)</div>
-    <div class="vt-grid" style="grid-template-columns: 1fr 1fr;">
-        <div class="vt-item"><span class="vt-label">Target 6ml</span><span id="vt-6" class="vt-val">0</span></div>
-        <div class="vt-item"><span class="vt-label">Target 8ml</span><span id="vt-8" class="vt-val">0</span></div>
-    </div>
-    <div class="vent-section-header" style="border-color:#e53935; color:#c62828;">With ARDS (4 ~ 6 ml/kg)</div>
-    <div class="vt-grid" style="grid-template-columns: 1fr 1fr;">
-        <div class="vt-item" style="border-color:#ef9a9a;"><span class="vt-label" style="color:#c62828;">Target 4ml</span><span id="vt-4" class="vt-val" style="color:#b71c1c;">0</span></div>
-        <div class="vt-item" style="border-color:#ef9a9a;"><span class="vt-label" style="color:#c62828;">Target 6ml</span><span id="vt-6-ards" class="vt-val" style="color:#b71c1c;">0</span></div>
-    </div>
-    <button class="btn-vent-print" onclick="window.print()">🖨️ 결과 출력 (Print)</button>
-    <button class="btn-popup-close" onclick="closeAllPopups()">닫기</button>
-</div>
-
-<div id="yale-panel" class="popup-panel">
-    <h3 style="text-align:center; margin-top:0; color:#5e35b1; margin-bottom:10px;">💉 Yale Insulin Protocol</h3>
-    <div style="text-align:center; font-size:0.85rem; color:var(--text-main); margin-bottom:15px; line-height:1.4;">
-        Concentration: 100 units / 100 mL (1:1)<br>
-        <span style="color:#e74c3c; font-weight:800;">Target BST: 140 - 180 mg/dL</span>
-    </div>
-    <div style="background:#f8f9f9; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #d5dbdb;">
-        <h4 style="font-size:0.95rem; color:#154360; margin:0 0 12px 0; border-left:3px solid #2980b9; padding-left:8px; font-weight:700;">1. 초기 시작 (Initiation)</h4>
-        <label style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:5px; color:#2c3e50;">현재 BST (mg/dL)</label>
-        <input type="number" id="yale-initBST" placeholder="수치 입력 (181 이상)" onkeydown="if(event.key === 'Enter'){calcYaleStart()}" style="width:100%; padding:10px; border:1px solid #bdc3c7; border-radius:6px; font-size:1rem; box-sizing:border-box; margin-bottom:10px;">
-        <button onclick="calcYaleStart()" style="width:100%; padding:12px; background:#154360; color:white; border:none; border-radius:6px; font-size:0.95rem; font-weight:700; cursor:pointer;">초기 투여량 계산</button>
-        <div id="yale-startRes" class="yale-result-box"></div>
-    </div>
-    <div style="background:#f8f9f9; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #d5dbdb;">
-        <h4 style="font-size:0.95rem; color:#154360; margin:0 0 12px 0; border-left:3px solid #2980b9; padding-left:8px; font-weight:700;">2. 조절 및 대처 (Maintenance)</h4>
-        <label style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:5px; color:#2c3e50;">현재 주입 속도 (cc/hr)</label>
-        <input type="number" id="yale-curRate" step="0.1" placeholder="현재 cc/hr" style="width:100%; padding:10px; border:1px solid #bdc3c7; border-radius:6px; font-size:1rem; box-sizing:border-box; margin-bottom:10px;">
-        <div style="display:flex; gap:8px; margin-bottom:10px;">
-            <div style="flex:1;">
-                <label style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:5px; color:#2c3e50;">이전 BST</label>
-                <input type="number" id="yale-prevBST" style="width:100%; padding:10px; border:1px solid #bdc3c7; border-radius:6px; font-size:1rem; box-sizing:border-box;">
-            </div>
-            <div style="flex:1;">
-                <label style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:5px; color:#2c3e50;">현재 BST</label>
-                <input type="number" id="yale-currBST" onkeydown="if(event.key === 'Enter'){calcYaleAdjust()}" style="width:100%; padding:10px; border:1px solid #bdc3c7; border-radius:6px; font-size:1rem; box-sizing:border-box;">
-            </div>
-        </div>
-        <label style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:5px; color:#2c3e50;">측정 간격 (시간)</label>
-        <input type="number" id="yale-interval" value="1" style="width:100%; padding:10px; border:1px solid #bdc3c7; border-radius:6px; font-size:1rem; box-sizing:border-box; margin-bottom:10px;">
-        <button onclick="calcYaleAdjust()" style="width:100%; padding:12px; background:#34495e; color:white; border:none; border-radius:6px; font-size:0.95rem; font-weight:700; cursor:pointer;">분석 및 속도조정</button>
-        <div id="yale-adjRes" class="yale-result-box"></div>
-        <div style="font-size:0.75rem; color:var(--text-main); margin-top:8px; opacity:0.8;">* Target BST 3회 연속 도달 시 측정간격 q 1h → q 2h 변경</div>
-    </div>
-    <div style="font-size:0.7rem; color:#7f8c8d; line-height:1.4; margin-bottom:10px; text-align:center;">본 프로그램은 간호 업무 보조 도구입니다. 계산 결과는 참고용이며, 환자의 개별적인 임상 상태와 주치의 처방이 우선합니다.</div>
-    <div style="text-align:center; margin-bottom:10px;">
-        <a href="https://doi.org/10.1177/10600280221074683" target="_blank" style="color:#7f8c8d; font-size:0.7rem; text-decoration:none; opacity:0.8;">Reference: 10.1177/10600280221074683</a>
-    </div>
-    <button class="btn-popup-close" onclick="closeAllPopups()">닫기</button>
-</div>
-
 <div id="hep-panel" class="popup-panel">
     <h3 style="text-align:center; margin-top:0; color:#e65100; margin-bottom:5px;">🩸 Heparin Protocol</h3>
     <div style="text-align:center; font-size:0.85rem; color:#666; margin-bottom:15px;">Standard Mix: <strong>25,000 U / 250 cc</strong> (100 U/cc)</div>
@@ -2198,39 +2047,6 @@ if(
     </div>
     <button class="btn-popup-close" onclick="closeAllPopups()">닫기</button>
 </div>
-
-<div id="intubation-panel" class="popup-panel">
-    <h3 style="text-align:center; margin-top:0; color:#3f51b5; margin-bottom:15px;">💊 Intubation</h3>
-    <div style="text-align:center; font-size:0.9rem; color:#555; margin-bottom:15px;">
-        현재 체중: <strong id="ind-bw-disp" style="font-size:1.3rem; color:#d32f2f;">60</strong> kg
-    </div>
-    <div class="hep-protocol-box" style="border-color:#9fa8da;">
-        <div class="hep-protocol-title" style="background:#c5cae9; color:#1a237e;">Propofol (20mg/cc)</div>
-        <div class="hep-calc-row">
-            <span class="hep-calc-label">Dose (mg/kg)</span>
-            <input type="number" id="ind_propo_dose" class="hep-calc-input" value="1.0" step="0.1" oninput="calcInduction()">
-        </div>
-        <div class="hep-calc-row" style="background:#e8eaf6;">
-            <span class="hep-calc-label" style="color:#1a237e; font-weight:900;">주입량 (cc)</span>
-            <span style="font-weight:900; color:#5c6bc0;">➜</span>
-            <div class="hep-calc-result" style="background:#fff; color:#d32f2f; font-size:1.2rem; border:1px solid #c5cae9;"><span id="ind_propo_res">0.00</span></div>
-        </div>
-    </div>
-    <div class="hep-protocol-box" style="border-color:#9fa8da;">
-        <div class="hep-protocol-title" style="background:#c5cae9; color:#1a237e;">Ketamine (50mg/cc)</div>
-        <div class="hep-calc-row">
-            <span class="hep-calc-label">Dose (mg/kg)</span>
-            <input type="number" id="ind_keta_dose" class="hep-calc-input" value="1.0" step="0.1" oninput="calcInduction()">
-        </div>
-        <div class="hep-calc-row" style="background:#e8eaf6;">
-            <span class="hep-calc-label" style="color:#1a237e; font-weight:900;">주입량 (cc)</span>
-            <span style="font-weight:900; color:#5c6bc0;">➜</span>
-            <div class="hep-calc-result" style="background:#fff; color:#d32f2f; font-size:1.2rem; border:1px solid #c5cae9;"><span id="ind_keta_res">0.00</span></div>
-        </div>
-    </div>
-    <button class="btn-popup-close" onclick="closeAllPopups()">닫기</button>
-</div>
-
 <div id="selection-panel" class="popup-panel">
     <h3 style="text-align:center; margin-top:0;">약물 목록 선택</h3>
     <div class="bulk-btn-row">
@@ -2304,7 +2120,6 @@ if(
         if(savedBw) document.getElementById('bw').value = savedBw;
         renderChecklist();
         renderTable();
-        calcInduction();
         if(localStorage.getItem('sch_icu_darkmode') === 'true') {
             document.body.classList.add('dark-mode');
             document.querySelector('.btn-darkmode').innerText = '☀️';
@@ -2313,7 +2128,6 @@ if(
 
     function saveWeight() { 
         localStorage.setItem('sch_icu_weight', document.getElementById('bw').value); 
-        calcInduction();
     }
     
     function toggleDarkMode() {
@@ -2416,26 +2230,6 @@ if(
         document.getElementById('empty-msg').style.display = count === 0 ? 'block' : 'none';
     }
 
-    function openIntubation() {
-        document.getElementById('ind-bw-disp').innerText = document.getElementById('bw').value || 0;
-        document.getElementById('intubation-panel').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-        calcInduction();
-    }
-    
-    function calcInduction() {
-        const bw = parseFloat(document.getElementById('bw').value) || 0;
-        const pDose = parseFloat(document.getElementById('ind_propo_dose').value) || 0;
-        document.getElementById('ind_propo_res').innerText = ((bw * pDose) / 20).toFixed(2);
-        const kDose = parseFloat(document.getElementById('ind_keta_dose').value) || 0;
-        document.getElementById('ind_keta_res').innerText = ((bw * kDose) / 50).toFixed(2);
-    }
-
-    let ventGender = 'male';
-    function openVentCalc() { document.getElementById('vent-panel').style.display = 'block'; document.getElementById('overlay').style.display = 'block'; calcPBW(); }
-    function setGender(gender) { ventGender = gender; document.getElementById('btn-male').className = gender === 'male' ? 'gender-btn active' : 'gender-btn'; document.getElementById('btn-female').className = gender === 'female' ? 'gender-btn active' : 'gender-btn'; calcPBW(); }
-    function calcPBW() { const height = parseFloat(document.getElementById('vent-height').value) || 0; let pbw = 0; if (height > 0) { if (ventGender === 'male') pbw = 50 + 0.91 * (height - 152.4); else pbw = 45.5 + 0.91 * (height - 152.4); } document.getElementById('pbw-val').innerText = pbw.toFixed(1); document.getElementById('vt-6').innerText = Math.round(pbw * 6); document.getElementById('vt-8').innerText = Math.round(pbw * 8); document.getElementById('vt-4').innerText = Math.round(pbw * 4); document.getElementById('vt-6-ards').innerText = Math.round(pbw * 6); }
-    function openYaleScale() { document.getElementById('yale-panel').style.display = 'block'; document.getElementById('overlay').style.display = 'block'; }
     function openHeparinCalc() { document.getElementById('hep-panel').style.display = 'block'; document.getElementById('overlay').style.display = 'block'; calcHeparin(); calcHeparinAdjustment(); }
     function calcHeparin() { const weight = parseFloat(document.getElementById('bw').value) || 0; document.getElementById('hep-acs-bolus').innerText = weight * 60; document.getElementById('hep-pte-bolus').innerText = weight * 80; const inputU_ACS = parseFloat(document.getElementById('hep-acs-u-input').value); if (!isNaN(inputU_ACS)) document.getElementById('hep-acs-cc-result').innerText = ((inputU_ACS * weight) / 100).toFixed(1); else document.getElementById('hep-acs-cc-result').innerText = "0.0"; const inputCC_ACS = parseFloat(document.getElementById('hep-acs-cc-input').value); if (!isNaN(inputCC_ACS)) document.getElementById('hep-acs-u-result').innerText = ((inputCC_ACS * 100) / weight).toFixed(1); else document.getElementById('hep-acs-u-result').innerText = "0.0"; const inputU_PTE = parseFloat(document.getElementById('hep-pte-u-input').value); if (!isNaN(inputU_PTE)) document.getElementById('hep-pte-cc-result').innerText = ((inputU_PTE * weight) / 100).toFixed(1); else document.getElementById('hep-pte-cc-result').innerText = "0.0"; const inputCC_PTE = parseFloat(document.getElementById('hep-pte-cc-input').value); if (!isNaN(inputCC_PTE)) document.getElementById('hep-pte-u-result').innerText = ((inputCC_PTE * 100) / weight).toFixed(1); else document.getElementById('hep-pte-u-result').innerText = "0.0"; }
     function calcHeparinAdjustment() { const weight = parseFloat(document.getElementById('bw').value) || 0; const currentRate = parseFloat(document.getElementById('hep-curr-rate').value) || 0; const aptt = document.getElementById('hep-aptt').value; let bolus = 0; let changeRateU = 0; let msg = "속도 조절 (Adjust Rate)"; if (aptt === '<35') { bolus = weight * 80; changeRateU = 4; } else if (aptt === '35-45') { bolus = weight * 40; changeRateU = 2; } else if (aptt === '46-70') { bolus = 0; changeRateU = 0; msg = "유지 (No Change)"; } else if (aptt === '71-90') { bolus = 0; changeRateU = -2; } else if (aptt === '>90') { bolus = 0; changeRateU = -3; msg = "1hr Stop & Decrease"; } else { document.getElementById('hep-adj-bolus').innerText = "0"; document.getElementById('hep-adj-rate').innerText = "0.0"; document.getElementById('hep-action-msg').innerText = "조절 후 속도"; return; } const changeCC = (weight * changeRateU) / 100; let newRate = currentRate + changeCC; if(newRate < 0) newRate = 0; document.getElementById('hep-adj-bolus').innerText = bolus; document.getElementById('hep-adj-rate').innerText = newRate.toFixed(1); document.getElementById('hep-action-msg').innerText = msg; }
@@ -2450,10 +2244,7 @@ if(
     
     function closeAllPopups() { 
         document.getElementById('selection-panel').style.display = 'none'; 
-        document.getElementById('vent-panel').style.display = 'none'; 
-        document.getElementById('yale-panel').style.display = 'none'; 
         document.getElementById('hep-panel').style.display = 'none'; 
-        document.getElementById('intubation-panel').style.display = 'none'; 
         document.getElementById('info-panel').style.display = 'none'; 
         document.getElementById('overlay').style.display = 'none'; 
         const checkboxes = document.querySelectorAll('#checklist-container input'); 
@@ -2467,8 +2258,6 @@ if(
     function copyEMR() { let text = `[ICU Drug Infusion] BW: ${document.getElementById('bw').value}kg\n`; let hasData = false; drugs.forEach(d => { if (currentDept === 'CCU' && ccuExclude.includes(d.id)) return; if (currentDept === 'SICU' && sicuExclude.includes(d.id)) return; if (!activeDrugs.includes(d.id)) return; const inputVal = parseFloat(savedInputs[d.id][currentMode]) || 0; if (inputVal > 0) { hasData = true; const outVal = document.getElementById(`output_${d.id}`).innerText; let doseUnit = d.unit.replace('Unit','U'); if (currentMode === 0) text += `- ${d.name}: ${inputVal} ${doseUnit} ➜ ${outVal} cc/hr\n`; else text += `- ${d.name}: ${inputVal} cc/hr ➜ ${outVal} ${doseUnit}\n`; } }); if(!hasData) { alert("입력된 약물이 없습니다."); return; } navigator.clipboard.writeText(text).then(() => { alert("📋 EMR 기록용 텍스트가 복사되었습니다!"); }); }
     function renderChecklist() { checklistContainer.innerHTML = ''; drugs.forEach(d => { const checked = activeDrugs.includes(d.id) ? 'checked' : ''; let colorDot = d.color === 'red' ? '🔴' : (d.color === 'blue' ? '🔵' : (d.color === 'yellow' ? '🟡' : '🟢')); checklistContainer.innerHTML += `<label class="check-item"><input type="checkbox" value="${d.id}" ${checked} style="margin-right:10px; transform:scale(1.3);">${colorDot} ${d.name}</label>`; }); }
     function openSettings() { document.getElementById('selection-panel').style.display = 'block'; document.getElementById('overlay').style.display = 'block'; }
-    function calcYaleStart() { const bst = parseFloat(document.getElementById('yale-initBST').value); const res = document.getElementById('yale-startRes'); if(!bst) { alert("BST 수치를 입력해주세요."); return; } if(bst <= 180) { res.style.display = "block"; res.className = "yale-result-box yale-res-warning"; res.innerHTML = "BST 180 이하는 프로토콜 시작 대상이 아닙니다."; return; } const rate = (Math.round((bst / 100) * 2) / 2).toFixed(1); let bolusText = "Bolus 없음"; if (bst >= 300) { const bolus = Math.round(bst / 100); const maxBolus = Math.min(bolus, 14); bolusText = `RI <span class="yale-bold">${maxBolus} units</span> IV Bolus 투여`; } res.style.display = "block"; res.className = "yale-result-box yale-res-success"; res.innerHTML = `➔ <b>${bolusText}</b><br>➔ 주입 속도: <b><span class="yale-bold">${rate} cc/hr</span></b>`; }
-    function calcYaleAdjust() { const rate = parseFloat(document.getElementById('yale-curRate').value); const prev = parseFloat(document.getElementById('yale-prevBST').value); const curr = parseFloat(document.getElementById('yale-currBST').value); const time = parseFloat(document.getElementById('yale-interval').value); const res = document.getElementById('yale-adjRes'); if(isNaN(rate) || isNaN(prev) || isNaN(curr)) { alert("모든 수치를 입력해주세요."); return; } const change = (prev - curr) / time; let delta; if (rate < 3) delta = 0.5; else if (rate <= 6) delta = 1.0; else if (rate <= 9.5) delta = 1.5; else if (rate <= 14.5) delta = 2.0; else if (rate <= 19.5) delta = 3.0; else if (rate <= 24.5) delta = 4.0; else delta = 5.0; res.style.display = "block"; res.className = "yale-result-box"; if (curr < 50) { res.classList.add("yale-res-danger"); res.innerHTML = `🚨 <b>주입 즉시 중단 및 50% DW 50ml(25g) IV 투여</b><br><span class="yale-small-inst">1. 15분 간격 BST 확인 및 70 미만 시 50% DW 50ml(25g) IV 재투여<br>2. BST 100↑ 확인 시 1시간 뒤 BST 재확인</span>➔ 1시간 뒤 BST 100↑ 이면 <b>${(rate * 0.5).toFixed(1)} cc/hr</b> 재개`; } else if (curr < 70) { res.classList.add("yale-res-warning"); res.innerHTML = `⚠️ <b>주입 즉시 중단 및 50% DW 25ml(12.5g) IV 투여</b><br><span class="yale-small-inst">1. 15분 간격 BST 확인 및 70 미만 시 50% DW 25ml(12.5g) IV 재투여<br>2. BST 100↑ 확인 시 1시간 뒤 BST 재확인</span>➔ 1시간 뒤 BST 100↑ 이면 <b>${(rate * 0.75).toFixed(1)} cc/hr</b> 재개`; } else if (curr < 100) { res.classList.add("yale-res-warning"); res.innerHTML = `⚠️ <b>주입 즉시 중단</b><br><span class="yale-small-inst">1. 30분 간격 BST 확인 및 70 미만 시 50% DW 25ml(12.5g) IV 투여<br>2. BST 100↑ 확인 시 <b>${(rate * 0.75).toFixed(1)} cc/hr</b> 재개</span>`; } else { let nextRate = rate; let isHold = false; if (curr >= 250) { if (change < 0) nextRate = rate + 2 * delta; else if (change <= 40) nextRate = rate + delta; else if (change <= 80) nextRate = rate; else if (change <= 120) nextRate = rate - delta; else { nextRate = rate - 2 * delta; isHold = true; } } else if (curr >= 180) { if (change <= -40) nextRate = rate + 2 * delta; else if (change <= 0) nextRate = rate + delta; else if (change <= 40) nextRate = rate; else if (change <= 80) nextRate = rate - delta; else { nextRate = rate - 2 * delta; isHold = true; } } else if (curr >= 140) { if (change <= -21) nextRate = rate + delta; else if (change <= 20) nextRate = rate; else if (change <= 40) nextRate = rate - delta; else { nextRate = rate - 2 * delta; isHold = true; } } else { if (change < 0) nextRate = rate; else if (change <= 20) nextRate = rate - delta; else { nextRate = rate - 2 * delta; isHold = true; } } if (nextRate < 0) nextRate = 0; res.classList.add(isHold ? "yale-res-warning" : "yale-res-success"); res.innerHTML = `변화량: ${change.toFixed(1)} mg/dL/hr<br>${isHold ? "❗ <b>30분 HOLD 후 재개</b><br>" : ""}👉 다음 속도: <b><span class="yale-bold">${nextRate.toFixed(1)} cc/hr</span></b>`; } }
     
     init();
 </script>
