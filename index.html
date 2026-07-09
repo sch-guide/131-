@@ -1826,16 +1826,16 @@ if(
         .table-wrap { padding:10px 5px 200px 5px; max-width:800px; margin:0 auto; }
         table { width:100%; border-collapse:separate; border-spacing:0; background:var(--bg-card); border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
         th { background:var(--bg-th); color:var(--text-th); padding:8px 2px; font-size:0.78rem; font-weight:700; text-align:center; border-bottom:1px solid var(--border-color); }
-        td { text-align:center; vertical-align:middle; height:46px; border-bottom:1px solid var(--border-color); border-right:1px solid var(--border-color); padding:0; }
+        td { text-align:center; vertical-align:middle; height:54px; border-bottom:1px solid var(--border-color); border-right:1px solid var(--border-color); padding:0; }
         td:last-child { border-right:none; } tr:last-child td { border-bottom:none; }
-        .td-name { width:26%; padding:6px 6px; font-weight:700; cursor:pointer; }
+        .td-name { width:26%; padding:0 4px; font-weight:700; cursor:pointer; }
         .drug-cell-container { display:flex; align-items:center; }
         .copy-btn-area { padding-right:4px; display:flex; align-items:center; }
         .copy-icon { font-size:0.9rem; color:var(--sch-blue); font-weight:900; cursor:pointer; padding:4px; }
         .name-area { flex:1; text-align:center; }
         .drug-title-row { display:flex; align-items:center; justify-content:center; gap:3px; }
-        .drug-title { font-size:0.98rem; line-height:1.2; margin-bottom:2px; word-break:keep-all; overflow-wrap:break-word; letter-spacing:-0.2px; }
-        .drug-mix-info { font-size:0.7rem; font-weight:600; opacity:0.9; display:block; color:inherit; line-height:1.15; }
+        .drug-title { font-size:0.9rem; line-height:1.05; margin-bottom:1px; word-break:break-all; }
+        .drug-mix-info { font-size:0.62rem; font-weight:500; opacity:0.8; display:block; color:inherit; line-height:1.08; }
         .info-icon { font-size:0.8rem; opacity:0.6; border:1px solid currentColor; border-radius:50%; width:14px; height:14px; display:inline-flex; align-items:center; justify-content:center; }
         .td-white { width:12%; background:var(--bg-card); color:var(--text-main); }
         .input-mini { width:100%; border:none; text-align:center; font-size:1.15rem; font-weight:700; color:var(--text-main); background:transparent; padding:0; }
@@ -1939,18 +1939,37 @@ if(
             .td-name {
                 grid-column:1 / -1;
                 min-height:auto;
-                padding:6px 6px;
+                padding:3px 5px;
                 border-radius:4px;
             }
             .td-name::before { display:none; }
-            .drug-cell-container { justify-content:flex-start; }
+            .drug-cell-container { justify-content:flex-start; align-items:center; gap:4px; }
             .copy-btn-area { padding-right:3px; }
             .copy-icon { font-size:0.78rem; padding:0; }
-            .name-area { text-align:left; }
-            .drug-title-row { justify-content:flex-start; }
-            .drug-title { font-size:0.94rem; line-height:1.15; word-break:keep-all; overflow-wrap:break-word; }
-            .info-icon { width:9px; height:9px; font-size:0.54rem; }
-            .drug-mix-info { font-size:0.64rem; margin-top:2px; line-height:1.1; opacity:0.9; }
+            .name-area { flex:1; text-align:center; min-width:0; }
+            .drug-title-row { justify-content:center; align-items:center; gap:2px; }
+            .drug-title {
+                display:block;
+                max-width:100%;
+                font-size:15px;
+                font-weight:800;
+                line-height:1.16;
+                white-space:normal;
+                word-break:keep-all;
+                overflow-wrap:anywhere;
+            }
+            .info-icon { width:9px; height:9px; font-size:0.54rem; flex:0 0 auto; }
+            .drug-mix-info {
+                display:block;
+                font-size:11px;
+                font-weight:600;
+                color:#607084;
+                opacity:1;
+                margin-top:1px;
+                line-height:1.08;
+                word-break:keep-all;
+                overflow-wrap:anywhere;
+            }
             .td-input,
             .td-unit { background:#fff8d9; }
             .td-result {
