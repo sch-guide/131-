@@ -1032,19 +1032,19 @@ const pages = [
 ];
 
 const categories = [
-  { name:"전체", start:1, end:159 },
-  { name:"ENT", start:11, end:35 },
-  { name:"UR0", start:36, end:74 },
-  { name:"EY", start:75, end:80 },
-  { name:"DM", start:81, end:82 },
-  { name:"실무전체", start:83, end:159 },
-  { name:"수술전후", start:84, end:108 },
-  { name:"식이", start:109, end:117 },
-  { name:"수혈/검체/AST", start:118, end:129 },
-  { name:"당뇨/항암/검사이해", start:130, end:139 },
-  { name:"SET/Tra/CSR", start:140, end:153 },
-  { name:"위치안내/유효기간", start:154, end:159 }
-];
+    { name:"전체", start:1, end:159 },
+    { name:"ENT", start:11, end:35 },
+    { name:"UR0", start:36, end:74 },
+    { name:"EY", start:75, end:80 },
+    { name:"DM", start:81, end:82 },
+    { name:"실무전체", start:83, end:159 },
+    { name:"수술전후", start:84, end:108 },
+    { name:"식이", start:109, end:117 },
+    { name:"수혈/검체/AST", start:118, end:129 },
+    { name:"당뇨/항암/검사이해", start:130, end:139 },
+    { name:"SET/Tra/CSR", start:140, end:153 },
+    { name:"위치안내/유효기간", start:154, end:159 }
+      ];
       
 const manualKeywords = {
     "저혈당": [130],
@@ -1882,20 +1882,24 @@ if(
 
         @media (max-width: 640px) {
             body { background:#eef3f8; }
-            .header { padding:14px 10px 12px; }
-            .hospital-title { font-size:1.35rem; margin-top:4px; }
-            .dept-title { font-size:1.05rem; margin-bottom:10px; }
+            .header { padding:8px 8px 8px; }
+            .hospital-title { font-size:1.12rem; margin-top:0; margin-bottom:2px; line-height:1.05; }
+            .dept-title { font-size:0.9rem; margin-bottom:6px; }
             .dept-switch-row,
             .control-top-row,
             .mode-row { max-width:none; }
             .dept-btn,
-            .mode-btn { font-size:0.86rem; padding:10px 4px; }
+            .mode-btn { font-size:0.78rem; padding:7px 4px; border-radius:6px; }
+            .dept-switch-row { gap:4px; margin-bottom:6px; }
             .control-top-row { align-items:stretch; }
-            .weight-container { padding:6px 10px; }
-            .weight-label { font-size:0.85rem; }
-            .weight-input { width:58px; height:38px; font-size:1.35rem; }
-            .btn-common { min-height:44px; font-size:0.86rem; }
-            .table-wrap { padding:5px 5px 145px; max-width:none; }
+            .control-top-row { gap:4px; margin-bottom:5px; }
+            .weight-container { padding:4px 8px; gap:5px; border-radius:7px; }
+            .weight-label { font-size:0.78rem; }
+            .weight-input { width:48px; height:31px; font-size:1.08rem; border-radius:5px; }
+            .btn-group { gap:3px; }
+            .btn-common { min-height:34px; font-size:0.76rem; padding:6px 0; border-radius:7px; }
+            .mode-row { gap:3px; margin-top:4px; }
+            .table-wrap { padding:4px 5px 130px; max-width:none; }
             table,
             tbody { display:block; width:100%; background:transparent; box-shadow:none; border-radius:0; }
             thead { display:none; }
@@ -1935,16 +1939,18 @@ if(
             .td-name {
                 grid-column:1 / -1;
                 min-height:auto;
-                padding:2px 5px;
-                border-radius:6px;
+                padding:2px 4px;
+                border-radius:5px;
             }
             .td-name::before { display:none; }
-            .drug-cell-container { justify-content:center; }
-            .copy-btn-area { padding-right:4px; }
-            .copy-icon { font-size:0.84rem; padding:1px; }
-            .drug-title { font-size:0.83rem; line-height:1.01; }
-            .info-icon { width:11px; height:11px; font-size:0.62rem; }
-            .drug-mix-info { font-size:0.58rem; margin-top:0; line-height:1; }
+            .drug-cell-container { justify-content:flex-start; }
+            .copy-btn-area { padding-right:3px; }
+            .copy-icon { font-size:0.78rem; padding:0; }
+            .name-area { text-align:left; }
+            .drug-title-row { justify-content:flex-start; }
+            .drug-title { font-size:0.88rem; line-height:1.04; }
+            .info-icon { width:10px; height:10px; font-size:0.58rem; }
+            .drug-mix-info { font-size:0.57rem; margin-top:0; line-height:1; }
             .td-input,
             .td-unit { background:#fff8d9; }
             .td-result {
