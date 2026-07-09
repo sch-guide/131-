@@ -780,7 +780,7 @@ body{
             <p class="calc-formula">총 용량(mg) = 전산 BSA(m²) × 코멘트 용량(mg/m²) × 감량률</p>
         </div>
 
-        <div class="calc-card">
+         <div class="calc-card">
             <h3>네오플라틴 계산기</h3>
             <div class="calc-grid">
                 <label>나이<input id="age" type="number" min="0" step="any"></label>
@@ -797,9 +797,10 @@ body{
                 <output id="crclResult" class="calc-result">--</output>
                 <button class="calc-copy" onclick="copyCalcResult('crclResult')">복사</button>
             </div>
+            <p id="crclFormulaLine" class="calc-detail"></p>
             <p id="crclError" class="calc-error"></p>
             <p class="calc-formula">GFR = [(140 - age) × BW / (72 × S-cr)] × 1(남성), 0.85(여성)</p>
-            <p class="calc-formula">Carbo dose = target AUC(2) × (GFR + 25)</p>
+            <p class="calc-formula">Carbo dose = target AUC(6) × (GFR + 25)</p>
         </div>
 
         <div class="calc-card">
