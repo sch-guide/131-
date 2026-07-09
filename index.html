@@ -1524,8 +1524,8 @@ function calculateCrcl(){
     }
     const maleValue = ((140 - age) * weightKg) / (72 * scr);
     const gfr = document.getElementById("sex").value === "female" ? maleValue * 0.85 : maleValue;
-    const carboDose = 2 * (gfr + 25);
-    setCalcOutput("crclResult", `GFR ${formatCalc(gfr, "mL/min")} / Carbo dose ${formatCalc(carboDose, "mg")}`);
+    const carboDose = 6 * (gfr + 25);
+    setCalcOutput("crclResult", `GFR ${formatCalc(gfr, "mL/min")} / Dose ${formatCalc(carboDose, "mg")}`);
     setCalcError("crclError", "");
 }
 
@@ -2479,5 +2479,4 @@ if(
 </template>
 </body>
 </html>
-
 
