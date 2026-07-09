@@ -696,7 +696,7 @@ body{
             <div class="calc-grid">
                 <label>총 수액량
                     <div class="calc-unit-row">
-                        <input id="totalVolumeRate" type="number" min="0" step="any">
+                        <input id="totalVolumeRate" type="number" min="0" step="any" placeholder="예: 1000">
                         <select id="totalVolumeRateUnit">
                             <option value="mL">mL</option>
                             <option value="L">L</option>
@@ -705,7 +705,7 @@ body{
                 </label>
                 <label>주입 시간
                     <div class="calc-unit-row">
-                        <input id="infusionTimeRate" type="number" min="0" step="any">
+                        <input id="infusionTimeRate" type="number" min="0" step="any" placeholder="예: 8">
                         <select id="infusionTimeRateUnit">
                             <option value="hr">시간</option>
                             <option value="min">분</option>
@@ -731,7 +731,7 @@ body{
             <div class="calc-grid">
                 <label>약물 함량
                     <div class="calc-unit-row">
-                        <input id="drugAmount" type="number" min="0" step="any">
+                        <input id="drugAmount" type="number" min="0" step="any" placeholder="예: 1">
                         <select id="drugAmountUnit">
                             <option value="g">g</option>
                             <option value="mg">mg</option>
@@ -740,11 +740,11 @@ body{
                     </div>
                 </label>
                 <label>총 부피(mL)
-                    <input id="totalVolume" type="number" min="0" step="any">
+                    <input id="totalVolume" type="number" min="0" step="any" placeholder="예: 5">
                 </label>
                 <label>처방 용량
                     <div class="calc-unit-row">
-                        <input id="prescribedDose" type="number" min="0" step="any">
+                        <input id="prescribedDose" type="number" min="0" step="any" placeholder="예: 150">
                         <select id="prescribedDoseUnit">
                             <option value="mg">mg</option>
                             <option value="g">g</option>
@@ -783,9 +783,9 @@ body{
          <div class="calc-card">
             <h3>네오플라틴 계산기</h3>
             <div class="calc-grid">
-                <label>나이<input id="age" type="number" min="0" step="any"></label>
-                <label>체중(kg)<input id="weightKgCrcl" type="number" min="0" step="any"></label>
-                <label>혈청 Cr(Scr)<input id="scr" type="number" min="0" step="any"></label>
+                <label>나이<input id="age" type="number" min="0" step="any" placeholder="예: 60"></label>
+                <label>체중(kg)<input id="weightKgCrcl" type="number" min="0" step="any" placeholder="예: 60"></label>
+                <label>혈청 Cr(Scr)<input id="scr" type="number" min="0" step="any" placeholder="예: 1.0"></label>
                 <label>성별
                     <select id="sex">
                         <option value="male">남성</option>
