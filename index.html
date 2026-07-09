@@ -692,11 +692,7 @@ body{
         </div>
 
         <div class="calc-card">
-            <h3>수액 속도계산기</h3>
-        </div>
-
-        <div class="calc-card">
-            <h3>수액 속도 mL/hr</h3>
+            <h3>수액 속도 계산기</h3>
             <div class="calc-grid">
                 <label>총 수액량
                     <div class="calc-unit-row">
@@ -767,7 +763,7 @@ body{
         </div>
 
         <div class="calc-card">
-            <h3>항암 계산기</h3>
+            <h3>항암 용량 계산기</h3>
             <div class="calc-grid">
                 <label>전산 BSA(m²)<input id="emrBsa" type="number" min="0" step="any" placeholder="예: 1.49"></label>
                 <label>코멘트 용량(mg/m²)<input id="bsaDosePerM2" type="number" min="0" step="any" placeholder="예: 60"></label>
@@ -785,7 +781,7 @@ body{
         </div>
 
         <div class="calc-card">
-            <h3>네오플란틴 계산기</h3>
+            <h3>네오플라틴 계산기</h3>
             <div class="calc-grid">
                 <label>나이<input id="age" type="number" min="0" step="any"></label>
                 <label>체중(kg)<input id="weightKgCrcl" type="number" min="0" step="any"></label>
@@ -1434,6 +1430,10 @@ function calculateFluidRate(){
 }
 
 function calculateIcuInfusion(){
+    if(!document.getElementById("icuDrugAmount")){
+        return;
+    }
+
     const totalMcg = toMcg(
         document.getElementById("icuDrugAmount").value,
         document.getElementById("icuDrugAmountUnit").value
@@ -1529,11 +1529,19 @@ function calculateCrcl(){
 }
 
 function calculateAll(){
-    calculateIcuInfusion();
-    calculateFluidRate();
-    calculateProportion();
-    calculateBsa();
-    calculateCrcl();
+    [
+        calculateIcuInfusion,
+        calculateFluidRate,
+        calculateProportion,
+        calculateBsa,
+        calculateCrcl
+    ].forEach((calculate) => {
+        try{
+            calculate();
+        }catch(error){
+            console.error("계산기 오류:", error);
+        }
+    });
 }
 
 function copyCalcResult(id){
