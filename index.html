@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
 
 <title>131병동 간호사전</title>
 
@@ -67,13 +67,14 @@ body{
         width:100%;
         height:100%;
         overflow:hidden;
+        padding-top:env(safe-area-inset-top);
     }
 
     #book{
-        height:100vh;
-        height:100svh;
-        height:100dvh;
-        max-height:100dvh;
+        height:calc(100vh - env(safe-area-inset-top));
+        height:calc(100svh - env(safe-area-inset-top));
+        height:calc(100dvh - env(safe-area-inset-top));
+        max-height:calc(100dvh - env(safe-area-inset-top));
         overflow:hidden;
     }
 
@@ -723,7 +724,7 @@ body{
 
 @media (max-width: 760px){
     .calc-box{
-        padding:62px 6px 10px;
+        padding:calc(62px + env(safe-area-inset-top)) 6px 10px;
     }
 
     .calc-panel-wide{
@@ -2081,7 +2082,7 @@ if(
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SCH ICU 약물 계산기</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -2189,7 +2190,7 @@ if(
         @media (max-width: 640px) {
             body { background:#e2eefc; }
             .header {
-                padding:7px 8px 8px;
+                padding:calc(7px + env(safe-area-inset-top)) 8px 8px;
                 background:#4f87bf;
                 border-bottom:1px solid #b9d2ea;
                 box-shadow:none;
@@ -2319,6 +2320,8 @@ if(
             .td-name {
                 grid-column:1 / -1;
                 order:1;
+                height:44px;
+                min-height:44px;
                 max-height:44px;
                 padding:1px 4px;
                 overflow:hidden;
