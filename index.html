@@ -641,6 +641,74 @@ body{
     font-weight:700;
 }
 
+.io-output-table{
+    margin-top:10px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    background:#fff;
+}
+
+.io-output-row{
+    display:grid;
+    grid-template-columns:0.8fr 0.9fr 1.1fr 1.2fr;
+    border-top:1px solid var(--line);
+}
+
+.io-output-row:first-child{
+    border-top:0;
+}
+
+.io-output-row span{
+    padding:8px 6px;
+    border-left:1px solid var(--line);
+    color:#152849;
+    font-size:12px;
+    font-weight:700;
+    line-height:1.25;
+    text-align:center;
+}
+
+.io-output-row span:first-child{
+    border-left:0;
+}
+
+.io-output-head span{
+    background:#eef4fb;
+    color:#4b5566;
+    font-size:11px;
+    font-weight:900;
+}
+
+.io-mode-tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin:10px 0 12px;
+}
+
+.io-mode-tab{
+    min-height:40px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#f7f9fc;
+    color:#152849;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.io-mode-tab.active{
+    background:var(--navy);
+    border-color:var(--navy);
+    color:#fff;
+}
+
+.io-mode-hidden{
+    display:none !important;
+}
+
 @media (max-width: 760px){
     .calc-box{
         padding:62px 6px 10px;
@@ -795,6 +863,45 @@ body{
             <p id="proportionFormulaLine" class="calc-note"></p>
             <p id="proportionError" class="calc-error"></p>
             <p class="calc-formula">투여량(mL) = 처방용량(mg 환산) × 총부피(mL) ÷ 약물함량(mg 환산)</p>
+        </div>
+
+        <div class="calc-card">
+            <h3>★ I/O 따라잡기 계산기</h3>
+            <p class="calc-note">기본 공식: 시간당 수액 속도(cc/hr) = (소변량 ÷ 2) - 40</p>
+            <div class="io-mode-tabs">
+                <button id="ioModeOneTab" class="io-mode-tab active" type="button" onclick="setIoMode('one')">1시간</button>
+                <button id="ioModeTwoTab" class="io-mode-tab" type="button" onclick="setIoMode('two')">2시간</button>
+            </div>
+            <div class="calc-grid">
+                <label id="ioOneHourField">1시간 소변량(mL)
+                    <input id="ioUrineOneHour" type="number" min="0" step="any" placeholder="예: 100">
+                </label>
+                <label id="ioTwoHourField" class="io-mode-hidden">2시간 소변량(mL)
+                    <input id="ioUrineTwoHour" type="number" min="0" step="any" placeholder="예: 200">
+                </label>
+            </div>
+            <div id="ioOneHourResultRow" class="calc-result-row">
+                <output id="ioMaintainResult" class="calc-result">기본 수액: -- cc/hr</output>
+                <button class="calc-copy" onclick="copyCalcResult('ioMaintainResult')">복사</button>
+            </div>
+            <div id="ioTwoHourResultRow" class="calc-result-row io-mode-hidden">
+                <output id="ioAdjustResult" class="calc-result">다음 2시간 주입량: -- cc</output>
+                <button class="calc-copy" onclick="copyCalcResult('ioAdjustResult')">복사</button>
+            </div>
+            <output id="ioTwoHourResult" hidden></output>
+            <div id="ioOutputTable" class="io-output-table">
+                <div class="io-output-row io-output-head">
+                    <span>구분</span><span>소변량</span><span>결과</span><span>기록</span>
+                </div>
+                <div class="io-output-row">
+                    <span id="ioTableMode">1시간</span><span id="ioTableUrine">--</span><span id="ioTableRate">--</span><span id="ioTableObservation">간호일지 기록</span>
+                </div>
+            </div>
+            <p id="ioFormulaLine" class="calc-note"></p>
+            <p id="ioError" class="calc-error"></p>
+            <p class="calc-formula">1시간 예시: 100cc 소변 → (100 ÷ 2 - 40) = 10 cc/hr, 200cc 소변 → 60 cc/hr</p>
+            <p class="calc-formula">2시간 기반: 다음 2시간 주입량 = 지난 2시간 소변량 × 60%</p>
+            <p class="calc-formula">매시간 또는 2시간마다 소변량 확인, 소변량·수액량·임상 변화 간호일지 기록</p>
         </div>
 
         <div class="calc-card">
@@ -1537,6 +1644,110 @@ function calculateProportion(){
     setCalcError("proportionError", "");
 }
 
+function calculateIoCatchUp(){
+    const checkTime = String(document.getElementById("ioCheckTime").value || "").trim();
+    const oneHourUrine = readCalcNumber("ioUrineOneHour");
+    const twoHourUrine = readCalcNumber("ioUrineTwoHour");
+    const observation = String(document.getElementById("ioObservation").value || "").trim();
+
+    let messages = [];
+    let tableTime = checkTime || "--";
+    let tableUrine = "--";
+    let tableRate = "--";
+    let tableObservation = observation || "--";
+
+    if(isPositive(oneHourUrine)){
+        const fluidRate = (oneHourUrine / 2) - 40;
+        setCalcOutput("ioMaintainResult", `시간당 수액 속도: ${formatCalc(fluidRate, "cc/hr")}`);
+        messages.push(`1시간: (${formatCalc(oneHourUrine, "cc")} ÷ 2) - 40 = ${formatCalc(fluidRate, "cc/hr")}`);
+        tableUrine = formatCalc(oneHourUrine, "cc");
+        tableRate = formatCalc(fluidRate, "cc/hr");
+    }else{
+        setCalcOutput("ioMaintainResult", "시간당 수액 속도: -- cc/hr");
+    }
+
+    if(isPositive(twoHourUrine)){
+        const targetVolume = twoHourUrine * 0.6;
+        const mainRate = targetVolume / 2;
+        setCalcOutput("ioAdjustResult", `다음 2시간 주입량: ${formatCalc(targetVolume, "cc")} (${formatCalc(mainRate, "cc/hr")})`);
+        setCalcOutput("ioTwoHourResult", `다음 2시간 주입량: ${formatCalc(targetVolume, "cc")} / ${formatCalc(mainRate, "cc/hr")}`);
+        messages.push(`2시간: ${formatCalc(twoHourUrine, "cc")} × 60% = ${formatCalc(targetVolume, "cc")} 주입`);
+        if(!isPositive(oneHourUrine)){
+            tableUrine = formatCalc(twoHourUrine, "cc/2hr");
+            tableRate = `${formatCalc(targetVolume, "cc/2hr")} (${formatCalc(mainRate, "cc/hr")})`;
+        }
+    }else{
+        setCalcOutput("ioAdjustResult", "다음 2시간 주입량: -- cc");
+        setCalcOutput("ioTwoHourResult", "");
+    }
+
+    document.getElementById("ioTableTime").textContent = tableTime;
+    document.getElementById("ioTableUrine").textContent = tableUrine;
+    document.getElementById("ioTableRate").textContent = tableRate;
+    document.getElementById("ioTableObservation").textContent = tableObservation;
+    document.getElementById("ioFormulaLine").textContent = messages.join(" / ");
+    setCalcError("ioError", messages.length ? "" : "소변량을 0보다 크게 입력하세요.");
+}
+
+let ioMode = "one";
+
+function setIoMode(mode){
+    ioMode = mode === "two" ? "two" : "one";
+    document.getElementById("ioModeOneTab").classList.toggle("active", ioMode === "one");
+    document.getElementById("ioModeTwoTab").classList.toggle("active", ioMode === "two");
+    document.getElementById("ioOneHourField").classList.toggle("io-mode-hidden", ioMode !== "one");
+    document.getElementById("ioTwoHourField").classList.toggle("io-mode-hidden", ioMode !== "two");
+    document.getElementById("ioOneHourResultRow").classList.toggle("io-mode-hidden", ioMode !== "one");
+    document.getElementById("ioTwoHourResultRow").classList.toggle("io-mode-hidden", ioMode !== "two");
+    calculateIoCatchUp();
+}
+
+function calculateIoCatchUp(){
+    const oneHourUrine = readCalcNumber("ioUrineOneHour");
+    const twoHourUrine = readCalcNumber("ioUrineTwoHour");
+    document.getElementById("ioTableObservation").textContent = "간호일지 기록";
+
+    if(ioMode === "one"){
+        document.getElementById("ioTableMode").textContent = "1시간";
+        if(isPositive(oneHourUrine)){
+            const fluidRate = (oneHourUrine / 2) - 40;
+            setCalcOutput("ioMaintainResult", `수액 속도: ${formatCalc(fluidRate, "cc/hr")}`);
+            document.getElementById("ioTableUrine").textContent = formatCalc(oneHourUrine, "cc");
+            document.getElementById("ioTableRate").textContent = formatCalc(fluidRate, "cc/hr");
+            document.getElementById("ioFormulaLine").textContent =
+                `(${formatCalc(oneHourUrine, "cc")} ÷ 2) - 40 = ${formatCalc(fluidRate, "cc/hr")}`;
+            setCalcError("ioError", "");
+        }else{
+            setCalcOutput("ioMaintainResult", "수액 속도: -- cc/hr");
+            document.getElementById("ioTableUrine").textContent = "--";
+            document.getElementById("ioTableRate").textContent = "--";
+            document.getElementById("ioFormulaLine").textContent = "";
+            setCalcError("ioError", "1시간 소변량을 0보다 크게 입력하세요.");
+        }
+        return;
+    }
+
+    document.getElementById("ioTableMode").textContent = "2시간";
+    if(isPositive(twoHourUrine)){
+        const targetVolume = twoHourUrine * 0.6;
+        const mainRate = targetVolume / 2;
+        setCalcOutput("ioAdjustResult", `다음 2시간 주입량: ${formatCalc(targetVolume, "cc")}`);
+        setCalcOutput("ioTwoHourResult", `다음 2시간 주입량: ${formatCalc(targetVolume, "cc")} / ${formatCalc(mainRate, "cc/hr")}`);
+        document.getElementById("ioTableUrine").textContent = formatCalc(twoHourUrine, "cc");
+        document.getElementById("ioTableRate").textContent = `${formatCalc(targetVolume, "cc/2hr")} (${formatCalc(mainRate, "cc/hr")})`;
+        document.getElementById("ioFormulaLine").textContent =
+            `${formatCalc(twoHourUrine, "cc")} × 60% = ${formatCalc(targetVolume, "cc")} 주입`;
+        setCalcError("ioError", "");
+    }else{
+        setCalcOutput("ioAdjustResult", "다음 2시간 주입량: -- cc");
+        setCalcOutput("ioTwoHourResult", "");
+        document.getElementById("ioTableUrine").textContent = "--";
+        document.getElementById("ioTableRate").textContent = "--";
+        document.getElementById("ioFormulaLine").textContent = "";
+        setCalcError("ioError", "2시간 소변량을 0보다 크게 입력하세요.");
+    }
+}
+
 function calculateBsa(){
     const emrBsa = readCalcNumber("emrBsa");
     const dosePerM2 = readCalcNumber("bsaDosePerM2");
@@ -1579,6 +1790,7 @@ function calculateAll(){
         calculateIcuInfusion,
         calculateFluidRate,
         calculateProportion,
+        calculateIoCatchUp,
         calculateBsa,
         calculateCrcl
     ].forEach((calculate) => {
@@ -1987,6 +2199,7 @@ if(
                 display:flex;
                 flex-direction:column;
                 justify-content:center;
+                align-items:center;
                 width:auto !important;
                 min-height:0;
                 height:auto;
@@ -2006,6 +2219,8 @@ if(
                 font-size:9px;
                 font-weight:800;
                 line-height:1.05;
+                width:100%;
+                text-align:center;
             }
             .td-name {
                 grid-column:1 / -1;
@@ -2015,10 +2230,22 @@ if(
                 overflow:hidden;
             }
             .td-name::before { display:none; }
-            .drug-cell-container { justify-content:flex-start; align-items:flex-start; gap:4px; }
-            .copy-btn-area { padding-right:3px; }
+            .drug-cell-container {
+                position:relative;
+                width:100%;
+                justify-content:center;
+                align-items:center;
+                gap:0;
+            }
+            .copy-btn-area {
+                position:absolute;
+                left:4px;
+                top:1px;
+                padding-right:0;
+                z-index:2;
+            }
             .copy-icon { font-size:0.74rem; padding:0; color:#123f73; }
-            .name-area { flex:1; text-align:center; min-width:0; }
+            .name-area { flex:0 1 100%; width:100%; text-align:center; min-width:0; padding:0 18px; box-sizing:border-box; }
             .drug-title-row { justify-content:center; align-items:center; gap:2px; }
             .drug-title {
                 display:block;
@@ -2080,21 +2307,23 @@ if(
                 align-items:center;
                 justify-content:center;
                 min-height:19px;
+                line-height:1;
             }
             .changeable-wrap input {
+                padding-left:16px !important;
                 padding-right:16px !important;
             }
             .change-indicator {
                 position:absolute;
-                right:2px;
+                right:4px;
                 top:50%;
                 transform:translateY(-50%);
-                width:10px;
-                height:18px;
-                border-left:1px solid #d5d5d5;
-                border-radius:0 5px 5px 0;
-                background:#fff;
-                box-shadow:inset 0 0 0 1px rgba(0,0,0,0.03);
+                width:7px;
+                height:12px;
+                border:0;
+                border-radius:0;
+                background:transparent;
+                box-shadow:none;
                 pointer-events:none;
                 user-select:none;
             }
@@ -2104,16 +2333,16 @@ if(
                 position:absolute;
                 left:50%;
                 transform:translateX(-50%);
-                border-left:2.5px solid transparent;
-                border-right:2.5px solid transparent;
+                border-left:2px solid transparent;
+                border-right:2px solid transparent;
             }
             .change-indicator::before {
-                top:4px;
-                border-bottom:3px solid #777;
+                top:1px;
+                border-bottom:3px solid #666;
             }
             .change-indicator::after {
-                bottom:4px;
-                border-top:3px solid #777;
+                bottom:1px;
+                border-top:3px solid #666;
             }
             .td-result {
                 order:6;
@@ -2133,16 +2362,21 @@ if(
             .input-mini,
             .input-dose {
                 width:100%;
+                height:19px;
                 min-height:19px;
                 font-size:12px;
                 font-weight:800;
                 border-radius:6px;
                 background:transparent;
                 color:#152849;
+                line-height:19px;
+                padding-top:0;
+                padding-bottom:0;
             }
             .input-dose { min-height:19px; font-size:17px; color:#152849; }
             .td-unit select {
-                min-height:22px;
+                height:19px;
+                min-height:19px;
                 font-size:10px !important;
                 background:transparent !important;
                 color:#152849 !important;
@@ -2152,8 +2386,11 @@ if(
                 box-sizing:border-box;
                 appearance:none;
                 -webkit-appearance:none;
+                line-height:19px;
+                text-align:center;
+                text-align-last:center;
             }
-            .unit-wrap select { width:100%; padding-right:16px !important; }
+            .unit-wrap select { width:100%; padding-left:16px !important; padding-right:16px !important; }
             .res-val { display:inline; font-size:20px; line-height:1; font-weight:900; color:#d32f2f; }
             .res-unit { display:inline; font-size:10px; margin-top:0; margin-left:2px; font-weight:800; opacity:0.9; color:#152849; }
             .theme-red .td-name { background:#fff5f5 !important; color:#b71c1c !important; }
@@ -2433,12 +2670,7 @@ if(
             let outputUnit = currentMode === 0 ? "cc/hr" : doseUnit;
             let amtUnit = 'mg'; if(d.id === 'vaso') amtUnit = 'IU'; if(d.id === 'precedex' || d.id === 'sufen' || d.id === 'fenta' || d.id === 'iso') amtUnit = 'mcg';
             let displaySub = String(currentSub)
-                .replace(/<br\s*\/?>/gi, ', ')
-                .replace(/[()]/g, '')
-                .replace(/\/1amp|\/1vial|\/1bt/gi, '')
-                .replace(/ml/gi, 'mL')
-                .replace(/cc/gi, 'mL')
-                .replace(/\s*,\s*/g, ', ');
+                .replace(/\s*<br\s*\/?>\s*/gi, '<br>');
             
             let unitCell = '';
             if (d.id === 'freecalc') {
