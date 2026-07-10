@@ -1911,12 +1911,21 @@ if(
                 padding:3px 7px;
                 gap:5px;
                 border-radius:7px;
-                background:#fff;
+                background:#EFE5FF;
                 color:#12345c;
+                border:1px solid #cbb6ff;
                 box-shadow:none;
             }
             .weight-label { display:inline-block; font-size:0.78rem; color:#12345c; font-weight:900; }
-            .weight-input { width:46px; height:28px; font-size:1rem; border-radius:5px; }
+            .weight-input {
+                width:46px;
+                height:28px;
+                font-size:1rem;
+                border-radius:5px;
+                background:#fff;
+                border:1px solid #b89cff;
+                color:#152849;
+            }
             .btn-group { gap:3px; }
             .btn-common {
                 min-height:32px;
@@ -1932,10 +1941,10 @@ if(
             thead { display:none; }
             tr {
                 display:grid;
-                grid-template-columns:minmax(0,1fr) 88px;
-                gap:4px;
-                margin:0 0 8px;
-                padding:6px;
+                grid-template-columns:repeat(4, minmax(0, 1fr));
+                gap:3px;
+                margin:0 0 5px;
+                padding:4px;
                 background:#fff;
                 border:1px solid #dbe3ee;
                 border-left-width:6px;
@@ -1966,15 +1975,15 @@ if(
                 display:block;
                 margin-bottom:1px;
                 color:#6a7485;
-                font-size:10px;
+                font-size:9px;
                 font-weight:800;
                 line-height:1.05;
             }
             .td-name {
                 grid-column:1 / -1;
                 order:1;
-                max-height:64px;
-                padding:0 2px 1px;
+                max-height:44px;
+                padding:1px 4px;
                 overflow:hidden;
             }
             .td-name::before { display:none; }
@@ -1986,9 +1995,9 @@ if(
             .drug-title {
                 display:block;
                 max-width:100%;
-                font-size:19px;
+                font-size:16px;
                 font-weight:800;
-                line-height:1.05;
+                line-height:1.02;
                 white-space:normal;
                 word-break:keep-all;
                 overflow-wrap:anywhere;
@@ -2000,70 +2009,77 @@ if(
                 font-weight:600;
                 color:#6a7485;
                 opacity:1;
-                margin-top:1px;
-                line-height:1.08;
+                margin-top:0;
+                line-height:1.05;
                 word-break:keep-all;
                 overflow-wrap:anywhere;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
             }
             .td-white {
-                order:5;
-                min-height:27px;
+                min-height:29px;
                 border:1px solid #e1e7ef;
                 background:#f9fbfd !important;
             }
+            .td-amount { order:2; grid-column:1 / 3; }
+            .td-volume { order:3; grid-column:3 / 5; }
             .td-input {
-                order:2;
-                min-height:36px;
+                order:4;
+                grid-column:1 / 3;
+                min-height:29px;
                 border:1px solid #cfd9e7;
                 background:#fff !important;
             }
             .td-unit {
-                order:3;
-                min-height:36px;
+                order:5;
+                grid-column:3 / 5;
+                min-height:29px;
                 border:1px solid #cfd9e7;
                 background:#fff !important;
-                font-size:12px;
+                font-size:10px;
                 font-weight:800;
                 line-height:1.12;
+                word-break:break-word;
             }
             .td-result {
-                order:4;
+                order:6;
                 grid-column:1 / -1;
-                min-height:39px;
-                padding:3px 8px;
-                border:0;
-                background:#fff4ec !important;
-                color:#d94a1a !important;
+                min-height:30px;
+                padding:0;
+                border:1px solid #e1e7ef;
+                background:#fff !important;
+                color:#152849 !important;
             }
             .td-result::before {
-                content:"결과";
-                color:#9d3d18;
-                font-size:10px;
+                content:attr(data-label);
+                color:#6a7485;
+                font-size:9px;
                 margin-bottom:0;
             }
             .input-mini,
             .input-dose {
                 width:100%;
-                min-height:22px;
-                font-size:13px;
+                min-height:19px;
+                font-size:12px;
                 font-weight:800;
                 border-radius:6px;
                 background:transparent;
                 color:#152849;
             }
-            .input-dose { min-height:24px; font-size:20px; color:#152849; }
+            .input-dose { min-height:19px; font-size:17px; color:#152849; }
             .td-unit select {
-                min-height:28px;
-                font-size:12px !important;
+                min-height:22px;
+                font-size:10px !important;
                 background:transparent !important;
                 color:#152849 !important;
             }
-            .res-val { display:inline; font-size:25px; line-height:1; font-weight:900; }
-            .res-unit { display:inline; font-size:12px; margin-top:0; margin-left:4px; font-weight:800; opacity:0.9; }
-            .theme-red .td-name,
-            .theme-blue .td-name,
-            .theme-green .td-name,
-            .theme-yellow .td-name { background:transparent; color:inherit; }
+            .res-val { display:inline; font-size:20px; line-height:1; font-weight:900; color:#d32f2f; }
+            .res-unit { display:inline; font-size:10px; margin-top:0; margin-left:2px; font-weight:800; opacity:0.9; color:#152849; }
+            .theme-red .td-name { background:#fff5f5 !important; color:inherit; }
+            .theme-green .td-name { background:#f3fbf5 !important; color:inherit; }
+            .theme-blue .td-name { background:#f2f8ff !important; color:inherit; }
+            .theme-yellow .td-name { background:#fffbea !important; color:inherit; }
             .txt-standard,
             .txt-vaso,
             .txt-mcgmin,
@@ -2338,10 +2354,17 @@ if(
             let inputUnit = currentMode === 0 ? doseUnit : "cc/hr";
             let outputUnit = currentMode === 0 ? "cc/hr" : doseUnit;
             let amtUnit = 'mg'; if(d.id === 'vaso') amtUnit = 'IU'; if(d.id === 'precedex' || d.id === 'sufen' || d.id === 'fenta' || d.id === 'iso') amtUnit = 'mcg';
+            let displaySub = String(currentSub)
+                .replace(/<br\s*\/?>/gi, ', ')
+                .replace(/[()]/g, '')
+                .replace(/\/1amp|\/1vial|\/1bt/gi, '')
+                .replace(/ml/gi, 'mL')
+                .replace(/cc/gi, 'mL')
+                .replace(/\s*,\s*/g, ', ');
             
             let unitCell = '';
             if (d.id === 'freecalc') {
-                unitCell = '<td class="td-unit ' + d.uTxt + '" data-label="단위"><select id="unit_freecalc" onchange="changeUnit(\'freecalc\')" style="width:100%; padding:5px; font-size:0.75rem; font-weight:800; text-align:center; background:transparent; border:none; color:inherit;">';
+                unitCell = '<td class="td-unit ' + d.uTxt + '" data-label="단위"><select id="unit_freecalc" onchange="changeUnit(\'freecalc\')" style="width:100%; padding:2px; font-size:0.68rem; font-weight:800; text-align:center; background:transparent; border:none; color:inherit;">';
                 const units = [ {v:'mcg/kg/min', t:1, l:'mcg/kg/min'}, {v:'Unit/min', t:2, l:'U/min'}, {v:'mg/kg/hr', t:3, l:'mg/kg/hr'}, {v:'mcg/min', t:5, l:'mcg/min'}, {v:'mg/hr', t:6, l:'mg/hr'}, {v:'mcg/kg/hr', t:7, l:'mcg/kg/hr'} ];
                 units.forEach(u => { const sel = d.unit === u.v ? ' selected' : ''; unitCell += '<option value="' + u.v + '" data-type="' + u.t + '"' + sel + '>' + u.l + '</option>'; });
                 unitCell += '</select></td>';
@@ -2355,15 +2378,15 @@ if(
                         <div class="copy-btn-area"><span class="copy-icon" onclick="copyMixInfo('${d.id}', '${amtUnit}', event)">※</span></div>
                         <div class="name-area">
                             <div class="drug-title-row"><span class="drug-title">${d.name}</span><span class="info-icon">ⓘ</span></div>
-                            <span class="drug-mix-info">${currentSub}</span>
+                            <span class="drug-mix-info">${displaySub}</span>
                         </div>
                     </div>
                 </td>
-                <td class="td-white" data-label="약물용량"><input type="number" step="5" class="input-mini" id="amt_${d.id}" value="${currentAmt}" oninput="updateMix('${d.id}')"></td>
-                <td class="td-white" data-label="총 수액량"><input type="number" step="10" class="input-mini" id="vol_${d.id}" value="${currentVol}" oninput="updateMix('${d.id}')"></td>
-                <td class="td-input" data-label="처방"><input type="number" step="0.01" class="input-dose" id="input_${d.id}" value="${val}" placeholder="0" oninput="handleInput('${d.id}')"></td>
+                <td class="td-white td-amount" data-label="약물총량"><input type="number" step="5" class="input-mini" id="amt_${d.id}" value="${currentAmt}" oninput="updateMix('${d.id}')"></td>
+                <td class="td-white td-volume" data-label="희석량"><input type="number" step="10" class="input-mini" id="vol_${d.id}" value="${currentVol}" oninput="updateMix('${d.id}')"></td>
+                <td class="td-input" data-label="입력값"><input type="number" step="0.01" class="input-dose" id="input_${d.id}" value="${val}" placeholder="0" oninput="handleInput('${d.id}')"></td>
                 ${unitCell}
-                <td class="td-result" data-label="속도"><span id="output_${d.id}" class="res-val">0.00</span><span class="res-unit">${outputUnit}</span></td>
+                <td class="td-result" data-label="계산결과"><span id="output_${d.id}" class="res-val">0.00</span><span class="res-unit">${outputUnit}</span></td>
             `;
             tableBody.appendChild(row);
             setTimeout(() => calc(d.id), 0);
