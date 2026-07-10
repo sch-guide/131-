@@ -24,6 +24,7 @@ href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/
     --shadow-sm:0 2px 8px rgba(15,27,48,0.10);
     --shadow-md:0 8px 24px rgba(15,27,48,0.16);
     --radius:14px;
+    --mobile-reader-top-gap:0px;
 }
 
 *{
@@ -62,6 +63,10 @@ body{
 }
 
 @media (max-width: 760px){
+    :root{
+        --mobile-reader-top-gap:28px;
+    }
+
     html,
     body{
         width:100%;
@@ -71,10 +76,11 @@ body{
     }
 
     #book{
-        height:calc(100vh - env(safe-area-inset-top));
-        height:calc(100svh - env(safe-area-inset-top));
-        height:calc(100dvh - env(safe-area-inset-top));
-        max-height:calc(100dvh - env(safe-area-inset-top));
+        height:calc(100vh - env(safe-area-inset-top) - var(--mobile-reader-top-gap));
+        height:calc(100svh - env(safe-area-inset-top) - var(--mobile-reader-top-gap));
+        height:calc(100dvh - env(safe-area-inset-top) - var(--mobile-reader-top-gap));
+        max-height:calc(100dvh - env(safe-area-inset-top) - var(--mobile-reader-top-gap));
+        margin-top:var(--mobile-reader-top-gap);
         overflow:hidden;
     }
 
@@ -84,7 +90,7 @@ body{
     }
 
     .controls{
-        top:8px;
+        top:calc(8px + env(safe-area-inset-top));
         right:8px;
         gap:6px;
     }
@@ -94,6 +100,24 @@ body{
         height:36px;
         font-size:16px;
         line-height:36px;
+    }
+}
+
+@media (display-mode: standalone) and (max-width: 760px){
+    :root{
+        --mobile-reader-top-gap:0px;
+    }
+
+    body{
+        padding-top:0;
+    }
+
+    #book{
+        height:100vh;
+        height:100svh;
+        height:100dvh;
+        max-height:100dvh;
+        margin-top:0;
     }
 }
 
@@ -2694,6 +2718,20 @@ if(
         renderTable();
         if(localStorage.getItem('sch_icu_darkmode') === 'true') {
             document.body.classList.add('dark-mode');
+        }
+        stabilizeInitialTable();
+    }
+
+    function stabilizeInitialTable() {
+        const rerender = () => {
+            renderTable();
+            calcAll();
+        };
+        requestAnimationFrame(rerender);
+        setTimeout(rerender, 250);
+        setTimeout(rerender, 900);
+        if(document.fonts && document.fonts.ready){
+            document.fonts.ready.then(rerender);
         }
     }
 
