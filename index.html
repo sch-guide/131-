@@ -1881,10 +1881,11 @@ if(
         .hep-new-rate { font-size:2rem; font-weight:900; color:#d84315; }
 
         @media (max-width: 640px) {
-            body { background:#f4f7fb; }
+            body { background:#e2eefc; }
             .header {
                 padding:7px 8px 8px;
-                background:#0b3f7c;
+                background:#4f87bf;
+                border-bottom:1px solid #b9d2ea;
                 box-shadow:none;
             }
             .hospital-title { font-size:1.02rem; margin-top:0; margin-bottom:1px; line-height:1.05; letter-spacing:0; }
@@ -1905,9 +1906,10 @@ if(
             .dept-btn.active,
             .mode-btn.active { background:#123f73; color:#fff; border-color:#123f73; }
             .dept-switch-row { gap:4px; margin-bottom:5px; }
-            .control-top-row { align-items:stretch; }
+            .control-top-row { align-items:center; }
             .control-top-row { gap:4px; margin-bottom:4px; }
             .weight-container {
+                height:36px;
                 padding:3px 7px;
                 gap:5px;
                 border-radius:7px;
@@ -1926,13 +1928,39 @@ if(
                 border:1px solid #b89cff;
                 color:#152849;
             }
-            .btn-group { gap:3px; }
+            .btn-group {
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:4px;
+                flex:1;
+            }
             .btn-common {
-                min-height:32px;
+                appearance:none;
+                -webkit-appearance:none;
+                box-sizing:border-box;
+                height:36px;
+                min-height:0;
                 font-size:0.72rem;
-                padding:5px 0;
+                padding:0 7px;
                 border-radius:7px;
                 box-shadow:none;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                line-height:1;
+                border-style:solid;
+            }
+            .btn-heparin {
+                background:#fff0d6;
+                color:#b85c00;
+                border-width:1px;
+                border-color:#ff9800;
+            }
+            .btn-setting {
+                background:#fff6b8;
+                color:#152849;
+                border-width:1px;
+                border-color:#e0aa16;
             }
             .mode-row { gap:3px; margin-top:3px; }
             .table-wrap { padding:6px 8px 96px; max-width:none; }
@@ -2041,6 +2069,51 @@ if(
                 font-weight:800;
                 line-height:1.12;
                 word-break:break-word;
+                position:relative;
+            }
+            .td-unit.selectable { padding-right:0; }
+            .unit-wrap,
+            .changeable-wrap {
+                position:relative;
+                width:100%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                min-height:19px;
+            }
+            .changeable-wrap input {
+                padding-right:16px !important;
+            }
+            .change-indicator {
+                position:absolute;
+                right:2px;
+                top:50%;
+                transform:translateY(-50%);
+                width:10px;
+                height:18px;
+                border-left:1px solid #d5d5d5;
+                border-radius:0 5px 5px 0;
+                background:#fff;
+                box-shadow:inset 0 0 0 1px rgba(0,0,0,0.03);
+                pointer-events:none;
+                user-select:none;
+            }
+            .change-indicator::before,
+            .change-indicator::after {
+                content:"";
+                position:absolute;
+                left:50%;
+                transform:translateX(-50%);
+                border-left:2.5px solid transparent;
+                border-right:2.5px solid transparent;
+            }
+            .change-indicator::before {
+                top:4px;
+                border-bottom:3px solid #777;
+            }
+            .change-indicator::after {
+                bottom:4px;
+                border-top:3px solid #777;
             }
             .td-result {
                 order:6;
@@ -2073,13 +2146,21 @@ if(
                 font-size:10px !important;
                 background:transparent !important;
                 color:#152849 !important;
+                width:100%;
+                border:none;
+                padding-right:14px;
+                box-sizing:border-box;
+                appearance:none;
+                -webkit-appearance:none;
             }
+            .unit-wrap select { width:100%; padding-right:16px !important; }
             .res-val { display:inline; font-size:20px; line-height:1; font-weight:900; color:#d32f2f; }
             .res-unit { display:inline; font-size:10px; margin-top:0; margin-left:2px; font-weight:800; opacity:0.9; color:#152849; }
-            .theme-red .td-name { background:#fff5f5 !important; color:inherit; }
-            .theme-green .td-name { background:#f3fbf5 !important; color:inherit; }
-            .theme-blue .td-name { background:#f2f8ff !important; color:inherit; }
-            .theme-yellow .td-name { background:#fffbea !important; color:inherit; }
+            .theme-red .td-name { background:#fff5f5 !important; color:#b71c1c !important; }
+            .theme-green .td-name { background:#f3fbf5 !important; color:#1b5e20 !important; }
+            .theme-blue .td-name { background:#f2f8ff !important; color:#0d47a1 !important; }
+            .theme-yellow .td-name { background:#fffbea !important; color:#8a5a00 !important; }
+            .theme-yellow .drug-mix-info { color:rgba(21,40,73,0.78); }
             .txt-standard,
             .txt-vaso,
             .txt-mcgmin,
@@ -2108,7 +2189,6 @@ if(
 </head>
 <body>
 <div class="header">
-    <button class="btn-darkmode" onclick="toggleDarkMode()">🌙</button>
     <h1 class="hospital-title">순천향대학교 천안병원</h1>
     <h3 class="dept-title">중환자실 약물계산기</h3>
     
@@ -2280,7 +2360,6 @@ if(
         renderTable();
         if(localStorage.getItem('sch_icu_darkmode') === 'true') {
             document.body.classList.add('dark-mode');
-            document.querySelector('.btn-darkmode').innerText = '☀️';
         }
     }
 
@@ -2291,7 +2370,6 @@ if(
     function toggleDarkMode() {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
-        document.querySelector('.btn-darkmode').innerText = isDark ? '☀️' : '🌙';
         localStorage.setItem('sch_icu_darkmode', isDark);
     }
 
@@ -2364,10 +2442,10 @@ if(
             
             let unitCell = '';
             if (d.id === 'freecalc') {
-                unitCell = '<td class="td-unit ' + d.uTxt + '" data-label="단위"><select id="unit_freecalc" onchange="changeUnit(\'freecalc\')" style="width:100%; padding:2px; font-size:0.68rem; font-weight:800; text-align:center; background:transparent; border:none; color:inherit;">';
+                unitCell = '<td class="td-unit selectable ' + d.uTxt + '" data-label="단위"><div class="unit-wrap"><select id="unit_freecalc" onchange="changeUnit(\'freecalc\')" style="width:100%; padding:2px 14px 2px 2px; font-size:0.68rem; font-weight:800; text-align:center; background:transparent; border:none; color:inherit;">';
                 const units = [ {v:'mcg/kg/min', t:1, l:'mcg/kg/min'}, {v:'Unit/min', t:2, l:'U/min'}, {v:'mg/kg/hr', t:3, l:'mg/kg/hr'}, {v:'mcg/min', t:5, l:'mcg/min'}, {v:'mg/hr', t:6, l:'mg/hr'}, {v:'mcg/kg/hr', t:7, l:'mcg/kg/hr'} ];
                 units.forEach(u => { const sel = d.unit === u.v ? ' selected' : ''; unitCell += '<option value="' + u.v + '" data-type="' + u.t + '"' + sel + '>' + u.l + '</option>'; });
-                unitCell += '</select></td>';
+                unitCell += '</select><span class="change-indicator" aria-hidden="true"></span></div></td>';
             } else {
                 unitCell = '<td class="td-unit ' + d.uTxt + '" data-label="단위">' + inputUnit + '</td>';
             }
@@ -2382,11 +2460,11 @@ if(
                         </div>
                     </div>
                 </td>
-                <td class="td-white td-amount" data-label="약물총량"><input type="number" step="5" class="input-mini" id="amt_${d.id}" value="${currentAmt}" oninput="updateMix('${d.id}')"></td>
-                <td class="td-white td-volume" data-label="희석량"><input type="number" step="10" class="input-mini" id="vol_${d.id}" value="${currentVol}" oninput="updateMix('${d.id}')"></td>
-                <td class="td-input" data-label="입력값"><input type="number" step="0.01" class="input-dose" id="input_${d.id}" value="${val}" placeholder="0" oninput="handleInput('${d.id}')"></td>
+                <td class="td-white td-amount" data-label="약물총량"><div class="changeable-wrap"><input type="number" step="5" class="input-mini" id="amt_${d.id}" value="${currentAmt}" oninput="updateMix('${d.id}')"><span class="change-indicator" aria-hidden="true"></span></div></td>
+                <td class="td-white td-volume" data-label="희석량"><div class="changeable-wrap"><input type="number" step="10" class="input-mini" id="vol_${d.id}" value="${currentVol}" oninput="updateMix('${d.id}')"><span class="change-indicator" aria-hidden="true"></span></div></td>
+                <td class="td-input" data-label="처방"><div class="changeable-wrap"><input type="number" step="0.01" class="input-dose" id="input_${d.id}" value="${val}" placeholder="0" oninput="handleInput('${d.id}')"><span class="change-indicator" aria-hidden="true"></span></div></td>
                 ${unitCell}
-                <td class="td-result" data-label="계산결과"><span id="output_${d.id}" class="res-val">0.00</span><span class="res-unit">${outputUnit}</span></td>
+                <td class="td-result" data-label="계산속도"><span id="output_${d.id}" class="res-val">0.00</span><span class="res-unit">${outputUnit}</span></td>
             `;
             tableBody.appendChild(row);
             setTimeout(() => calc(d.id), 0);
