@@ -651,7 +651,7 @@ body{
 
 .io-output-row{
     display:grid;
-    grid-template-columns:0.8fr 0.9fr 1.1fr 1.2fr;
+    grid-template-columns:0.7fr 0.8fr 1fr 1fr 1fr;
     border-top:1px solid var(--line);
 }
 
@@ -707,6 +707,18 @@ body{
 
 .io-mode-hidden{
     display:none !important;
+}
+
+.io-flex-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+@media (max-width: 560px){
+    .io-flex-grid{
+        grid-template-columns:1fr;
+    }
 }
 
 @media (max-width: 760px){
@@ -818,11 +830,9 @@ body{
             </div>
             <div class="calc-result-row">
                 <output id="fluidRateResult" class="calc-result">-- mL/hr</output>
-                <button class="calc-copy" onclick="copyCalcResult('fluidRateResult')">복사</button>
             </div>
             <div class="calc-result-row">
                 <output id="dropIntervalResult" class="calc-result">--</output>
-                <button class="calc-copy" onclick="copyCalcResult('dropIntervalResult')">복사</button>
             </div>
             <p id="gttMinuteResult" class="calc-note"></p>
             <p id="fluidRateError" class="calc-error"></p>
@@ -858,7 +868,6 @@ body{
             </div>
             <div class="calc-result-row">
                 <output id="proportionResult" class="calc-result">-- mL</output>
-                <button class="calc-copy" onclick="copyCalcResult('proportionResult')">복사</button>
             </div>
             <p id="proportionFormulaLine" class="calc-note"></p>
             <p id="proportionError" class="calc-error"></p>
@@ -866,42 +875,48 @@ body{
         </div>
 
         <div class="calc-card">
-            <h3>★ I/O 따라잡기 계산기</h3>
-            <p class="calc-note">기본 공식: 시간당 수액 속도(cc/hr) = (소변량 ÷ 2) - 40</p>
-            <div class="io-mode-tabs">
+            <h3>I/O 따라잡기 계산기</h3>
+            <p class="calc-note">main 수액과 따라잡기 수액을 각각 따로 계산합니다. 계산결과는 따라잡기 수액의 조절수액 속도입니다.</p>
+            <div class="io-mode-tabs io-mode-hidden">
                 <button id="ioModeOneTab" class="io-mode-tab active" type="button" onclick="setIoMode('one')">1시간</button>
                 <button id="ioModeTwoTab" class="io-mode-tab" type="button" onclick="setIoMode('two')">2시간</button>
             </div>
-            <div class="calc-grid">
-                <label id="ioOneHourField">1시간 소변량(mL)
+            <div class="calc-grid io-flex-grid">
+                <label>시간(hr)
+                    <input id="ioHours" type="number" min="0" step="any" placeholder="예: 2">
+                </label>
+                <label>처방 %
+                    <input id="ioPercent" type="number" min="0" step="any" value="60" placeholder="예: 60">
+                </label>
+                <label>소변량(mL)
+                    <input id="ioUrineMl" type="number" min="0" step="any" placeholder="예: 200">
+                </label>
+                <label>main 수액 속도(cc/hr)
+                    <input id="ioMainRate" type="number" min="0" step="any" value="40" placeholder="예: 40">
+                </label>
+                <label id="ioOneHourField" class="io-mode-hidden">1시간 소변량(mL)
                     <input id="ioUrineOneHour" type="number" min="0" step="any" placeholder="예: 100">
                 </label>
                 <label id="ioTwoHourField" class="io-mode-hidden">2시간 소변량(mL)
                     <input id="ioUrineTwoHour" type="number" min="0" step="any" placeholder="예: 200">
                 </label>
             </div>
-            <div id="ioOneHourResultRow" class="calc-result-row">
-                <output id="ioMaintainResult" class="calc-result">기본 수액: -- cc/hr</output>
-                <button class="calc-copy" onclick="copyCalcResult('ioMaintainResult')">복사</button>
-            </div>
-            <div id="ioTwoHourResultRow" class="calc-result-row io-mode-hidden">
-                <output id="ioAdjustResult" class="calc-result">다음 2시간 주입량: -- cc</output>
-                <button class="calc-copy" onclick="copyCalcResult('ioAdjustResult')">복사</button>
-            </div>
+            <output id="ioFinalRateResult" hidden></output>
+            <output id="ioMaintainResult" hidden></output>
+            <output id="ioAdjustResult" hidden></output>
             <output id="ioTwoHourResult" hidden></output>
             <div id="ioOutputTable" class="io-output-table">
                 <div class="io-output-row io-output-head">
-                    <span>구분</span><span>소변량</span><span>결과</span><span>기록</span>
+                    <span>시간</span><span>처방 %</span><span>main 수액</span><span>따라잡기 수액</span><span>조절수액 속도</span>
                 </div>
                 <div class="io-output-row">
-                    <span id="ioTableMode">1시간</span><span id="ioTableUrine">--</span><span id="ioTableRate">--</span><span id="ioTableObservation">간호일지 기록</span>
+                    <span id="ioTableMode">--</span><span id="ioTableUrine">--</span><span id="ioTableRate">--</span><span id="ioTableObservation">--</span><span id="ioTableAdjustRate">--</span>
                 </div>
             </div>
             <p id="ioFormulaLine" class="calc-note"></p>
             <p id="ioError" class="calc-error"></p>
-            <p class="calc-formula">1시간 예시: 100cc 소변 → (100 ÷ 2 - 40) = 10 cc/hr, 200cc 소변 → 60 cc/hr</p>
-            <p class="calc-formula">2시간 기반: 다음 2시간 주입량 = 지난 2시간 소변량 × 60%</p>
-            <p class="calc-formula">매시간 또는 2시간마다 소변량 확인, 소변량·수액량·임상 변화 간호일지 기록</p>
+            <p class="calc-formula">목표 주입량 = 소변량 × 처방 %, main 용량 = main 속도 × 시간</p>
+            <p class="calc-formula">조절수액 속도 = ((소변량 × 처방 %) ÷ 시간) - main 속도</p>
         </div>
 
         <div class="calc-card">
@@ -915,7 +930,6 @@ body{
             </div>
             <div class="calc-result-row">
                 <output id="bsaResult" class="calc-result">-- mg</output>
-                <button class="calc-copy" onclick="copyCalcResult('bsaResult')">복사</button>
             </div>
             <p id="bsaFormulaLine" class="calc-note"></p>
             <p id="bsaError" class="calc-error"></p>
@@ -937,7 +951,6 @@ body{
             </div>
             <div class="calc-result-row">
                 <output id="crclResult" class="calc-result">--</output>
-                <button class="calc-copy" onclick="copyCalcResult('crclResult')">복사</button>
             </div>
             <p id="crclFormulaLine" class="calc-detail"></p>
             <p id="crclError" class="calc-error"></p>
@@ -1697,8 +1710,14 @@ function setIoMode(mode){
     document.getElementById("ioModeTwoTab").classList.toggle("active", ioMode === "two");
     document.getElementById("ioOneHourField").classList.toggle("io-mode-hidden", ioMode !== "one");
     document.getElementById("ioTwoHourField").classList.toggle("io-mode-hidden", ioMode !== "two");
-    document.getElementById("ioOneHourResultRow").classList.toggle("io-mode-hidden", ioMode !== "one");
-    document.getElementById("ioTwoHourResultRow").classList.toggle("io-mode-hidden", ioMode !== "two");
+    const oneHourResultRow = document.getElementById("ioOneHourResultRow");
+    const twoHourResultRow = document.getElementById("ioTwoHourResultRow");
+    if(oneHourResultRow){
+        oneHourResultRow.classList.toggle("io-mode-hidden", ioMode !== "one");
+    }
+    if(twoHourResultRow){
+        twoHourResultRow.classList.toggle("io-mode-hidden", ioMode !== "two");
+    }
     calculateIoCatchUp();
 }
 
@@ -1746,6 +1765,49 @@ function calculateIoCatchUp(){
         document.getElementById("ioFormulaLine").textContent = "";
         setCalcError("ioError", "2시간 소변량을 0보다 크게 입력하세요.");
     }
+}
+
+function calculateIoCatchUp(){
+    const hours = readCalcNumber("ioHours");
+    const percent = readCalcNumber("ioPercent");
+    const urineMl = readCalcNumber("ioUrineMl");
+    const mainRate = readCalcNumber("ioMainRate");
+
+    if(!isPositive(hours) || !isPositive(percent) || !isPositive(urineMl) || !Number.isFinite(mainRate) || mainRate < 0){
+        setCalcOutput("ioFinalRateResult", "조절수액 속도: -- cc/hr");
+        setCalcOutput("ioMaintainResult", "main 수액: -- cc / -- cc/hr");
+        setCalcOutput("ioAdjustResult", "따라잡기 수액: -- cc / -- cc/hr");
+        setCalcOutput("ioTwoHourResult", "");
+        document.getElementById("ioTableMode").textContent = "--";
+        document.getElementById("ioTableUrine").textContent = "--";
+        document.getElementById("ioTableRate").textContent = "--";
+        document.getElementById("ioTableObservation").textContent = "--";
+        document.getElementById("ioTableAdjustRate").textContent = "--";
+        document.getElementById("ioFormulaLine").textContent = "";
+        setCalcError("ioError", "시간, 처방 %, 소변량, main 수액 속도를 입력하세요.");
+        return;
+    }
+
+    const targetVolume = urineMl * (percent / 100);
+    const finalRate = targetVolume / hours;
+    const mainVolume = mainRate * hours;
+    const catchUpRate = Math.max(finalRate - mainRate, 0);
+    const catchUpVolume = catchUpRate * hours;
+    const totalVolume = mainVolume + catchUpVolume;
+    const balance = totalVolume - targetVolume;
+
+    setCalcOutput("ioFinalRateResult", `조절수액 속도: ${formatCalc(catchUpRate, "cc/hr")}`);
+    setCalcOutput("ioMaintainResult", `main 수액: ${formatCalc(mainVolume, "cc")} / ${formatCalc(mainRate, "cc/hr")}`);
+    setCalcOutput("ioAdjustResult", `따라잡기 수액: ${formatCalc(catchUpVolume, "cc")} / ${formatCalc(catchUpRate, "cc/hr")}`);
+    setCalcOutput("ioTwoHourResult", `main ${formatCalc(mainVolume, "cc")} + 따라잡기 ${formatCalc(catchUpVolume, "cc")}`);
+    document.getElementById("ioTableMode").textContent = formatCalc(hours, "hr");
+    document.getElementById("ioTableUrine").textContent = `${formatCalc(percent, "%")} (${formatCalc(urineMl, "cc")})`;
+    document.getElementById("ioTableRate").textContent = `${formatCalc(mainVolume, "cc")} / ${formatCalc(mainRate, "cc/hr")}`;
+    document.getElementById("ioTableObservation").textContent = formatCalc(catchUpVolume, "cc");
+    document.getElementById("ioTableAdjustRate").textContent = formatCalc(catchUpRate, "cc/hr");
+    document.getElementById("ioFormulaLine").textContent =
+        `목표 ${formatCalc(targetVolume, "cc")} - main ${formatCalc(mainVolume, "cc")} = 따라잡기 ${formatCalc(catchUpVolume, "cc")}; 조절수액 속도 ${formatCalc(catchUpVolume, "cc")} ÷ ${formatCalc(hours, "hr")} = ${formatCalc(catchUpRate, "cc/hr")}; 차이 ${formatCalc(balance, "cc")}`;
+    setCalcError("ioError", "");
 }
 
 function calculateBsa(){
@@ -1802,8 +1864,40 @@ function calculateAll(){
     });
 }
 
+function buildIoNursingRecord(){
+    const hours = readCalcNumber("ioHours");
+    const percent = readCalcNumber("ioPercent");
+    const urineMl = readCalcNumber("ioUrineMl");
+    const mainRate = readCalcNumber("ioMainRate");
+    if(!isPositive(hours) || !isPositive(percent) || !isPositive(urineMl) || !Number.isFinite(mainRate) || mainRate < 0){
+        return "";
+    }
+
+    const targetVolume = urineMl * (percent / 100);
+    const targetRate = targetVolume / hours;
+    const mainVolume = mainRate * hours;
+    const catchUpRate = Math.max(targetRate - mainRate, 0);
+    const catchUpVolume = catchUpRate * hours;
+    const catchUpNote = catchUpRate > 0
+        ? `따라잡기 수액 ${formatCalc(catchUpVolume, "cc")}를 ${formatCalc(catchUpRate, "cc/hr")}로 조절함.`
+        : "main 수액량이 목표 주입량 이상으로 확인되어 따라잡기 수액 추가 주입 없음.";
+
+    return [
+        "[I/O 따라잡기]",
+        `시간: ${formatCalc(hours, "hr")}`,
+        `소변량: ${formatCalc(urineMl, "cc")}`,
+        `처방: 소변량의 ${formatCalc(percent, "%")}`,
+        `main 수액: ${formatCalc(mainVolume, "cc")} / ${formatCalc(mainRate, "cc/hr")}`,
+        `따라잡기 수액: ${formatCalc(catchUpVolume, "cc")}`,
+        `조절수액 속도: ${formatCalc(catchUpRate, "cc/hr")}`,
+        "",
+        `간호기록: 지난 ${formatCalc(hours, "hr")} 동안 소변량 ${formatCalc(urineMl, "cc")} 확인함. 처방 ${formatCalc(percent, "%")} 기준 목표 주입량 ${formatCalc(targetVolume, "cc")} 중 main 수액 ${formatCalc(mainVolume, "cc")}(${formatCalc(mainRate, "cc/hr")}) 주입 예정이며, ${catchUpNote} 소변량 및 수액 주입량 관찰함.`
+    ].join("\n");
+}
+
 function copyCalcResult(id){
-    const value = document.getElementById(id).dataset.copyValue || "";
+    const ioCopyIds = ["ioFinalRateResult", "ioMaintainResult", "ioAdjustResult"];
+    const value = ioCopyIds.includes(id) ? buildIoNursingRecord() : (document.getElementById(id).dataset.copyValue || "");
     if(!value){
         alert("계산할 값을 먼저 입력하세요.");
         return;
