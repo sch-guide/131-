@@ -64,7 +64,7 @@ body{
 
 @media (max-width: 760px){
     :root{
-        --mobile-reader-top-gap:28px;
+        --mobile-reader-top-gap:48px;
     }
 
     html,
@@ -1545,6 +1545,31 @@ const FIXED_DROP_FACTOR = 20;
 
 function openCalculator(){
     document.getElementById("calcBox").style.display = "block";
+    refreshIcuCalculatorFrame();
+}
+
+function refreshIcuCalculatorFrame(){
+    const frame = document.getElementById("icuCalcFrame");
+    if(!frame){
+        return;
+    }
+    const rerender = () => {
+        try{
+            const win = frame.contentWindow;
+            if(win && typeof win.renderTable === "function"){
+                win.renderTable();
+            }
+            if(win && typeof win.calcAll === "function"){
+                win.calcAll();
+            }
+        }catch(error){
+            console.warn("ICU calculator refresh skipped", error);
+        }
+    };
+    requestAnimationFrame(rerender);
+    setTimeout(rerender, 80);
+    setTimeout(rerender, 300);
+    setTimeout(rerender, 900);
 }
 
 function closeCalculator(){
