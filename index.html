@@ -772,8 +772,8 @@ body{
 
 </style>
 
+<link rel="preload" as="image" href="ebook1/001.JPG">
 <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
-<script src="ocr-data.js?v=3"></script>
 </head>
 
 <body>
@@ -1209,13 +1209,57 @@ const manualKeywords = {
     "Adenoidectomy": [22]
 };
 let currentViewerIndex = 0;
+let ocrLoadPromise = null;
 
-pages.forEach((item) => {
+function getOcrTexts(){
+    if(typeof ocrTexts !== "undefined"){
+        return ocrTexts;
+    }
+    return window.ocrTexts || {};
+}
+
+function loadOcrData(){
+    if(typeof ocrTexts !== "undefined"){
+        return Promise.resolve(ocrTexts);
+    }
+
+    if(ocrLoadPromise){
+        return ocrLoadPromise;
+    }
+
+    ocrLoadPromise = new Promise((resolve) => {
+        const existingScript = document.querySelector('script[data-ocr-loader="true"]');
+
+        if(existingScript){
+            existingScript.addEventListener("load", () => resolve(getOcrTexts()), { once:true });
+            existingScript.addEventListener("error", () => resolve({}), { once:true });
+            return;
+        }
+
+        const script = document.createElement("script");
+        script.src = "ocr-data.js?v=3";
+        script.async = true;
+        script.dataset.ocrLoader = "true";
+        script.onload = () => resolve(getOcrTexts());
+        script.onerror = () => {
+            window.ocrTexts = window.ocrTexts || {};
+            resolve({});
+        };
+
+        document.head.appendChild(script);
+    });
+
+    return ocrLoadPromise;
+}
+
+pages.forEach((item, index) => {
     const page = document.createElement("div");
     page.className = "page";
 
     const img = document.createElement("img");
     img.src = `${item.folder}/${item.name}`;
+    img.decoding = "async";
+    img.loading = index === 0 ? "eager" : "lazy";
 
     page.appendChild(img);
     book.appendChild(page);
@@ -1404,6 +1448,16 @@ function applyBookZoom(){
 }
 pageFlip.loadFromHTML(document.querySelectorAll(".page"));
 
+function prepareOcrAfterFirstPaint(){
+    if("requestIdleCallback" in window){
+        requestIdleCallback(() => loadOcrData(), { timeout:4000 });
+    }else{
+        setTimeout(() => loadOcrData(), 2500);
+    }
+}
+
+prepareOcrAfterFirstPaint();
+
 categories.forEach((cat, idx) => {
     const btn = document.createElement("button");
     btn.className = "category-btn";
@@ -1456,6 +1510,8 @@ function renderGallery(start, end){
 
         const thumb = document.createElement("img");
         thumb.src = `${item.folder}/${item.name}`;
+        thumb.loading = "lazy";
+        thumb.decoding = "async";
 
         const title = document.createElement("div");
         title.className = "gallery-title";
@@ -1962,6 +2018,12 @@ function copyCalcResult(id){
    function openSearch(){
     document.getElementById("searchBox").style.display = "block";
     document.getElementById("searchInput").focus();
+    loadOcrData().then(() => {
+        const input = document.getElementById("searchInput");
+        if(input.value.trim() !== ""){
+            searchPages();
+        }
+    });
 }
 
 function closeSearch(){
@@ -2008,9 +2070,10 @@ function searchPages(){
     pages.forEach((item,index)=>{
         const fileKey = `${item.folder}/${item.name}`;
         const fileNameText = normalizeText(item.name);
+        const loadedOcrTexts = getOcrTexts();
         const ocrText = normalizeText(
-           typeof ocrTexts !== "undefined" && ocrTexts[fileKey]
-    ? ocrTexts[fileKey]
+           loadedOcrTexts[fileKey]
+    ? loadedOcrTexts[fileKey]
     : ""
         );
 
