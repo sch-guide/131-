@@ -772,7 +772,7 @@ body{
 
 </style>
 
-<link rel="preload" as="image" href="ebook1/001.JPG">
+<link rel="preload" as="image" href="ebook1/001.JPG?v=20260722">
 <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
 </head>
 
@@ -1009,7 +1009,7 @@ const fileNames1 = [
 "001.JPG",
 "002_입원수속.JPG",
 "003_전화번호.JPG",
-"004_전화번호.JPG",
+"004.JPG",
 "005_약조제시간.JPG",
 "006_ENT소개.JPG",
 "007_URO소개.JPG",
@@ -1099,76 +1099,78 @@ const fileNames1 = [
 "091.JPG",
 "092.JPG",
 "093.JPG",
-"094_수술후.JPG",
+"094.JPG",
 "095.JPG",
-"096.JPG",
+"096_수술후.JPG",
 "097.JPG",
 "098.JPG",
 "099.JPG",
-"100.JPG"
+"100I.JPG"
 ];
 
 const fileNames2 = [
-"101_SINAPI.JPG",
+"101.JPG",
 "102.JPG",
-"103.JPG",
-"104_NPWT.JPG",
+"103_SINAPI.JPG",
+"104.JPG",
 "105.JPG",
-"106.JPG",
+"106_NPWT.JPG",
 "107.JPG",
 "108.JPG",
 "109.JPG",
-"110_식이.JPG",
+"110.JPG",
 "111.JPG",
-"112.JPG",
+"112_식이.JPG",
 "113.JPG",
 "114.JPG",
 "115.JPG",
 "116.JPG",
 "117.JPG",
 "118.JPG",
-"119_수혈.JPG",
+"119.JPG",
 "120.JPG",
-"121_검체.JPG",
+"121_수혈.JPG",
 "122.JPG",
-"123.JPG",
+"123_검체.JPG",
 "124.JPG",
 "125.JPG",
 "126.JPG",
 "127.JPG",
-"128_AST.JPG",
+"128.JPG",
 "129.JPG",
-"130.JPG",
-"131_당뇨.JPG",
-"132_항암.JPG",
-"133.JPG",
-"134_ACTH.JPG",
-"135_검사line정리.JPG",
-"136_검사순서이해.JPG",
-"137_X-ray.JPG",
-"138_핵의학검사.JPG",
-"139.JPG",
-"140_심장초음파_폐기능검사.JPG",
-"141_SET준비.JPG",
-"142.JPG",
-"143.JPG",
+"130_AST.JPG",
+"131.JPG",
+"132.JPG",
+"133_당뇨.JPG",
+"134_항암.JPG",
+"135.JPG",
+"136_ACTH.JPG",
+"137_검사line정리.JPG",
+"138_검사순서이해.JPG",
+"139_X-ray.JPG",
+"140_핵의학검사.JPG",
+"141.JPG",
+"142_심장초음파_폐기능검사.JPG",
+"143_SET준비.JPG",
 "144.JPG",
 "145.JPG",
-"146_Tra이해.JPG",
+"146.JPG",
 "147.JPG",
-"148.JPG",
+"148_Tra이해.JPG",
 "149.JPG",
-"150_CSR관리.JPG",
+"150.JPG",
 "151.JPG",
-"152.JPG",
+"152_CSR관리.JPG",
 "153.JPG",
 "154.JPG",
-"155_위치안내.JPG",
+"155.JPG",
 "156.JPG",
-"157.JPG",
+"157_위치안내.JPG",
 "158.JPG",
-"159_유효기간.JPG",
-"160.JPG"
+"159.JPG",
+"160.JPG",
+"161_유효기간.JPG",
+"162.JPG"
 ];
 
 const pages = [
@@ -1176,29 +1178,35 @@ const pages = [
     ...fileNames2.map(name => ({ folder:"ebook2", name }))
 ];
 
+const ASSET_VERSION = "20260722";
+
+function assetUrl(item){
+    return `${item.folder}/${item.name}?v=${ASSET_VERSION}`;
+}
+
 const categories = [
-    { name:"전체", start:1, end:159 },
-    { name:"ENT", start:11, end:35 },
-    { name:"UR0", start:36, end:74 },
-    { name:"EY", start:75, end:80 },
-    { name:"DM", start:81, end:82 },
-    { name:"실무전체", start:83, end:159 },
-    { name:"수술전후", start:84, end:108 },
-    { name:"식이", start:109, end:117 },
-    { name:"수혈/검체/AST", start:118, end:129 },
-    { name:"당뇨/항암/검사이해", start:130, end:139 },
-    { name:"SET/Tra/CSR", start:140, end:153 },
-    { name:"위치안내/유효기간", start:154, end:159 }
+    { name:"전체", start:1, end:162 },
+    { name:"ENT", start:11, end:36 },
+    { name:"UR0", start:37, end:75 },
+    { name:"EY", start:76, end:81 },
+    { name:"DM", start:82, end:83 },
+    { name:"실무전체", start:84, end:162 },
+    { name:"수술전후", start:85, end:111 },
+    { name:"식이", start:112, end:120 },
+    { name:"수혈/검체/AST", start:121, end:132 },
+    { name:"당뇨/항암/검사이해", start:133, end:142 },
+    { name:"SET/Tra/CSR", start:143, end:156 },
+    { name:"위치안내/유효기간", start:157, end:162 }
       ];
       
 const manualKeywords = {
-    "저혈당": [130],
-    "혈당": [130],
-    "고혈당": [130],
-    "인슐린": [130],
-    "당뇨": [130],
-    "BST": [130],
-    "DM": [130],
+    "저혈당": [133],
+    "혈당": [133],
+    "고혈당": [133],
+    "인슐린": [133],
+    "당뇨": [133],
+    "BST": [133],
+    "DM": [133],
           
     "편도": [22],
     "편도절제술": [22],
@@ -1237,7 +1245,7 @@ function loadOcrData(){
         }
 
         const script = document.createElement("script");
-        script.src = "ocr-data.js?v=3";
+        script.src = "ocr-data.js?v=20260722";
         script.async = true;
         script.dataset.ocrLoader = "true";
         script.onload = () => resolve(getOcrTexts());
@@ -1257,7 +1265,7 @@ pages.forEach((item, index) => {
     page.className = "page";
 
     const img = document.createElement("img");
-    img.src = `${item.folder}/${item.name}`;
+    img.src = assetUrl(item);
     img.decoding = "async";
     img.loading = index === 0 ? "eager" : "lazy";
 
@@ -1396,8 +1404,7 @@ function setZoomPage(index){
         return;
     }
 
-    document.getElementById("zoomImg").src =
-        `${item.folder}/${item.name}`;
+    document.getElementById("zoomImg").src = assetUrl(item);
 }
 
 function openImageViewer(){
@@ -1509,7 +1516,7 @@ function renderGallery(start, end){
         wrapper.className = "gallery-item";
 
         const thumb = document.createElement("img");
-        thumb.src = `${item.folder}/${item.name}`;
+        thumb.src = assetUrl(item);
         thumb.loading = "lazy";
         thumb.decoding = "async";
 
@@ -1541,8 +1548,7 @@ function openViewer(index){
     currentViewerIndex = index;
     const item = pages[index];
 
-    document.getElementById("viewerImg").src =
-        `${item.folder}/${item.name}`;
+    document.getElementById("viewerImg").src = assetUrl(item);
 
     document.getElementById("viewerTitle").innerText =
         item.name.replace(".JPG", "");
