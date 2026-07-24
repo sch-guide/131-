@@ -12,6 +12,12 @@ content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable
 <link rel="stylesheet" as="style" crossorigin
 href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 
+<script>
+if(window.navigator.standalone === true){
+    document.documentElement.classList.add("ios-standalone");
+}
+</script>
+
 <style>
 :root{
     --navy:#1B2A4A;
@@ -25,6 +31,7 @@ href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/
     --shadow-md:0 8px 24px rgba(15,27,48,0.16);
     --radius:14px;
     --mobile-reader-top-gap:0px;
+    --mobile-reader-side-gap:0px;
 }
 
 *{
@@ -64,7 +71,8 @@ body{
 
 @media (max-width: 760px){
     :root{
-        --mobile-reader-top-gap:48px;
+        --mobile-reader-top-gap:64px;
+        --mobile-reader-side-gap:12px;
     }
 
     html,
@@ -76,17 +84,19 @@ body{
     }
 
     #book{
+        width:calc(100vw - (var(--mobile-reader-side-gap) * 2));
         height:calc(100vh - env(safe-area-inset-top) - var(--mobile-reader-top-gap));
         height:calc(100svh - env(safe-area-inset-top) - var(--mobile-reader-top-gap));
         height:calc(100dvh - env(safe-area-inset-top) - var(--mobile-reader-top-gap));
         max-height:calc(100dvh - env(safe-area-inset-top) - var(--mobile-reader-top-gap));
-        margin-top:var(--mobile-reader-top-gap);
+        margin:var(--mobile-reader-top-gap) auto 0;
         overflow:hidden;
     }
 
     .page,
     .page img{
-        max-height:100dvh;
+        max-width:100%;
+        max-height:100%;
     }
 
     .controls{
@@ -99,25 +109,49 @@ body{
         width:36px;
         height:36px;
         font-size:16px;
-        line-height:36px;
+        line-height:1;
     }
 }
 
 @media (display-mode: standalone) and (max-width: 760px){
     :root{
         --mobile-reader-top-gap:0px;
+        --mobile-reader-side-gap:0px;
     }
 
+    html,
     body{
         padding-top:0;
     }
 
     #book{
+        width:100vw;
         height:100vh;
         height:100svh;
         height:100dvh;
         max-height:100dvh;
-        margin-top:0;
+        margin:0 auto;
+    }
+}
+
+@media (max-width: 760px){
+    html.ios-standalone{
+        --mobile-reader-top-gap:0px;
+        --mobile-reader-side-gap:0px;
+    }
+
+    html.ios-standalone,
+    html.ios-standalone body{
+        padding-top:0;
+    }
+
+    html.ios-standalone #book{
+        width:100vw;
+        height:100vh;
+        height:100svh;
+        height:100dvh;
+        max-height:100dvh;
+        margin:0 auto;
     }
 }
 
@@ -151,11 +185,14 @@ body{
 }
 
 .icon-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
     width:44px;
     height:44px;
     padding:0;
     font-size:19px;
-    line-height:44px;
+    line-height:1;
 }
 
 #gallery{
